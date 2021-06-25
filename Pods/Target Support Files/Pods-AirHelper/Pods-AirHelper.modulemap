@@ -1,0 +1,6 @@
+framework module Pods_AirHelper {
+  umbrella header "Pods-AirHelper-umbrella.h"
+
+  export *
+  module * { export * }
+}

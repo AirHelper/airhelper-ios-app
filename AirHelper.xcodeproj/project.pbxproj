@@ -1,0 +1,779 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1329168F26789067009C9ADD /* AirHelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1329168E26789067009C9ADD /* AirHelperApp.swift */; };
+		1329169126789067009C9ADD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1329169026789067009C9ADD /* ContentView.swift */; };
+		1329169326789069009C9ADD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1329169226789069009C9ADD /* Assets.xcassets */; };
+		1329169626789069009C9ADD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1329169526789069009C9ADD /* Preview Assets.xcassets */; };
+		132916A126789069009C9ADD /* AirHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132916A026789069009C9ADD /* AirHelperTests.swift */; };
+		132916AC26789069009C9ADD /* AirHelperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132916AB26789069009C9ADD /* AirHelperUITests.swift */; };
+		134B366A2685CFF6009FBCE2 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B36692685CFF6009FBCE2 /* MoreView.swift */; };
+		134B366D268641C6009FBCE2 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B366C268641C6009FBCE2 /* AppState.swift */; };
+		134F2CD02684D72800731212 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134F2CCF2684D72800731212 /* MainTabView.swift */; };
+		1381F975268221410051AF88 /* LoginSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1381F974268221410051AF88 /* LoginSettingView.swift */; };
+		2E606BAF5C194C1AF4CBE287 /* Pods_AirHelperTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */; };
+		7990E433EEFC083304535C91 /* Pods_AirHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF3011E6E9937A3DEABDF397 /* Pods_AirHelper.framework */; };
+		A8F51866891650DB33C61C4D /* Pods_AirHelper_AirHelperUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9D4AC4A41A234641145D62 /* Pods_AirHelper_AirHelperUITests.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1329169D26789069009C9ADD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1329168326789067009C9ADD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1329168A26789067009C9ADD;
+			remoteInfo = AirHelper;
+		};
+		132916A826789069009C9ADD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1329168326789067009C9ADD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1329168A26789067009C9ADD;
+			remoteInfo = AirHelper;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		10975B08EF67912B3D42BBAF /* Pods-AirHelperTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelperTests.release.xcconfig"; path = "Target Support Files/Pods-AirHelperTests/Pods-AirHelperTests.release.xcconfig"; sourceTree = "<group>"; };
+		1329168B26789067009C9ADD /* AirHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1329168E26789067009C9ADD /* AirHelperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHelperApp.swift; sourceTree = "<group>"; };
+		1329169026789067009C9ADD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; wrapsLines = 0; };
+		1329169226789069009C9ADD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1329169526789069009C9ADD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1329169726789069009C9ADD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1329169C26789069009C9ADD /* AirHelperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AirHelperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		132916A026789069009C9ADD /* AirHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHelperTests.swift; sourceTree = "<group>"; };
+		132916A226789069009C9ADD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		132916A726789069009C9ADD /* AirHelperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AirHelperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		132916AB26789069009C9ADD /* AirHelperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHelperUITests.swift; sourceTree = "<group>"; };
+		132916AD26789069009C9ADD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		134B36692685CFF6009FBCE2 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
+		134B366C268641C6009FBCE2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		134F2CCF2684D72800731212 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		1381F974268221410051AF88 /* LoginSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSettingView.swift; sourceTree = "<group>"; };
+		721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AirHelperTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2CFF6FFB4FA43C0D1742B81 /* Pods-AirHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelper.release.xcconfig"; path = "Target Support Files/Pods-AirHelper/Pods-AirHelper.release.xcconfig"; sourceTree = "<group>"; };
+		A5AB9E51A6C68D565DA12DDB /* Pods-AirHelper-AirHelperUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelper-AirHelperUITests.release.xcconfig"; path = "Target Support Files/Pods-AirHelper-AirHelperUITests/Pods-AirHelper-AirHelperUITests.release.xcconfig"; sourceTree = "<group>"; };
+		BF9D4AC4A41A234641145D62 /* Pods_AirHelper_AirHelperUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AirHelper_AirHelperUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C377D46D0C20C29DB71E7DCB /* Pods-AirHelper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelper.debug.xcconfig"; path = "Target Support Files/Pods-AirHelper/Pods-AirHelper.debug.xcconfig"; sourceTree = "<group>"; };
+		DF3011E6E9937A3DEABDF397 /* Pods_AirHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AirHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5D4B2FEAB48BAB38816B3FA /* Pods-AirHelper-AirHelperUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelper-AirHelperUITests.debug.xcconfig"; path = "Target Support Files/Pods-AirHelper-AirHelperUITests/Pods-AirHelper-AirHelperUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		F74C2B10220DC0AD33B29FC7 /* Pods-AirHelperTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelperTests.debug.xcconfig"; path = "Target Support Files/Pods-AirHelperTests/Pods-AirHelperTests.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1329168826789067009C9ADD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7990E433EEFC083304535C91 /* Pods_AirHelper.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1329169926789069009C9ADD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E606BAF5C194C1AF4CBE287 /* Pods_AirHelperTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		132916A426789069009C9ADD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A8F51866891650DB33C61C4D /* Pods_AirHelper_AirHelperUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1329168226789067009C9ADD = {
+			isa = PBXGroup;
+			children = (
+				1329168D26789067009C9ADD /* AirHelper */,
+				1329169F26789069009C9ADD /* AirHelperTests */,
+				132916AA26789069009C9ADD /* AirHelperUITests */,
+				1329168C26789067009C9ADD /* Products */,
+				4AA8DA820E605471D2113A97 /* Pods */,
+				CA246A1360F424D8F42BC358 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		1329168C26789067009C9ADD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1329168B26789067009C9ADD /* AirHelper.app */,
+				1329169C26789069009C9ADD /* AirHelperTests.xctest */,
+				132916A726789069009C9ADD /* AirHelperUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1329168D26789067009C9ADD /* AirHelper */ = {
+			isa = PBXGroup;
+			children = (
+				134B366B268641B8009FBCE2 /* State */,
+				134B36672685B7FA009FBCE2 /* TabViews */,
+				1329168E26789067009C9ADD /* AirHelperApp.swift */,
+				1329169026789067009C9ADD /* ContentView.swift */,
+				1329169226789069009C9ADD /* Assets.xcassets */,
+				1329169726789069009C9ADD /* Info.plist */,
+				1329169426789069009C9ADD /* Preview Content */,
+				1381F974268221410051AF88 /* LoginSettingView.swift */,
+			);
+			path = AirHelper;
+			sourceTree = "<group>";
+		};
+		1329169426789069009C9ADD /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				1329169526789069009C9ADD /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1329169F26789069009C9ADD /* AirHelperTests */ = {
+			isa = PBXGroup;
+			children = (
+				132916A026789069009C9ADD /* AirHelperTests.swift */,
+				132916A226789069009C9ADD /* Info.plist */,
+			);
+			path = AirHelperTests;
+			sourceTree = "<group>";
+		};
+		132916AA26789069009C9ADD /* AirHelperUITests */ = {
+			isa = PBXGroup;
+			children = (
+				132916AB26789069009C9ADD /* AirHelperUITests.swift */,
+				132916AD26789069009C9ADD /* Info.plist */,
+			);
+			path = AirHelperUITests;
+			sourceTree = "<group>";
+		};
+		134B36672685B7FA009FBCE2 /* TabViews */ = {
+			isa = PBXGroup;
+			children = (
+				134B36682685CFE2009FBCE2 /* More */,
+				134F2CCF2684D72800731212 /* MainTabView.swift */,
+			);
+			path = TabViews;
+			sourceTree = "<group>";
+		};
+		134B36682685CFE2009FBCE2 /* More */ = {
+			isa = PBXGroup;
+			children = (
+				134B36692685CFF6009FBCE2 /* MoreView.swift */,
+			);
+			path = More;
+			sourceTree = "<group>";
+		};
+		134B366B268641B8009FBCE2 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				134B366C268641C6009FBCE2 /* AppState.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		4AA8DA820E605471D2113A97 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C377D46D0C20C29DB71E7DCB /* Pods-AirHelper.debug.xcconfig */,
+				A2CFF6FFB4FA43C0D1742B81 /* Pods-AirHelper.release.xcconfig */,
+				E5D4B2FEAB48BAB38816B3FA /* Pods-AirHelper-AirHelperUITests.debug.xcconfig */,
+				A5AB9E51A6C68D565DA12DDB /* Pods-AirHelper-AirHelperUITests.release.xcconfig */,
+				F74C2B10220DC0AD33B29FC7 /* Pods-AirHelperTests.debug.xcconfig */,
+				10975B08EF67912B3D42BBAF /* Pods-AirHelperTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		CA246A1360F424D8F42BC358 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DF3011E6E9937A3DEABDF397 /* Pods_AirHelper.framework */,
+				BF9D4AC4A41A234641145D62 /* Pods_AirHelper_AirHelperUITests.framework */,
+				721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1329168A26789067009C9ADD /* AirHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 132916B026789069009C9ADD /* Build configuration list for PBXNativeTarget "AirHelper" */;
+			buildPhases = (
+				67659FF567BA34CAF03AFA9E /* [CP] Check Pods Manifest.lock */,
+				1329168726789067009C9ADD /* Sources */,
+				1329168826789067009C9ADD /* Frameworks */,
+				1329168926789067009C9ADD /* Resources */,
+				E2990C37A32B116A96A2F2A7 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AirHelper;
+			productName = AirHelper;
+			productReference = 1329168B26789067009C9ADD /* AirHelper.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1329169B26789069009C9ADD /* AirHelperTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 132916B326789069009C9ADD /* Build configuration list for PBXNativeTarget "AirHelperTests" */;
+			buildPhases = (
+				AD8AC3A9EA9C0EC7237E300C /* [CP] Check Pods Manifest.lock */,
+				1329169826789069009C9ADD /* Sources */,
+				1329169926789069009C9ADD /* Frameworks */,
+				1329169A26789069009C9ADD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1329169E26789069009C9ADD /* PBXTargetDependency */,
+			);
+			name = AirHelperTests;
+			productName = AirHelperTests;
+			productReference = 1329169C26789069009C9ADD /* AirHelperTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		132916A626789069009C9ADD /* AirHelperUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 132916B626789069009C9ADD /* Build configuration list for PBXNativeTarget "AirHelperUITests" */;
+			buildPhases = (
+				BC071642217BB9EAC5F8FD05 /* [CP] Check Pods Manifest.lock */,
+				132916A326789069009C9ADD /* Sources */,
+				132916A426789069009C9ADD /* Frameworks */,
+				132916A526789069009C9ADD /* Resources */,
+				94E5992EED6A875266203619 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				132916A926789069009C9ADD /* PBXTargetDependency */,
+			);
+			name = AirHelperUITests;
+			productName = AirHelperUITests;
+			productReference = 132916A726789069009C9ADD /* AirHelperUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1329168326789067009C9ADD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1240;
+				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					1329168A26789067009C9ADD = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					1329169B26789069009C9ADD = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = 1329168A26789067009C9ADD;
+					};
+					132916A626789069009C9ADD = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = 1329168A26789067009C9ADD;
+					};
+				};
+			};
+			buildConfigurationList = 1329168626789067009C9ADD /* Build configuration list for PBXProject "AirHelper" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1329168226789067009C9ADD;
+			productRefGroup = 1329168C26789067009C9ADD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1329168A26789067009C9ADD /* AirHelper */,
+				1329169B26789069009C9ADD /* AirHelperTests */,
+				132916A626789069009C9ADD /* AirHelperUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1329168926789067009C9ADD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1329169626789069009C9ADD /* Preview Assets.xcassets in Resources */,
+				1329169326789069009C9ADD /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1329169A26789069009C9ADD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		132916A526789069009C9ADD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		67659FF567BA34CAF03AFA9E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AirHelper-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		94E5992EED6A875266203619 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AirHelper-AirHelperUITests/Pods-AirHelper-AirHelperUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AirHelper-AirHelperUITests/Pods-AirHelper-AirHelperUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AirHelper-AirHelperUITests/Pods-AirHelper-AirHelperUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AD8AC3A9EA9C0EC7237E300C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AirHelperTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BC071642217BB9EAC5F8FD05 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AirHelper-AirHelperUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E2990C37A32B116A96A2F2A7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AirHelper/Pods-AirHelper-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AirHelper/Pods-AirHelper-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AirHelper/Pods-AirHelper-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1329168726789067009C9ADD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1329169126789067009C9ADD /* ContentView.swift in Sources */,
+				1381F975268221410051AF88 /* LoginSettingView.swift in Sources */,
+				1329168F26789067009C9ADD /* AirHelperApp.swift in Sources */,
+				134B366D268641C6009FBCE2 /* AppState.swift in Sources */,
+				134F2CD02684D72800731212 /* MainTabView.swift in Sources */,
+				134B366A2685CFF6009FBCE2 /* MoreView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1329169826789069009C9ADD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				132916A126789069009C9ADD /* AirHelperTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		132916A326789069009C9ADD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				132916AC26789069009C9ADD /* AirHelperUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1329169E26789069009C9ADD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1329168A26789067009C9ADD /* AirHelper */;
+			targetProxy = 1329169D26789069009C9ADD /* PBXContainerItemProxy */;
+		};
+		132916A926789069009C9ADD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1329168A26789067009C9ADD /* AirHelper */;
+			targetProxy = 132916A826789069009C9ADD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		132916AE26789069009C9ADD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		132916AF26789069009C9ADD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		132916B126789069009C9ADD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C377D46D0C20C29DB71E7DCB /* Pods-AirHelper.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"AirHelper/Preview Content\"";
+				DEVELOPMENT_TEAM = JWAF325559;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = AirHelper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.junho.AirHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		132916B226789069009C9ADD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2CFF6FFB4FA43C0D1742B81 /* Pods-AirHelper.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"AirHelper/Preview Content\"";
+				DEVELOPMENT_TEAM = JWAF325559;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = AirHelper/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.junho.AirHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		132916B426789069009C9ADD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F74C2B10220DC0AD33B29FC7 /* Pods-AirHelperTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JWAF325559;
+				INFOPLIST_FILE = AirHelperTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.junho.AirHelperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AirHelper.app/AirHelper";
+			};
+			name = Debug;
+		};
+		132916B526789069009C9ADD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 10975B08EF67912B3D42BBAF /* Pods-AirHelperTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JWAF325559;
+				INFOPLIST_FILE = AirHelperTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.junho.AirHelperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AirHelper.app/AirHelper";
+			};
+			name = Release;
+		};
+		132916B726789069009C9ADD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E5D4B2FEAB48BAB38816B3FA /* Pods-AirHelper-AirHelperUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JWAF325559;
+				INFOPLIST_FILE = AirHelperUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.junho.AirHelperUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AirHelper;
+			};
+			name = Debug;
+		};
+		132916B826789069009C9ADD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5AB9E51A6C68D565DA12DDB /* Pods-AirHelper-AirHelperUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JWAF325559;
+				INFOPLIST_FILE = AirHelperUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.junho.AirHelperUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AirHelper;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1329168626789067009C9ADD /* Build configuration list for PBXProject "AirHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				132916AE26789069009C9ADD /* Debug */,
+				132916AF26789069009C9ADD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		132916B026789069009C9ADD /* Build configuration list for PBXNativeTarget "AirHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				132916B126789069009C9ADD /* Debug */,
+				132916B226789069009C9ADD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		132916B326789069009C9ADD /* Build configuration list for PBXNativeTarget "AirHelperTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				132916B426789069009C9ADD /* Debug */,
+				132916B526789069009C9ADD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		132916B626789069009C9ADD /* Build configuration list for PBXNativeTarget "AirHelperUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				132916B726789069009C9ADD /* Debug */,
+				132916B826789069009C9ADD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1329168326789067009C9ADD /* Project object */;
+}
