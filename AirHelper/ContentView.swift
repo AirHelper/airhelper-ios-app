@@ -19,7 +19,7 @@ extension Color {
 class User: ObservableObject {
     @Published var id: Int = 0
 }
-//ㅌ
+//ㅌㅇㅇ
 struct MainLoginView: View {
     @State var Maintag:Int? = nil
     @State var Logintag:Int? = nil
