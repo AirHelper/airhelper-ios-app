@@ -9,16 +9,12 @@ import SwiftUI
 import Alamofire
 
 struct MoreView: View {
-    @State var tag:Int? = nil
     @State var showAlert = false
-    //@Binding var gotoTab: Bool
+    @Binding var shouldPopToRoot : Bool
     
     var body: some View {
         GeometryReader { gp in
             ZStack() {
-                NavigationLink(destination: MainLoginView(Maintag: 0, Logintag: 0), tag: 1, selection: self.$tag ) {
-                    EmptyView()
-                }
                 Form {
                     Section(header: Text("기타"), content: {
                         Button("로그아웃"){
@@ -33,8 +29,7 @@ struct MoreView: View {
                                             UserDefaults.standard.removeObject(forKey: "refresh_token")
                                             UserDefaults.standard.removeObject(forKey: "access_token")
                                             UserDefaults.standard.removeObject(forKey: "user_id")
-                                            self.tag=1
-                                            //self.gotoTab = false
+                                            self.shouldPopToRoot = false
                                         case .failure(let error):
                                             print("Error: \(error)")
                                             return

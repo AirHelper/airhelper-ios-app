@@ -16,15 +16,12 @@ extension Color {
     }
 }
 
-class User: ObservableObject {
-    @Published var id: Int = 0
-}
-//ㅌㅇㅇ
+
 struct MainLoginView: View {
-    @State var Maintag:Int? = nil
-    @State var Logintag:Int? = nil
-    @StateObject var user = User()
-    
+    @State var Maintag : Int? = nil
+    @State var Logintag : Int? = nil
+    @State var isActive : Bool = false
+    @State var autoIsActive : Bool = false
     var body: some View {
         NavigationView() {
             GeometryReader() { gp in
@@ -54,12 +51,19 @@ struct MainLoginView: View {
                     }
                     
                     VStack(alignment: .center) {
-                        NavigationLink(destination: LoginSettingView().environmentObject(self.user), tag: 1, selection: self.$Logintag ) {
+//                        NavigationLink(destination: LoginSettingView(), tag: 1, selection: self.$Logintag ) {
+//                            EmptyView()
+//                        }
+//                        NavigationLink(destination: LoginSettingView(tag: 1), tag: 1, selection: self.$Maintag ) {
+//                            EmptyView()
+//                        }
+                        NavigationLink(destination: LoginSettingView(tag: 0, rootIsActive: self.$isActive), isActive: self.$isActive) {
                             EmptyView()
                         }
-                        NavigationLink(destination: MainTabView().environmentObject(self.user), tag: 1, selection: self.$Maintag ) {
+                        NavigationLink(destination: MainTabView(shouldPopToRoot: self.$autoIsActive).navigationBarTitle("dd", displayMode: .inline), isActive: self.$autoIsActive) {
                             EmptyView()
                         }
+                        
                         Button(action:{
                             // 카카오톡 설치 여부 확인
                             if (UserApi.isKakaoTalkLoginAvailable()) {
@@ -76,8 +80,6 @@ struct MainLoginView: View {
                                                     if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
                                                         if let user = data["user"] as? [String: Any] { // 파싱
                                                             if let is_active = user["is_active"] as? Int, let user_id = user["id"] as? Int { // is_active 변환
-                                                                self.user.id = user_id
-                                                                print(self.user.id)
                                                                 
                                                                 if is_active == 1 { //계정 활성화 상태이면
                                                                     print("계정 활성화")
@@ -120,20 +122,19 @@ struct MainLoginView: View {
                                                     if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
                                                         if let user = data["user"] as? [String: Any] { // 파싱
                                                             if let is_active = user["is_active"] as? Int, let user_id = user["id"] as? Int { // is_active 변환
-                                                                self.user.id = user_id
-                                                                print(self.user.id)
-                                                                
+                                                                UserDefaults.standard.set(user_id, forKey: "user_id")
                                                                 if is_active == 1 { //계정 활성화 상태이면
                                                                     print("계정 활성화")
                                                                     if let access = data["access"] as? String, let refresh = data["refresh"] as? String {
                                                                         UserDefaults.standard.set(access, forKey: "access_token")
                                                                         UserDefaults.standard.set(refresh, forKey: "refresh_token")
-                                                                        UserDefaults.standard.set(user_id, forKey: "user_id")
                                                                     }
+                                                                    self.autoIsActive = true
                                                                     self.Maintag = 1
                                                                 }
                                                                 else {
                                                                     print("계정 비활성화")
+                                                                    self.isActive = true
                                                                     self.Logintag = 1
                                                                 }
                                                             }
@@ -186,7 +187,7 @@ struct ContentView: View {
     var body: some View {
         if let _ = UserDefaults.standard.string(forKey: "access_token"), let _ = UserDefaults.standard.string(forKey: "refresh_token") {
             GeometryReader() { gp in
-                MainLoginView(Maintag: 1)
+                MainLoginView(autoIsActive: true)
                 //MainTabView()
             }
         }

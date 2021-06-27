@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @EnvironmentObject var user: User
-    //@Binding var gotoTab: Bool
+    @Binding var shouldPopToRoot : Bool
+    
     var body: some View {
-        
         TabView {
             Text("1")
                 .tabItem {
@@ -19,18 +18,7 @@ struct MainTabView: View {
                     Text("필드 예약")
                 }
             
-            NavigationView {
-                List(1...10, id: \.self) { index in
-                    NavigationLink(
-                        destination: Text("Item #\(index) Details"),
-                        label: {
-                            Text("Item #\(index)")
-                                .font(.system(size: 20, weight: .bold, design: .rounded))
-                        })
-                    
-                }
-                .navigationTitle("TabView Demo")
-            }
+            Text("2")
             .tabItem {
                 Image(systemName: "bubble.left.and.bubble.right.fill")
                 Text("커뮤니티")
@@ -49,9 +37,7 @@ struct MainTabView: View {
                 }
             
             
-            NavigationView {
-                MoreView()
-            }
+            MoreView(shouldPopToRoot: self.$shouldPopToRoot)
             .tabItem {
                 VStack{
                     Image(systemName: "ellipsis.circle")
