@@ -11,12 +11,18 @@ import Alamofire
 struct MoreView: View {
     @State var showAlert = false
     @Binding var shouldPopToRoot : Bool
-    
+
     var body: some View {
         GeometryReader { gp in
             ZStack() {
                 Form {
                     Section(header: Text("기타"), content: {
+                        HStack {
+                                Text("버전정보")
+                                Spacer()
+                                Text("1.0.0")
+                        }
+                        
                         Button("로그아웃"){
                             self.showAlert = true
                         }
@@ -43,9 +49,9 @@ struct MoreView: View {
                         Button("탈퇴하기"){
                             print("dd")
                         }
-                        
                     })
                 }
+                
             }
         }
     }
