@@ -46,6 +46,7 @@ struct MainTabView: View {
                 }
                 .tag(Tab.attend)
             
+            
             MoreView(shouldPopToRoot: self.$shouldPopToRoot)
                 .tabItem {
                     VStack{
@@ -55,6 +56,7 @@ struct MainTabView: View {
                 }
                 .tag(Tab.more)
         }
+        //.navigationBarHidden(true)
         .navigationBarTitle(Text(currentTab.rawValue), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
         
