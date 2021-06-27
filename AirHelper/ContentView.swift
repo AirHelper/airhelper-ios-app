@@ -57,10 +57,12 @@ struct MainLoginView: View {
 //                        NavigationLink(destination: LoginSettingView(tag: 1), tag: 1, selection: self.$Maintag ) {
 //                            EmptyView()
 //                        }
-                        NavigationLink(destination: LoginSettingView(tag: 0, rootIsActive: self.$isActive), isActive: self.$isActive) {
+                        NavigationLink(destination: LoginSettingView(tag: 0, rootIsActive: self.$isActive),
+                                       isActive: self.$isActive) {
                             EmptyView()
                         }
-                        NavigationLink(destination: MainTabView(shouldPopToRoot: self.$autoIsActive).navigationBarTitle("dd", displayMode: .inline), isActive: self.$autoIsActive) {
+                        NavigationLink(destination: MainTabView(shouldPopToRoot: self.$autoIsActive),
+                                       isActive: self.$autoIsActive) {
                             EmptyView()
                         }
                         

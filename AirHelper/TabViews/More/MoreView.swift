@@ -46,7 +46,6 @@ struct MoreView: View {
                         
                     })
                 }
-                .navigationBarTitle("더보기", displayMode: .inline)
             }
         }
     }
