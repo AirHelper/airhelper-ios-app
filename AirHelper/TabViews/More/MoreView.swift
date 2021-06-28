@@ -12,16 +12,30 @@ struct MoreView: View {
     @State var showAlert = false
     @State var drawalAlert = false
     @Binding var shouldPopToRoot : Bool
-
+    @State var isView1Active: Bool = false
     var body: some View {
         GeometryReader { gp in
             ZStack() {
                 Form {
+                    Section(header: Text("사용자 정보"), content: {
+                        
+                        NavigationLink(destination: Text("dd"), isActive: self.$isView1Active) {
+                            HStack {
+                                Image(systemName: "person.fill")
+                                Text("JEFF")
+
+                            }
+                        }
+                        .isDetailLink(false)
+                        Button("ddd") {
+                            self.isView1Active = true
+                        }
+                    })
                     Section(header: Text("기타"), content: {
                         HStack {
-                                Text("버전정보")
-                                Spacer()
-                                Text("1.0.0")
+                            Text("버전정보")
+                            Spacer()
+                            Text("1.0.0")
                         }
                         
                         Button("로그아웃"){
