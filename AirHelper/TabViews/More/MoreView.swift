@@ -10,6 +10,7 @@ import Alamofire
 
 struct MoreView: View {
     @State var showAlert = false
+    @State var drawalAlert = false
     @Binding var shouldPopToRoot : Bool
 
     var body: some View {
@@ -47,7 +48,27 @@ struct MoreView: View {
                             )
                         }
                         Button("탈퇴하기"){
-                            print("dd")
+                            self.drawalAlert = true
+                        }
+                        .alert(isPresented: self.$drawalAlert) {
+                            Alert(title: Text("회원탈퇴"), message: Text("정말로 탈퇴 하시겠어요?"),
+                                  primaryButton: .default (Text("OK")) {
+                                    AF.request("http://airhelper.kro.kr/api/cert/user/\(UserDefaults.standard.integer(forKey: "user_id"))", method: .delete, encoding: URLEncoding.httpBody).responseJSON() { response in
+                                        switch response.result {
+                                        case .success:
+                                            UserDefaults.standard.removeObject(forKey: "refresh_token")
+                                            UserDefaults.standard.removeObject(forKey: "access_token")
+                                            UserDefaults.standard.removeObject(forKey: "user_id")
+                                            self.shouldPopToRoot = false
+                                        case .failure(let error):
+                                            print("Error: \(error)")
+                                            return
+                                        }
+                                        
+                                    }
+                                  },
+                                  secondaryButton: .cancel()
+                            )
                         }
                     })
                 }

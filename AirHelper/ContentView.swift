@@ -74,7 +74,7 @@ struct MainLoginView: View {
                                                     if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
                                                         if let user = data["user"] as? [String: Any] { // 파싱
                                                             if let is_active = user["is_active"] as? Int, let user_id = user["id"] as? Int { // is_active 변환
-                                                                
+                                                                UserDefaults.standard.set(user_id, forKey: "user_id")
                                                                 if is_active == 1 { //계정 활성화 상태이면
                                                                     print("계정 활성화")
                                                                     if let access = data["access"] as? String, let refresh = data["refresh"] as? String {
