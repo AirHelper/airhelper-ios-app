@@ -18,8 +18,6 @@ extension Color {
 
 
 struct MainLoginView: View {
-    @State var Maintag : Int? = nil
-    @State var Logintag : Int? = nil
     @State var isActive : Bool = false
     @State var autoIsActive : Bool = false
     var body: some View {
@@ -51,12 +49,6 @@ struct MainLoginView: View {
                     }
                     
                     VStack(alignment: .center) {
-//                        NavigationLink(destination: LoginSettingView(), tag: 1, selection: self.$Logintag ) {
-//                            EmptyView()
-//                        }
-//                        NavigationLink(destination: LoginSettingView(tag: 1), tag: 1, selection: self.$Maintag ) {
-//                            EmptyView()
-//                        }
                         NavigationLink(destination: LoginSettingView(tag: 0, rootIsActive: self.$isActive),
                                        isActive: self.$isActive) {
                             EmptyView()
@@ -90,11 +82,11 @@ struct MainLoginView: View {
                                                                         UserDefaults.standard.set(refresh, forKey: "refresh_token")
                                                                         UserDefaults.standard.set(user_id, forKey: "user_id")
                                                                     }
-                                                                    self.Maintag = 1
+                                                                    self.autoIsActive = true
                                                                 }
                                                                 else {
                                                                     print("계정 비활성화")
-                                                                    self.Logintag = 1
+                                                                    self.isActive = true
                                                                 }
                                                             }
                                                         }
@@ -132,12 +124,10 @@ struct MainLoginView: View {
                                                                         UserDefaults.standard.set(refresh, forKey: "refresh_token")
                                                                     }
                                                                     self.autoIsActive = true
-                                                                    self.Maintag = 1
                                                                 }
                                                                 else {
                                                                     print("계정 비활성화")
                                                                     self.isActive = true
-                                                                    self.Logintag = 1
                                                                 }
                                                             }
                                                         }
