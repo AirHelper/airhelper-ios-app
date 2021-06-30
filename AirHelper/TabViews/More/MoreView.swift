@@ -8,28 +8,48 @@
 import SwiftUI
 import Alamofire
 
+
+func apiGetCallSign(user_id: String) -> String {
+    AF.request("http://airhelper.kro.kr/api/cert/user/\(user_id)", method: .get).responseJSON() { response in
+        switch response.result {
+        case .success:
+            if let data = try! response.result.get() as? [String: Any]{
+                if let callsign = data["call_sign"] as? String {
+                    
+                    var dd:String = callsign
+                }
+            }
+        case .failure(let error):
+            print("Error: \(error)")
+            return
+        }
+    }
+
+    return ""
+}
+
 struct MoreView: View {
     @State var showAlert = false
     @State var drawalAlert = false
     @Binding var shouldPopToRoot : Bool
-    @State var isView1Active: Bool = false
-
+    @State var isUserInfoViewActive: Bool = false
+    @State var callSign : String = ""
+    
+    
     var body: some View {
         GeometryReader { gp in
             ZStack() {
                 Form {
-                    
                     Section(header: Text("사용자 정보"), content: {
-                        NavigationLink(destination: Text("dd"), isActive: self.$isView1Active) {
+                        NavigationLink(destination: UserInfoView(), isActive: self.$isUserInfoViewActive) {
                             HStack {
                                 Image(systemName: "person.fill")
-                                Text("JEFF")
-                                
+                                Text(self.callSign)
                             }
                         }
                         .isDetailLink(false)
                     })
-
+                    
                     Section(header: Text("기타"), content: {
                         HStack {
                             Text("버전정보")
@@ -89,6 +109,21 @@ struct MoreView: View {
                 }
                 
             }
+            .onAppear(perform: {
+                AF.request("http://airhelper.kro.kr/api/cert/user/\(UserDefaults.standard.string(forKey: "user_id")!)", method: .get).responseJSON() { response in
+                    switch response.result {
+                    case .success:
+                        if let data = try! response.result.get() as? [String: Any]{
+                            if let callsign = data["call_sign"] as? String {
+                                self.callSign = callsign
+                            }
+                        }
+                    case .failure(let error):
+                        print("Error: \(error)")
+                        return
+                    }
+                }
+            })
         }
     }
 }

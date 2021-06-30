@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1314D9E4268CB4AA00B57845 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1314D9E3268CB4AA00B57845 /* UserInfoView.swift */; };
 		1329168F26789067009C9ADD /* AirHelperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1329168E26789067009C9ADD /* AirHelperApp.swift */; };
 		1329169126789067009C9ADD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1329169026789067009C9ADD /* ContentView.swift */; };
 		1329169326789069009C9ADD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1329169226789069009C9ADD /* Assets.xcassets */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		10975B08EF67912B3D42BBAF /* Pods-AirHelperTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelperTests.release.xcconfig"; path = "Target Support Files/Pods-AirHelperTests/Pods-AirHelperTests.release.xcconfig"; sourceTree = "<group>"; };
+		1314D9E3268CB4AA00B57845 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
 		1329168B26789067009C9ADD /* AirHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1329168E26789067009C9ADD /* AirHelperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHelperApp.swift; sourceTree = "<group>"; };
 		1329169026789067009C9ADD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; wrapsLines = 0; };
@@ -171,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				134B36692685CFF6009FBCE2 /* MoreView.swift */,
+				1314D9E3268CB4AA00B57845 /* UserInfoView.swift */,
 			);
 			path = More;
 			sourceTree = "<group>";
@@ -448,6 +451,7 @@
 				1329168F26789067009C9ADD /* AirHelperApp.swift in Sources */,
 				134B366D268641C6009FBCE2 /* AppState.swift in Sources */,
 				134F2CD02684D72800731212 /* MainTabView.swift in Sources */,
+				1314D9E4268CB4AA00B57845 /* UserInfoView.swift in Sources */,
 				134B366A2685CFF6009FBCE2 /* MoreView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
