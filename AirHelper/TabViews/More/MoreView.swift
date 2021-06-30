@@ -13,24 +13,23 @@ struct MoreView: View {
     @State var drawalAlert = false
     @Binding var shouldPopToRoot : Bool
     @State var isView1Active: Bool = false
+
     var body: some View {
         GeometryReader { gp in
             ZStack() {
                 Form {
+                    
                     Section(header: Text("사용자 정보"), content: {
-                        
                         NavigationLink(destination: Text("dd"), isActive: self.$isView1Active) {
                             HStack {
                                 Image(systemName: "person.fill")
                                 Text("JEFF")
-
+                                
                             }
                         }
                         .isDetailLink(false)
-                        Button("ddd") {
-                            self.isView1Active = true
-                        }
                     })
+
                     Section(header: Text("기타"), content: {
                         HStack {
                             Text("버전정보")
@@ -41,6 +40,7 @@ struct MoreView: View {
                         Button("로그아웃"){
                             self.showAlert = true
                         }
+                        .foregroundColor(Color.black)
                         .alert(isPresented: $showAlert) {
                             Alert(title: Text("로그아웃"), message: Text("정말 로그아웃 하시겠어요?"),
                                   primaryButton: .default (Text("OK")) {
@@ -64,6 +64,7 @@ struct MoreView: View {
                         Button("탈퇴하기"){
                             self.drawalAlert = true
                         }
+                        .foregroundColor(Color.black)
                         .alert(isPresented: self.$drawalAlert) {
                             Alert(title: Text("회원탈퇴"), message: Text("정말로 탈퇴 하시겠어요?"),
                                   primaryButton: .default (Text("OK")) {
