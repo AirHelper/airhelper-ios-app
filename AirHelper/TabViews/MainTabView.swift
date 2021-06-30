@@ -16,7 +16,12 @@ struct MainTabView: View {
     }
     var body: some View {
         TabView(selection: $currentTab) {
-            Text("1")
+            NavigationLink(destination: Text("dddd")) {
+                HStack {
+                    Image(systemName: "person.fill")
+                    Text("ddd")
+                }
+            }
                 .navigationBarTitle("예약", displayMode: .inline)
                 .tabItem {
                     Image(systemName: "clock.fill")

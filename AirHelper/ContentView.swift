@@ -170,6 +170,7 @@ struct MainLoginView: View {
                 .edgesIgnoringSafeArea(.all)
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
 }

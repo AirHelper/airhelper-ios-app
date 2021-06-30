@@ -34,21 +34,21 @@ struct MoreView: View {
     @Binding var shouldPopToRoot : Bool
     @State var isUserInfoViewActive: Bool = false
     @State var callSign : String = ""
-    
-    
+
     var body: some View {
         GeometryReader { gp in
             ZStack() {
                 Form {
                     Section(header: Text("사용자 정보"), content: {
-                        NavigationLink(destination: UserInfoView(), isActive: self.$isUserInfoViewActive) {
+                        NavigationLink(destination: UserInfoView()) {
                             HStack {
                                 Image(systemName: "person.fill")
                                 Text(self.callSign)
                             }
                         }
-                        .isDetailLink(false)
+                        //.isDetailLink(false)
                     })
+                    
                     
                     Section(header: Text("기타"), content: {
                         HStack {
