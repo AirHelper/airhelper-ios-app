@@ -50,6 +50,7 @@ struct MoreView: View {
                     })
                     
                     
+                    
                     Section(header: Text("기타"), content: {
                         HStack {
                             Text("버전정보")
