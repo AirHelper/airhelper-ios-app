@@ -9,24 +9,6 @@ import SwiftUI
 import Alamofire
 
 
-func apiGetCallSign(user_id: String) -> String {
-    AF.request("http://airhelper.kro.kr/api/cert/user/\(user_id)", method: .get).responseJSON() { response in
-        switch response.result {
-        case .success:
-            if let data = try! response.result.get() as? [String: Any]{
-                if let callsign = data["call_sign"] as? String {
-                    
-                    var dd:String = callsign
-                }
-            }
-        case .failure(let error):
-            print("Error: \(error)")
-            return
-        }
-    }
-
-    return ""
-}
 
 struct MoreView: View {
     @State var showAlert = false
@@ -40,16 +22,14 @@ struct MoreView: View {
             ZStack() {
                 Form {
                     Section(header: Text("사용자 정보"), content: {
-                        NavigationLink(destination: UserInfoView()) {
+                        NavigationLink(destination: UserInfoView(InfoActive: self.$isUserInfoViewActive), isActive: self.$isUserInfoViewActive) {
                             HStack {
                                 Image(systemName: "person.fill")
                                 Text(self.callSign)
                             }
                         }
-                        //.isDetailLink(false)
+                        .isDetailLink(false)
                     })
-                    
-                    
                     
                     Section(header: Text("기타"), content: {
                         HStack {
