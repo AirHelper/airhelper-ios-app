@@ -22,7 +22,7 @@ struct MoreView: View {
             ZStack() {
                 Form {
                     Section(header: Text("사용자 정보"), content: {
-                        NavigationLink(destination: UserInfoView(InfoActive: self.$isUserInfoViewActive), isActive: self.$isUserInfoViewActive) {
+                        NavigationLink(destination: UserInfoView()) {
                             HStack {
                                 Image(systemName: "person.fill")
                                 Text(self.callSign)

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Alamofire
 struct ImagePicker: UIViewControllerRepresentable {
     
     @Environment(\.presentationMode)
@@ -76,20 +76,25 @@ extension Image {
     }
 }
 
+
+
 struct UserInfoView: View {
     @State var showImagePicker: Bool = false
     @State var image: Image? = nil
+    @State var uploadImage: UIImage? = nil
     @State var name: String = ""
     @State var email: String = ""
     @State var callSign: String = ""
-    @Binding var InfoActive: Bool
+    @State var profile_image: String = "http://airhelper.kro.kr/media/profiles/default.png"
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     var body: some View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 0){
                 if image == nil {
+                    
                     Image(systemName: "person.fill")
-                        .data(url: URL(string: "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png")!)
+                        .data(url: URL(string: self.profile_image)!)
                         .resizable()
                         .clipShape(Circle())
                         .shadow(radius: 5)
@@ -117,6 +122,7 @@ struct UserInfoView: View {
                 .padding(.bottom, 20)
                 .sheet(isPresented: $showImagePicker) {
                     ImagePicker(sourceType: .photoLibrary) { image in
+                        self.uploadImage = image
                         self.image = Image(uiImage: image)
                         
                     }
@@ -126,7 +132,7 @@ struct UserInfoView: View {
                 HStack(alignment: .center){
                     Text("이름")
                         .frame(width: gp.size.width * 0.2, alignment: .center)
-                    TextField("홍길동", text: self.$name)
+                    TextField(self.name, text: self.$name)
                 }
                 .padding()
                 .background(Color.white)
@@ -134,7 +140,7 @@ struct UserInfoView: View {
                 HStack(alignment: .center){
                     Text("이메일")
                         .frame(width: gp.size.width * 0.2, alignment: .center)
-                    TextField("test@naver.com", text: self.$email)
+                    TextField(self.email, text: self.$email)
                 }
                 .padding()
                 .background(Color.white)
@@ -142,7 +148,7 @@ struct UserInfoView: View {
                 HStack(alignment: .center){
                     Text("콜사인")
                         .frame(width: gp.size.width * 0.2, alignment: .center)
-                    TextField("CallSign", text: self.$callSign)
+                    TextField(self.callSign, text: self.$callSign)
                 }
                 .padding()
                 .background(Color.white)
@@ -151,6 +157,22 @@ struct UserInfoView: View {
                 trailing:
                     Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
+                        let headers: HTTPHeaders = [
+                            /* "Authorization": "your_access_token",  in case you need authorization header */
+                            "Content-type": "multipart/form-data"
+                        ]
+                        
+                        
+                        AF.upload(
+                            multipartFormData: { multipartFormData in
+                                multipartFormData.append(self.uploadImage!.jpegData(compressionQuality: 0.5)!, withName: "profile_image" , fileName: "user\(UserDefaults.standard.string(forKey: "user_id")!)Profile.jpeg", mimeType: "image/jpeg")
+                            },
+                            to: "http://airhelper.kro.kr/api/cert/user/\(UserDefaults.standard.string(forKey: "user_id")!)", method: .patch , headers: headers)
+                            .responseJSON { resp in
+                                print(resp)
+                                
+                            }
+                        
                     }) {
                         Text("저장")
                     }
@@ -159,10 +181,25 @@ struct UserInfoView: View {
         .background(Color(hex: 0xF2F2F7))
         .edgesIgnoringSafeArea(.bottom)
         .onAppear(perform: {
-            self.InfoActive = true
-        })
-        .onDisappear(perform: {
-            self.InfoActive = false
+            AF.request("http://airhelper.kro.kr/api/cert/user/\(UserDefaults.standard.string(forKey: "user_id")!)", method: .get).responseJSON() { response in
+                switch response.result {
+                case .success:
+                    if let data = try! response.result.get() as? [String: Any]{
+                        if let callsign = data["call_sign"] as? String,
+                           let name = data["name"] as? String,
+                           let email = data["email"] as? String,
+                           let profile_image = data["profile_image"] as? String{
+                            self.callSign = callsign
+                            self.name = name
+                            self.email = email
+                            self.profile_image = profile_image
+                        }
+                    }
+                case .failure(let error):
+                    print("Error: \(error)")
+                    return
+                }
+            }
         })
     }
     
