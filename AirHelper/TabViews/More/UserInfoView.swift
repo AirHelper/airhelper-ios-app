@@ -96,10 +96,10 @@ struct UserInfoView: View {
                     Image(systemName: "person.fill")
                         .data(url: URL(string: self.profile_image)!)
                         .resizable()
+                        .frame(width: 100, height: 100)
                         .clipShape(Circle())
                         .shadow(radius: 5)
                         .scaledToFit()
-                        .frame(width: 100, height: 100)
                         .padding(.top, 30)
                 }
                 else {
@@ -156,21 +156,29 @@ struct UserInfoView: View {
             .navigationBarItems(
                 trailing:
                     Button(action: {
-                        self.presentationMode.wrappedValue.dismiss()
                         let headers: HTTPHeaders = [
                             /* "Authorization": "your_access_token",  in case you need authorization header */
                             "Content-type": "multipart/form-data"
                         ]
                         
-                        
                         AF.upload(
                             multipartFormData: { multipartFormData in
-                                multipartFormData.append(self.uploadImage!.jpegData(compressionQuality: 0.5)!, withName: "profile_image" , fileName: "user\(UserDefaults.standard.string(forKey: "user_id")!)Profile.jpeg", mimeType: "image/jpeg")
+                                if let _ = self.image {
+                                    multipartFormData.append(self.uploadImage!.jpegData(compressionQuality: 0.5)!, withName: "profile_image" , fileName: "user\(UserDefaults.standard.string(forKey: "user_id")!)Profile.jpeg", mimeType: "image/jpeg")
+                                }
+                                multipartFormData.append((self.callSign).data(using: .utf8)!, withName: "call_sign")
+                                multipartFormData.append(self.name.data(using: .utf8)!, withName: "name")
+                                multipartFormData.append(self.email.data(using: .utf8)!, withName: "email")
                             },
                             to: "http://airhelper.kro.kr/api/cert/user/\(UserDefaults.standard.string(forKey: "user_id")!)", method: .patch , headers: headers)
                             .responseJSON { resp in
-                                print(resp)
-                                
+                                switch resp.result{
+                                case .success:
+                                    self.presentationMode.wrappedValue.dismiss()
+                                case .failure(let error):
+                                    print("Error: \(error)")
+                                    return
+                                }
                             }
                         
                     }) {
