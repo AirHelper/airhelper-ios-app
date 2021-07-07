@@ -14,6 +14,7 @@
 		1329169626789069009C9ADD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1329169526789069009C9ADD /* Preview Assets.xcassets */; };
 		132916A126789069009C9ADD /* AirHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132916A026789069009C9ADD /* AirHelperTests.swift */; };
 		132916AC26789069009C9ADD /* AirHelperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132916AB26789069009C9ADD /* AirHelperUITests.swift */; };
+		133F8BA42694B055008C7C0B /* CreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133F8BA32694B055008C7C0B /* CreateView.swift */; };
 		134B366A2685CFF6009FBCE2 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B36692685CFF6009FBCE2 /* MoreView.swift */; };
 		134B366D268641C6009FBCE2 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B366C268641C6009FBCE2 /* AppState.swift */; };
 		134F2CD02684D72800731212 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134F2CCF2684D72800731212 /* MainTabView.swift */; };
@@ -55,6 +56,7 @@
 		132916A726789069009C9ADD /* AirHelperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AirHelperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		132916AB26789069009C9ADD /* AirHelperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHelperUITests.swift; sourceTree = "<group>"; };
 		132916AD26789069009C9ADD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		133F8BA32694B055008C7C0B /* CreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateView.swift; sourceTree = "<group>"; };
 		134B36692685CFF6009FBCE2 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
 		134B366C268641C6009FBCE2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		134F2CCF2684D72800731212 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
@@ -160,9 +162,18 @@
 			path = AirHelperUITests;
 			sourceTree = "<group>";
 		};
+		133F8BA22694B032008C7C0B /* Create */ = {
+			isa = PBXGroup;
+			children = (
+				133F8BA32694B055008C7C0B /* CreateView.swift */,
+			);
+			path = Create;
+			sourceTree = "<group>";
+		};
 		134B36672685B7FA009FBCE2 /* TabViews */ = {
 			isa = PBXGroup;
 			children = (
+				133F8BA22694B032008C7C0B /* Create */,
 				134B36682685CFE2009FBCE2 /* More */,
 				134F2CCF2684D72800731212 /* MainTabView.swift */,
 			);
@@ -448,6 +459,7 @@
 			files = (
 				1329169126789067009C9ADD /* ContentView.swift in Sources */,
 				1381F975268221410051AF88 /* LoginSettingView.swift in Sources */,
+				133F8BA42694B055008C7C0B /* CreateView.swift in Sources */,
 				1329168F26789067009C9ADD /* AirHelperApp.swift in Sources */,
 				134B366D268641C6009FBCE2 /* AppState.swift in Sources */,
 				134F2CD02684D72800731212 /* MainTabView.swift in Sources */,
