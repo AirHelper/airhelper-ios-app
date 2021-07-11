@@ -32,7 +32,7 @@ struct MainTabView: View {
                 }
                 .tag(Tab.community)
             
-            Text("3")
+            CreateView()
                 .tabItem {
                     Image(systemName: "plus.circle")
                     Text("방 생성")
