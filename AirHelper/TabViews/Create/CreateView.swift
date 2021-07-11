@@ -82,18 +82,21 @@ struct CreateView: View {
                 Divider()
                     .frame(width: gp.size.width * 0.9)
                 
-                ForEach(0..<buttons.count) { button in
-                    Button(action: {
-                        self.buttonSelected = button
-                    }) {
-                        Text("\(self.buttons[button])")
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(self.buttonSelected == button ? Color.blue : Color.green)
-                            .clipShape(Capsule())
+                HStack() {
+                    ForEach(0..<buttons.count) { button in
+                        Button(action: {
+                            self.buttonSelected = button
+                        }) {
+                            Text("\(self.buttons[button])")
+                                .padding()
+                                .foregroundColor(.white)
+                                .frame(width: gp.size.width * 0.3, height: gp.size.width * 0.4)
+                                .background(self.buttonSelected == button ? Color.blue : Color.green)
+                                .clipShape(Rectangle())
+                            //.clipShape(Capsule())
+                        }
                     }
                 }
-                
                 Button(action: {}) {
                     HStack{
                         Spacer()
