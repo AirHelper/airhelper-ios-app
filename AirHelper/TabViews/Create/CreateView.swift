@@ -14,9 +14,9 @@ struct TextFieldWithLabel: View {
         VStack(alignment: .leading, spacing: 10.0) {
             Text(label).font(.headline)
             TextField(placeholder, text: $text)
-            .padding(.all)
-            .clipShape(RoundedRectangle(cornerRadius: 5.0))
-            .background(Color(red: 239.0/255.0, green: 243.0/255, blue: 244.0/255.0, opacity:1.0))
+                .padding(.all)
+                .clipShape(RoundedRectangle(cornerRadius: 5.0))
+                .background(Color(red: 239.0/255.0, green: 243.0/255, blue: 244.0/255.0, opacity:1.0))
         }.padding(.horizontal,15)
     }
 }
@@ -82,34 +82,49 @@ struct CreateView: View {
                 Divider()
                     .frame(width: gp.size.width * 0.9)
                 
-                HStack() {
-                    ForEach(0..<buttons.count) { button in
-                        Button(action: {
-                            self.buttonSelected = button
-                        }) {
-                            Text("\(self.buttons[button])")
-                                .padding()
-                                .foregroundColor(.white)
-                                .frame(width: gp.size.width * 0.3, height: gp.size.width * 0.4)
-                                .background(self.buttonSelected == button ? Color.blue : Color.green)
+                Group(){
+                    HStack(){
+                        Spacer()
+                        Text("게임모드")
+                            .padding()
+                        Spacer()
+                    }
+                    HStack() {
+                        ForEach(0..<buttons.count) { button in
+                            Button(action: {
+                                self.buttonSelected = button
+                            }) {
+                                VStack(){
+                                    Image(self.buttonSelected == button ? self.buttons[button]+"-selected" : self.buttons[button])
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 80)
+                                    Text("\(self.buttons[button])")
+                                        .foregroundColor(self.buttonSelected == button ? Color.blue : Color.gray)
+                                }
+                                .frame(width: gp.size.width * 0.25, height: gp.size.width * 0.35)
                                 .clipShape(Rectangle())
-                            //.clipShape(Capsule())
+                                .border(self.buttonSelected == button ? Color.blue : Color.gray, width: 1)
+                            }
                         }
                     }
+                    
                 }
-                Button(action: {}) {
-                    HStack{
-                        Spacer()
+                
+                
+                Button(action: {
+                    print("Button action")
+                }) {
+                    HStack {
                         Text("생성하기")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                        Spacer()
+                            .font(.title2)
+                            .foregroundColor(Color.white)
                     }
+                    .frame(width: gp.size.width * 0.6, height: gp.size.height * 0.1)
+                    .background(Color.blue)
+                    .cornerRadius(10)
                 }
-                .padding(.vertical, 10.0)
-                .clipShape(RoundedRectangle(cornerRadius: 4.0))
-                .background(Color.blue)
-                .padding(.horizontal, 80)
+                .padding(.top, 30)
                 
             }.listRowInsets(EdgeInsets())
             
