@@ -30,6 +30,7 @@ struct CreateView: View {
     
     let buttons = ["섬멸전", "폭탄전", "스파이전"]
     @State public var buttonSelected: Int?
+    @State private var showingAlert = false
     
     var body: some View {
         GeometryReader { gp in
@@ -45,6 +46,7 @@ struct CreateView: View {
                 SecureField("비밀번호", text: self.$password)
                     .padding()
                     .frame(width: gp.size.width * 0.9)
+                    .keyboardType(.numberPad)
                 
                 Divider()
                     .frame(width: gp.size.width * 0.9)
@@ -114,6 +116,7 @@ struct CreateView: View {
                 
                 Button(action: {
                     print("Button action")
+                    self.create_validation()
                 }) {
                     HStack {
                         Text("생성하기")
@@ -125,10 +128,42 @@ struct CreateView: View {
                     .cornerRadius(10)
                 }
                 .padding(.top, 30)
+                .alert(isPresented: $showingAlert) {
+                    Alert(title: Text("입력"), message: Text("모든 항목을 입력해주세요."), dismissButton: .default(Text("확인")))
+                }
                 
             }.listRowInsets(EdgeInsets())
-            
+
         }
+    }
+    
+    func create_validation() -> Bool {
+        if self.title == "" {
+            self.showingAlert = true
+            return false
+        }
+        else if self.password == "" {
+            self.showingAlert = true
+            return false
+        }
+        else if self.verboseLeft == "" {
+            self.showingAlert = true
+            return false
+        }
+        else if self.verboseRight == "" {
+            self.showingAlert = true
+            return false
+        }
+        else if self.minuties == "" {
+            self.showingAlert = true
+            return false
+        }
+        else if self.buttonSelected == nil {
+            self.showingAlert = true
+            return false
+        }
+        
+        return true
     }
 }
 
