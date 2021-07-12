@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "KeyboardToolbar",
+        "repositoryURL": "https://github.com/cameronshemilt/KeyboardToolbar",
+        "state": {
+          "branch": "main",
+          "revision": "0fa1ea953166fc7f72ac1ff873370891c86aebb1",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

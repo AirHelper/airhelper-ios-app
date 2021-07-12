@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,7 @@
 		134B366D268641C6009FBCE2 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B366C268641C6009FBCE2 /* AppState.swift */; };
 		134F2CD02684D72800731212 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134F2CCF2684D72800731212 /* MainTabView.swift */; };
 		1381F975268221410051AF88 /* LoginSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1381F974268221410051AF88 /* LoginSettingView.swift */; };
+		13F92A46269C58EF009A44F8 /* KeyboardToolbar in Frameworks */ = {isa = PBXBuildFile; productRef = 13F92A45269C58EF009A44F8 /* KeyboardToolbar */; };
 		2E606BAF5C194C1AF4CBE287 /* Pods_AirHelperTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */; };
 		7990E433EEFC083304535C91 /* Pods_AirHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF3011E6E9937A3DEABDF397 /* Pods_AirHelper.framework */; };
 		A8F51866891650DB33C61C4D /* Pods_AirHelper_AirHelperUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9D4AC4A41A234641145D62 /* Pods_AirHelper_AirHelperUITests.framework */; };
@@ -77,6 +78,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7990E433EEFC083304535C91 /* Pods_AirHelper.framework in Frameworks */,
+				13F92A46269C58EF009A44F8 /* KeyboardToolbar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,6 +240,9 @@
 			dependencies = (
 			);
 			name = AirHelper;
+			packageProductDependencies = (
+				13F92A45269C58EF009A44F8 /* KeyboardToolbar */,
+			);
 			productName = AirHelper;
 			productReference = 1329168B26789067009C9ADD /* AirHelper.app */;
 			productType = "com.apple.product-type.application";
@@ -312,6 +317,9 @@
 				Base,
 			);
 			mainGroup = 1329168226789067009C9ADD;
+			packageReferences = (
+				13F92A44269C58EF009A44F8 /* XCRemoteSwiftPackageReference "KeyboardToolbar" */,
+			);
 			productRefGroup = 1329168C26789067009C9ADD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -790,6 +798,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		13F92A44269C58EF009A44F8 /* XCRemoteSwiftPackageReference "KeyboardToolbar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cameronshemilt/KeyboardToolbar";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		13F92A45269C58EF009A44F8 /* KeyboardToolbar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 13F92A44269C58EF009A44F8 /* XCRemoteSwiftPackageReference "KeyboardToolbar" */;
+			productName = KeyboardToolbar;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1329168326789067009C9ADD /* Project object */;
 }

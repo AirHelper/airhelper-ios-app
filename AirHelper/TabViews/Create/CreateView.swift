@@ -1,27 +1,19 @@
-//
-//  CreateView.swift
-//  AirHelper
-//
-//  Created by Junho Son on 2021/07/07.
-//
-
 import SwiftUI
+import KeyboardToolbar
 
-struct TextFieldWithLabel: View {
-    var label: String
-    var placeholder : String
-    @State var text: String = ""
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10.0) {
-            Text(label).font(.headline)
-            TextField(placeholder, text: $text)
-                .padding(.all)
-                .clipShape(RoundedRectangle(cornerRadius: 5.0))
-                .background(Color(red: 239.0/255.0, green: 243.0/255, blue: 244.0/255.0, opacity:1.0))
-        }.padding(.horizontal,15)
-    }
-}
-
+//extension View { // 키보드 밖 화면에서 스크롤시 키보드 사라짐
+//    func endEditing(_ force: Bool) {
+//        UIApplication.shared.windows.forEach { $0.endEditing(force)}
+//    }
+//}
+//extension UIApplication { // 키보드밖 화면 터치시 키보드 사라짐
+//    func endEditing() {
+//        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//    }
+//}
+let toolbarItems: [KeyboardToolbarItem] = [
+    .dismissKeyboard
+]
 struct CreateView: View {
     @State var title: String = ""
     @State var password: String = ""
@@ -136,8 +128,14 @@ struct CreateView: View {
                 }
                 
             }.listRowInsets(EdgeInsets())
-
+            
         }
+//        .onTapGesture(count: 1) { // 키보드밖 화면 터치시 키보드 사라짐
+//            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//        }
+//        .gesture(DragGesture().onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)}) // 키보드 밖 화면에서 스크롤시 키보드 사라짐
+        .keyboardToolbar(toolbarItems)
+        
     }
     
     func create_validation() -> Bool {
