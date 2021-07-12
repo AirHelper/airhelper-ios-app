@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 struct TextFieldWithLabel: View {
     var label: String
     var placeholder : String
@@ -116,7 +117,9 @@ struct CreateView: View {
                 
                 Button(action: {
                     print("Button action")
-                    self.create_validation()
+                    if self.create_validation() == false {
+                        self.showingAlert = true
+                    }
                 }) {
                     HStack {
                         Text("생성하기")
@@ -139,27 +142,21 @@ struct CreateView: View {
     
     func create_validation() -> Bool {
         if self.title == "" {
-            self.showingAlert = true
             return false
         }
         else if self.password == "" {
-            self.showingAlert = true
             return false
         }
         else if self.verboseLeft == "" {
-            self.showingAlert = true
             return false
         }
         else if self.verboseRight == "" {
-            self.showingAlert = true
             return false
         }
         else if self.minuties == "" {
-            self.showingAlert = true
             return false
         }
         else if self.buttonSelected == nil {
-            self.showingAlert = true
             return false
         }
         
