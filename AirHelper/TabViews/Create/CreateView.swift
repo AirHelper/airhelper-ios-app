@@ -28,9 +28,12 @@ struct CreateView: View {
     
     @State var spyPercent : String = ""
     @State var spyMax : String = ""
+    
+    @StateObject private var keyboardHandler = KeyboardHandler()
+    
     var body: some View {
         GeometryReader { gp in
-            ScrollView(.vertical, showsIndicators: false){
+            ScrollView(.vertical){
                 VStack(alignment:.center, spacing: 5) {
                     
                     TextField("방 제목", text: self.$title)
@@ -162,7 +165,10 @@ struct CreateView: View {
             //            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             //        }
             //        .gesture(DragGesture().onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)}) // 키보드 밖 화면에서 스크롤시 키보드 사라짐
+            .padding(.bottom, keyboardHandler.keyboardHeight)
+            .animation(.default)
             .keyboardToolbar(toolbarItems)
+            
         }
     }
     

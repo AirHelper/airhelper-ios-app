@@ -18,6 +18,7 @@
 		134B366A2685CFF6009FBCE2 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B36692685CFF6009FBCE2 /* MoreView.swift */; };
 		134B366D268641C6009FBCE2 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B366C268641C6009FBCE2 /* AppState.swift */; };
 		134F2CD02684D72800731212 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134F2CCF2684D72800731212 /* MainTabView.swift */; };
+		137AFAA3269D7D8D005A7711 /* KeyboardHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137AFAA2269D7D8D005A7711 /* KeyboardHandler.swift */; };
 		1381F975268221410051AF88 /* LoginSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1381F974268221410051AF88 /* LoginSettingView.swift */; };
 		13F92A46269C58EF009A44F8 /* KeyboardToolbar in Frameworks */ = {isa = PBXBuildFile; productRef = 13F92A45269C58EF009A44F8 /* KeyboardToolbar */; };
 		2E606BAF5C194C1AF4CBE287 /* Pods_AirHelperTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */; };
@@ -61,6 +62,7 @@
 		134B36692685CFF6009FBCE2 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
 		134B366C268641C6009FBCE2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		134F2CCF2684D72800731212 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		137AFAA2269D7D8D005A7711 /* KeyboardHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHandler.swift; sourceTree = "<group>"; };
 		1381F974268221410051AF88 /* LoginSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSettingView.swift; sourceTree = "<group>"; };
 		721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AirHelperTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2CFF6FFB4FA43C0D1742B81 /* Pods-AirHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelper.release.xcconfig"; path = "Target Support Files/Pods-AirHelper/Pods-AirHelper.release.xcconfig"; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				1329169726789069009C9ADD /* Info.plist */,
 				1329169426789069009C9ADD /* Preview Content */,
 				1381F974268221410051AF88 /* LoginSettingView.swift */,
+				137AFAA2269D7D8D005A7711 /* KeyboardHandler.swift */,
 			);
 			path = AirHelper;
 			sourceTree = "<group>";
@@ -468,6 +471,7 @@
 				1329169126789067009C9ADD /* ContentView.swift in Sources */,
 				1381F975268221410051AF88 /* LoginSettingView.swift in Sources */,
 				133F8BA42694B055008C7C0B /* CreateView.swift in Sources */,
+				137AFAA3269D7D8D005A7711 /* KeyboardHandler.swift in Sources */,
 				1329168F26789067009C9ADD /* AirHelperApp.swift in Sources */,
 				134B366D268641C6009FBCE2 /* AppState.swift in Sources */,
 				134F2CD02684D72800731212 /* MainTabView.swift in Sources */,
