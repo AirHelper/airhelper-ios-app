@@ -140,8 +140,6 @@ struct CreateView: View {
                             Divider()
                                 .frame(width: gp.size.width * 0.9)
                         }
-                        
-                        
                     }
 
                     Button(action: {
@@ -162,9 +160,8 @@ struct CreateView: View {
                     .alert(isPresented: $showingAlert) {
                         Alert(title: Text("입력"), message: Text("모든 항목을 입력해주세요."), dismissButton: .default(Text("확인")))
                     }
-                    
-                }.listRowInsets(EdgeInsets())
-
+                }
+                .listRowInsets(EdgeInsets())
             }
             //        .onTapGesture(count: 1) { // 키보드밖 화면 터치시 키보드 사라짐
             //            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
