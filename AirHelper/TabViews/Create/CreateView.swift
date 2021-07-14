@@ -1,6 +1,6 @@
 import SwiftUI
 import KeyboardToolbar
-
+import MapKit
 //extension View { // 키보드 밖 화면에서 스크롤시 키보드 사라짐
 //    func endEditing(_ force: Bool) {
 //        UIApplication.shared.windows.forEach { $0.endEditing(force)}
@@ -30,11 +30,11 @@ struct CreateView: View {
     @State var spyMax : String = ""
     
     @StateObject private var keyboardHandler = KeyboardHandler()
-    
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
     var body: some View {
         GeometryReader { gp in
-            ScrollView(.vertical){
-                VStack(alignment:.center, spacing: 5) {
+            ScrollView(.vertical, showsIndicators: false){
+                VStack(alignment:.center, spacing: 0) {
                     
                     TextField("방 제목", text: self.$title)
                         .padding()
@@ -112,7 +112,10 @@ struct CreateView: View {
                         }
                         
                         if self.buttonSelected == 1 {
-                            Text("폭탄전")
+                            Text("폭탄 설치 범위를 설정해주세요.")
+                                .padding(.vertical, 30)
+                            Map(coordinateRegion: $region, showsUserLocation: true, userTrackingMode: .constant(.follow))
+                                .frame(width: gp.size.width * 0.9, height: gp.size.height * 0.5)
                         }
                         else if self.buttonSelected == 2 {
                             HStack() {
@@ -153,13 +156,13 @@ struct CreateView: View {
                         .background(Color.blue)
                         .cornerRadius(10)
                     }
-                    .padding(.top, 10)
+                    .padding(.vertical, 30)
                     .alert(isPresented: $showingAlert) {
                         Alert(title: Text("입력"), message: Text("모든 항목을 입력해주세요."), dismissButton: .default(Text("확인")))
                     }
                     
                 }.listRowInsets(EdgeInsets())
-                
+
             }
             //        .onTapGesture(count: 1) { // 키보드밖 화면 터치시 키보드 사라짐
             //            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -168,7 +171,8 @@ struct CreateView: View {
             .padding(.bottom, keyboardHandler.keyboardHeight)
             .animation(.default)
             .keyboardToolbar(toolbarItems)
-            
+            .border(Color.green)
+            .frame(height: gp.size.height)
         }
     }
     
@@ -192,6 +196,14 @@ struct CreateView: View {
             return false
         }
         
+        if self.buttonSelected == 2 {
+            if self.spyMax == "" {
+                return false
+            }
+            else if self.spyPercent == "" {
+                return false
+            }
+        }
         return true
     }
 }
