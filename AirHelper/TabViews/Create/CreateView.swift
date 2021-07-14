@@ -112,10 +112,11 @@ struct CreateView: View {
                         }
                         
                         if self.buttonSelected == 1 {
-                            Text("폭탄 설치 범위를 설정해주세요.")
+                            Text("폭탄 설치지역 설정")
                                 .padding(.vertical, 30)
                             Map(coordinateRegion: $region, showsUserLocation: true, userTrackingMode: .constant(.follow))
-                                .frame(width: gp.size.width * 0.9, height: gp.size.height * 0.5)
+                                .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
+                            
                         }
                         else if self.buttonSelected == 2 {
                             HStack() {
@@ -139,24 +140,25 @@ struct CreateView: View {
                             Divider()
                                 .frame(width: gp.size.width * 0.9)
                         }
+                        
+                        
                     }
-                    
+
                     Button(action: {
                         print("Button action")
                         if self.create_validation() == false {
                             self.showingAlert = true
                         }
                     }) {
-                        HStack {
-                            Text("생성하기")
-                                .font(.title2)
-                                .foregroundColor(Color.white)
-                        }
-                        .frame(width: gp.size.width * 0.6, height: gp.size.height * 0.1)
-                        .background(Color.blue)
-                        .cornerRadius(10)
+                        Text("생성하기")
+                            .font(.title2)
+                            .foregroundColor(Color.white)
+                            .frame(width: gp.size.width * 0.6, height: gp.size.height * 0.1)
+                            .background(Color.blue)
+                            .cornerRadius(10)
                     }
-                    .padding(.vertical, 30)
+                    .padding(.top, 30)
+                    .padding(.bottom, 100)
                     .alert(isPresented: $showingAlert) {
                         Alert(title: Text("입력"), message: Text("모든 항목을 입력해주세요."), dismissButton: .default(Text("확인")))
                     }
@@ -171,8 +173,6 @@ struct CreateView: View {
             .padding(.bottom, keyboardHandler.keyboardHeight)
             .animation(.default)
             .keyboardToolbar(toolbarItems)
-            .border(Color.green)
-            .frame(height: gp.size.height)
         }
     }
     
