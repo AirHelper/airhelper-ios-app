@@ -30,7 +30,18 @@ struct CreateView: View {
     @State var spyMax : String = ""
     
     @StateObject private var keyboardHandler = KeyboardHandler()
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+
+    @StateObject var locationManager = LocationManager()
+    //서울 좌표
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5666791, longitude: 126.9782914), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+    
+//        var userLatitude: String {
+//            return "\(locationManager.lastLocation?.coordinate.latitude ?? 0)"
+//        }
+//
+//        var userLongitude: String {
+//            return "\(locationManager.lastLocation?.coordinate.longitude ?? 0)"
+//        }
     var body: some View {
         GeometryReader { gp in
             ScrollView(.vertical, showsIndicators: false){

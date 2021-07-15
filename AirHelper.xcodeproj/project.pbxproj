@@ -20,6 +20,7 @@
 		134F2CD02684D72800731212 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134F2CCF2684D72800731212 /* MainTabView.swift */; };
 		137AFAA3269D7D8D005A7711 /* KeyboardHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137AFAA2269D7D8D005A7711 /* KeyboardHandler.swift */; };
 		1381F975268221410051AF88 /* LoginSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1381F974268221410051AF88 /* LoginSettingView.swift */; };
+		13EC5FA226A014F3004ABFD6 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13EC5FA126A014F3004ABFD6 /* LocationManager.swift */; };
 		13F92A46269C58EF009A44F8 /* KeyboardToolbar in Frameworks */ = {isa = PBXBuildFile; productRef = 13F92A45269C58EF009A44F8 /* KeyboardToolbar */; };
 		2E606BAF5C194C1AF4CBE287 /* Pods_AirHelperTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */; };
 		7990E433EEFC083304535C91 /* Pods_AirHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF3011E6E9937A3DEABDF397 /* Pods_AirHelper.framework */; };
@@ -64,6 +65,7 @@
 		134F2CCF2684D72800731212 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		137AFAA2269D7D8D005A7711 /* KeyboardHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHandler.swift; sourceTree = "<group>"; };
 		1381F974268221410051AF88 /* LoginSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSettingView.swift; sourceTree = "<group>"; };
+		13EC5FA126A014F3004ABFD6 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AirHelperTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2CFF6FFB4FA43C0D1742B81 /* Pods-AirHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelper.release.xcconfig"; path = "Target Support Files/Pods-AirHelper/Pods-AirHelper.release.xcconfig"; sourceTree = "<group>"; };
 		A5AB9E51A6C68D565DA12DDB /* Pods-AirHelper-AirHelperUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AirHelper-AirHelperUITests.release.xcconfig"; path = "Target Support Files/Pods-AirHelper-AirHelperUITests/Pods-AirHelper-AirHelperUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				133F8BA32694B055008C7C0B /* CreateView.swift */,
+				13EC5FA126A014F3004ABFD6 /* LocationManager.swift */,
 			);
 			path = Create;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 			files = (
 				1329169126789067009C9ADD /* ContentView.swift in Sources */,
 				1381F975268221410051AF88 /* LoginSettingView.swift in Sources */,
+				13EC5FA226A014F3004ABFD6 /* LocationManager.swift in Sources */,
 				133F8BA42694B055008C7C0B /* CreateView.swift in Sources */,
 				137AFAA3269D7D8D005A7711 /* KeyboardHandler.swift in Sources */,
 				1329168F26789067009C9ADD /* AirHelperApp.swift in Sources */,
