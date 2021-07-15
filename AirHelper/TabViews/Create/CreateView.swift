@@ -125,7 +125,7 @@ struct CreateView: View {
                         if self.buttonSelected == 1 {
                             Text("폭탄 설치지역 설정")
                                 .padding(.vertical, 30)
-                            Map(coordinateRegion: $region, showsUserLocation: true, userTrackingMode: .constant(.follow))
+                            Map(coordinateRegion: $region, showsUserLocation: false, userTrackingMode: .constant(.follow))
                                 .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
                             
                         }
