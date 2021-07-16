@@ -11,12 +11,14 @@ PODS:
     - KakaoSDKCommon/Common (= 2.5.3)
   - KakaoSDKUser (2.5.3):
     - KakaoSDKAuth (= 2.5.3)
+  - NMapsMap (3.13.0)
 
 DEPENDENCIES:
   - Alamofire (~> 5.4)
   - KakaoSDKAuth
   - KakaoSDKCommon
   - KakaoSDKUser
+  - NMapsMap
 
 SPEC REPOS:
   trunk:
@@ -24,13 +26,15 @@ SPEC REPOS:
     - KakaoSDKAuth
     - KakaoSDKCommon
     - KakaoSDKUser
+    - NMapsMap
 
 SPEC CHECKSUMS:
   Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
   KakaoSDKAuth: b1a0b9a84c21c967c4139d221edce83a7f15cdfe
   KakaoSDKCommon: 08548932f6f570215ea038241a98157c0b3f7a8b
   KakaoSDKUser: 5d2de71fe070455bbaaad6a37af3eb500fbc8972
+  NMapsMap: 88b5bdac7087bfa99ab058ff5cdd95fb766e0e95
 
-PODFILE CHECKSUM: 300f5bf1176850f4e96e3369f69f7f765254534b
+PODFILE CHECKSUM: 92160beca9be11f2011b019a28eb66fccdabcc14
 
 COCOAPODS: 1.10.1

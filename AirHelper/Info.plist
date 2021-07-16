@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>사용자의 위치를 받습니다.</string>
+	<key>NMFClientId</key>
+	<string>aoikqbnbpq</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>앱이 사용중일때만 가져오기</string>
 	<key>UIUserInterfaceStyle</key>
