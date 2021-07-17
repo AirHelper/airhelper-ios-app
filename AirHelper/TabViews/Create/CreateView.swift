@@ -2,45 +2,9 @@ import SwiftUI
 import KeyboardToolbar
 import MapKit
 import NMapsMap
-//extension View { // 키보드 밖 화면에서 스크롤시 키보드 사라짐
-//    func endEditing(_ force: Bool) {
-//        UIApplication.shared.windows.forEach { $0.endEditing(force)}
-//    }
-//}
-//extension UIApplication { // 키보드밖 화면 터치시 키보드 사라짐
-//    func endEditing() {
-//        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//    }
-//}
-let toolbarItems: [KeyboardToolbarItem] = [
-    .dismissKeyboard
-]
+import Combine
 
 
-struct MapView: UIViewRepresentable {
-  @ObservedObject var viewModel = MapSceneViewModel()
-  @StateObject var locationManager = LocationManager()
-  @State var userLatitude: Double
-  @State var userLongitude: Double
-    
-  func makeUIView(context: Context) -> NMFNaverMapView {
-    let view = NMFNaverMapView()
-    view.showZoomControls = false
-    view.mapView.zoomLevel = 17
-    view.mapView.mapType = .hybrid
-
-    let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: userLatitude, lng: userLongitude))
-    view.mapView.moveCamera(cameraUpdate)
-    return view
-  }
-
-  func updateUIView(_ uiView: NMFNaverMapView, context: Context) {}
-    
-}
-
-class MapSceneViewModel: ObservableObject {
-
-}
 struct CreateView: View {
     @State var title: String = ""
     @State var password: String = ""
@@ -56,28 +20,28 @@ struct CreateView: View {
     @State var spyMax : String = ""
     
     @StateObject private var keyboardHandler = KeyboardHandler()
-
+    
     @StateObject var locationManager = LocationManager()
-     var userLatitude: Double {
+    var userLatitude: Double {
         return locationManager.lastLocation?.coordinate.latitude ?? 0
     }
-
-     var userLongitude: Double {
+    
+    var userLongitude: Double {
         return locationManager.lastLocation?.coordinate.longitude ?? 0
     }
-//    var userLatitude: String {
-//        return "\(locationManager.lastLocation?.coordinate.latitude ?? 0)"
-//    }
-//
-//    var userLongitude: String {
-//        return "\(locationManager.lastLocation?.coordinate.longitude ?? 0)"
-//      }
-        
+    //    var userLatitude: String {
+    //        return "\(locationManager.lastLocation?.coordinate.latitude ?? 0)"
+    //    }
+    //
+    //    var userLongitude: String {
+    //        return "\(locationManager.lastLocation?.coordinate.longitude ?? 0)"
+    //      }
+    
     //서울 좌표
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5666791, longitude: 126.9782914), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
     
-
-        
+    
+    
     var body: some View {
         GeometryReader { gp in
             ScrollView(.vertical, showsIndicators: false){
@@ -161,19 +125,15 @@ struct CreateView: View {
                         if self.buttonSelected == 1 {
                             Text("폭탄 설치지역 설정")
                                 .padding(.vertical, 30)
-                           
-
+                            
+                            
                             MapView(userLatitude: self.userLatitude, userLongitude: self.userLongitude)
                                 .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
-                                
-
-//                            Map(coordinateRegion: $region, showsUserLocation: false, userTrackingMode: .constant(.follow))
-//                                .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
-//                                .gesture(
-//                                    TapGesture().onEnded { _ in
-//
-//                                    }
-//                                )
+                            
+                            
+                            //                            Map(coordinateRegion: $region, showsUserLocation: false, userTrackingMode: .constant(.follow))
+                            //                                .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
+                            
                             
                         }
                         else if self.buttonSelected == 2 {
@@ -199,7 +159,7 @@ struct CreateView: View {
                                 .frame(width: gp.size.width * 0.9)
                         }
                     }
-
+                    
                     Button(action: {
                         print("Button action")
                         if self.create_validation() == false {
