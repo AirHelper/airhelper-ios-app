@@ -44,12 +44,30 @@ struct MapView: UIViewRepresentable {
     class Coordinator: NSObject, NMFMapViewTouchDelegate, NMFMapViewCameraDelegate, NMFMapViewOptionDelegate {
         @ObservedObject var viewModel: MapSceneViewModel
         var cancellable = Set<AnyCancellable>()
+        let circle = NMFCircleOverlay()
         
         init(viewModel: MapSceneViewModel) {
             self.viewModel = viewModel
         }
         func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
             print("지도 탭")
+            print(latlng.lat)
+            print(latlng.lng)
+            //let circle = NMFCircleOverlay()
+            if circle.mapView != nil {
+                circle.mapView = nil
+            }
+            circle.center = NMGLatLng(lat: latlng.lat, lng: latlng.lng)
+            circle.radius = 10
+            circle.fillColor = UIColor.green.withAlphaComponent(0.75)
+            circle.outlineWidth = 1
+            circle.outlineColor = UIColor.red
+            circle.touchHandler = { (overlay: NMFOverlay) -> Bool in
+                overlay.mapView = nil
+                return true
+            }
+            circle.mapView = mapView
+            
         }
     }
     
