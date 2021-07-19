@@ -54,6 +54,10 @@ struct MoreView: View {
                                             self.shouldPopToRoot = false
                                         case .failure(let error):
                                             print("Error: \(error)")
+                                            UserDefaults.standard.removeObject(forKey: "refresh_token")
+                                            UserDefaults.standard.removeObject(forKey: "access_token")
+                                            UserDefaults.standard.removeObject(forKey: "user_id")
+                                            self.shouldPopToRoot = false
                                             return
                                         }
                                         
