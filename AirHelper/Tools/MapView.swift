@@ -50,10 +50,6 @@ struct MapView: UIViewRepresentable {
             self.viewModel = viewModel
         }
         func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
-            print("지도 탭")
-            print(latlng.lat)
-            print(latlng.lng)
-            //let circle = NMFCircleOverlay()
             if circle.mapView != nil {
                 circle.mapView = nil
             }
@@ -67,7 +63,6 @@ struct MapView: UIViewRepresentable {
                 return true
             }
             circle.mapView = mapView
-            
         }
     }
     

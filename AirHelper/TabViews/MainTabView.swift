@@ -39,7 +39,7 @@ struct MainTabView: View {
                 }
                 .tag(Tab.add)
             
-            Text("4")
+            RoomListView()
                 .tabItem {
                     Image(systemName: "gamecontroller.fill")
                     Text("방 참가")
