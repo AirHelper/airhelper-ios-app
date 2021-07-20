@@ -204,6 +204,7 @@ struct CreateView: View {
             .padding(.bottom, keyboardHandler.keyboardHeight)
             .animation(.default)
             .keyboardToolbar(toolbarItems)
+            
         }
     }
     

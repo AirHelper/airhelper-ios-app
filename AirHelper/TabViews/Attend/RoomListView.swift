@@ -12,7 +12,8 @@ struct RoomListView: View {
         GeometryReader { gp in
             ScrollView(.vertical, showsIndicators: false){
                 Spacer()
-                NavigationLink(destination: AttendView()){
+                
+                NavigationLink(destination: PasswordView()){
                     VStack(alignment: .leading, spacing: 0){
                         Text("팀 내전")
                             .bold()
@@ -50,7 +51,7 @@ struct RoomListView: View {
                     
                 }
                 Spacer()
-                NavigationLink(destination: AttendView()){
+                NavigationLink(destination: PasswordView()){
                     VStack(alignment: .leading, spacing: 0){
                         Text("팀 내전")
                             .bold()
@@ -86,7 +87,7 @@ struct RoomListView: View {
                     .foregroundColor(Color.white)
                 }
                 Spacer()
-                NavigationLink(destination: AttendView()){
+                NavigationLink(destination: PasswordView()){
                     VStack(alignment: .leading, spacing: 0){
                         Text("팀 내전")
                             .bold()
@@ -121,13 +122,23 @@ struct RoomListView: View {
                     .cornerRadius(5)
                     .foregroundColor(Color.white)
                 }
-                
-                
-                
-                
+
+
             }
             .frame(width: gp.size.width)
             .border(Color.green)
+            .navigationBarItems(
+                trailing:
+                    Button(action: {
+                        print("dd")
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                            .resizable()
+                            .foregroundColor(Color.black)
+                            .scaledToFit()
+                            .frame(width: gp.size.width * 0.06)
+                    }
+            )
         }
     }
 }
@@ -138,12 +149,3 @@ struct AttendView_Previews: PreviewProvider {
     }
 }
 
-struct AttendView: View {
-    var body: some View {
-        GeometryReader { gp in
-            ScrollView(.vertical, showsIndicators: true){
-                
-            }
-        }
-    }
-}
