@@ -53,11 +53,12 @@ struct MainLoginView: View {
                                        isActive: self.$isActive) {
                             EmptyView()
                         }
+                        .isDetailLink(false)
                         NavigationLink(destination: MainTabView(shouldPopToRoot: self.$autoIsActive),
                                        isActive: self.$autoIsActive) {
                             EmptyView()
                         }
-                        
+                        .isDetailLink(false)
                         Button(action:{
                             // 카카오톡 설치 여부 확인
                             if (UserApi.isKakaoTalkLoginAvailable()) {

@@ -20,7 +20,7 @@ struct LoginSettingView: View {
                 NavigationLink(destination: MainTabView(shouldPopToRoot: self.$rootIsActive).navigationTitle("dd"), tag: 1, selection: self.$tag) {
                     EmptyView()
                 }
-                
+                .isDetailLink(false)
                 Form {
                     HStack(alignment: .center) {
                         Text("콜 사인")
