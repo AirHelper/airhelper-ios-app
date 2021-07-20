@@ -38,9 +38,7 @@ struct CreateView: View {
     //      }
     
     //서울 좌표
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5666791, longitude: 126.9782914), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
-    
-    
+//    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5666791, longitude: 126.9782914), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
     
     var body: some View {
         GeometryReader { gp in
@@ -50,7 +48,9 @@ struct CreateView: View {
                     TextField("방 제목", text: self.$title)
                         .padding()
                         .frame(width: gp.size.width * 0.9)
-                    
+                        .onReceive(title.publisher.collect()) {
+                            self.title = String($0.prefix(15))
+                        }
                     Divider()
                         .frame(width: gp.size.width * 0.9)
                     
@@ -58,7 +58,9 @@ struct CreateView: View {
                         .padding()
                         .frame(width: gp.size.width * 0.9)
                         .keyboardType(.numberPad)
-                    
+                        .onReceive(password.publisher.collect()) {
+                            self.password = String($0.prefix(6))
+                        }
                     Divider()
                         .frame(width: gp.size.width * 0.9)
                     
@@ -68,6 +70,9 @@ struct CreateView: View {
                             .padding()
                             .frame(width: gp.size.width * 0.2, alignment: .center)
                             .multilineTextAlignment(.center)
+                            .onReceive(verboseLeft.publisher.collect()) {
+                                self.verboseLeft = String($0.prefix(3))
+                            }
                         Text("VS")
                             .padding()
                         TextField("5", text: self.$verboseRight)
@@ -75,6 +80,9 @@ struct CreateView: View {
                             .padding()
                             .frame(width: gp.size.width * 0.2, alignment: .center)
                             .multilineTextAlignment(.center)
+                            .onReceive(verboseRight.publisher.collect()) {
+                                self.verboseRight = String($0.prefix(3))
+                            }
                     }
                     
                     Divider()
@@ -86,7 +94,9 @@ struct CreateView: View {
                             .padding()
                             .multilineTextAlignment(.trailing)
                             .frame(width: gp.size.width * 0.7)
-                        
+                            .onReceive(minuties.publisher.collect()) {
+                                self.minuties = String($0.prefix(3))
+                            }
                         Text("분")
                             .padding()
                             .frame(width: gp.size.width * 0.2)
@@ -143,6 +153,9 @@ struct CreateView: View {
                                     .padding()
                                     .multilineTextAlignment(.trailing)
                                     .frame(width: gp.size.width * 0.7)
+                                    .onReceive(spyPercent.publisher.collect()) {
+                                        self.spyPercent = String($0.prefix(2))
+                                    }
                                 Text("%")
                             }
                             Divider()
@@ -153,6 +166,9 @@ struct CreateView: View {
                                     .padding()
                                     .multilineTextAlignment(.trailing)
                                     .frame(width: gp.size.width * 0.7)
+                                    .onReceive(spyMax.publisher.collect()) {
+                                        self.spyMax = String($0.prefix(2))
+                                    }
                                 Text("명")
                             }
                             Divider()
