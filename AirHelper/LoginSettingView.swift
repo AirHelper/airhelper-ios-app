@@ -17,7 +17,7 @@ struct LoginSettingView: View {
     var body: some View {
         GeometryReader { gp in
             ZStack() {
-                NavigationLink(destination: MainTabView(shouldPopToRoot: self.$rootIsActive).navigationTitle("dd"), tag: 1, selection: self.$tag) {
+                NavigationLink(destination: MainTabView(shouldPopToRoot: self.$rootIsActive), tag: 1, selection: self.$tag) {
                     EmptyView()
                 }
                 .isDetailLink(false)

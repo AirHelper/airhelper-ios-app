@@ -177,7 +177,7 @@ struct MainLoginView: View {
 }
 
 struct ContentView: View {
-    
+
     var body: some View {
         if let _ = UserDefaults.standard.string(forKey: "access_token"), let _ = UserDefaults.standard.string(forKey: "refresh_token") {
             GeometryReader() { gp in

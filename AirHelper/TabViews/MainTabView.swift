@@ -16,16 +16,15 @@ struct MainTabView: View {
     }
     var body: some View {
         TabView(selection: $currentTab) {
+            
             FieldReservView()
-                .navigationBarTitle("예약", displayMode: .inline)
                 .tabItem {
                     Image(systemName: "clock.fill")
                     Text("필드 예약")
                 }
                 .tag(Tab.reserve)
-            
+                
             Text("2")
-                .navigationBarTitle("커뮤니티", displayMode: .inline)
                 .tabItem {
                     Image(systemName: "bubble.left.and.bubble.right.fill")
                     Text("커뮤니티")
@@ -60,7 +59,23 @@ struct MainTabView: View {
         //.navigationBarHidden(true)
         .navigationBarTitle(Text(currentTab.rawValue), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        
+        .navigationBarItems(trailing: navigationBarLeadingItems)
+    }
+    
+    @ViewBuilder
+    var navigationBarLeadingItems: some View {
+        if currentTab == .attend {
+            Button(action: {
+                print("dd")
+            }) {
+                Image(systemName: "magnifyingglass")
+                    .resizable()
+                    .foregroundColor(Color.black)
+                    .scaledToFit()
+                    .frame(width: 20)
+                    .opacity(0.6)
+            }
+        }
     }
 }
 
