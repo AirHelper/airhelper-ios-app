@@ -9,6 +9,11 @@ import SwiftUI
 
 struct PasswordView: View {
     @State var appeared: Double = 0
+    
+//    init(){
+//        UINavigationBar.setAnimationsEnabled(false)
+//    }
+    
     var body: some View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 5){
@@ -17,6 +22,8 @@ struct PasswordView: View {
                 Text("참여코드를 입력해 주십시오.")
                     .font(.title3)
                     .foregroundColor(Color.gray)
+                
+
             }
             .frame(width:gp.size.width, height: gp.size.height / 1.5)
             .border(Color.green)

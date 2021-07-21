@@ -9,7 +9,6 @@ import SwiftUI
 
 
 struct RoomListView: View {
-    //@State var text : String = ""
     
     var body: some View {
         GeometryReader { gp in
