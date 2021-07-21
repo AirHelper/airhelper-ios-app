@@ -23,13 +23,10 @@ struct PasswordView: View {
             .navigationBarBackButtonHidden(true)
             
         }
-        .transition(AnyTransition.opacity.animation(.easeOut(duration: 2)))
         .opacity(appeared)
         .animation(Animation.easeInOut(duration: 3.0), value: appeared)
         .onAppear {self.appeared = 1.0}
         .onDisappear {self.appeared = 0.0}
-        
-        
     }
 }
 
