@@ -106,8 +106,7 @@ struct PasswordView: View {
                     .frame(width: gp.size.width * 0.4)
                 
             }
-            .frame(width:gp.size.width, height: gp.size.height / 1.0)
-            .border(Color.green)
+            .frame(width:gp.size.width, height: gp.size.height / 1.1)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(leading: navigationBarLeadingItems)
         }
