@@ -92,6 +92,7 @@ struct PasswordView: View {
                     .onReceive(password.publisher.collect()) {
                         self.password = String($0.prefix(6))
                         if password.count == 6 {
+                            //여기에 비번 확인 작업
                             print("6개")
                         }
                     }
