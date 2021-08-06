@@ -3,7 +3,17 @@ import KeyboardToolbar
 import MapKit
 import NMapsMap
 import Combine
+import Alamofire
 
+
+struct GameBasicInfo: Codable {
+    var title: String
+    var password: String
+    var verboseLeft: String
+    var verboseRight: String
+    var time: String
+    var game_type: Int
+}
 
 struct CreateView: View {
     @State var title: String = ""
@@ -180,6 +190,35 @@ struct CreateView: View {
                         print("Button action")
                         if self.create_validation() == false {
                             self.showingAlert = true
+                        }
+                        else {
+                            let encoder = JSONEncoder()
+                            encoder.outputFormatting = .prettyPrinted
+                            
+                            let room = GameBasicInfo(title: self.title, password: self.password, verboseLeft: self.verboseLeft, verboseRight: self.verboseRight, time: self.minuties, game_type: self.buttonSelected!)
+                            
+                            let data = try! encoder.encode(room)
+                            print(String(data: data, encoding: .utf8)!)
+                            
+                            AF.request("http://airhelper.kro.kr/api/game/room", method: .post, parameters: [
+                                "title": self.title,
+                                "password": self.password,
+                                "verbose_left": self.verboseLeft,
+                                "verbose_right": self.verboseRight,
+                                "time": self.minuties,
+                                "game_type": self.buttonSelected!
+                            ], encoding: URLEncoding.httpBody).responseJSON() { response in
+                                switch response.result {
+                                case .success:
+                                    if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
+                                        print(data)
+                                    }
+                                case .failure(let error):
+                                    print("Error: \(error)")
+                                    return
+                                }
+                                
+                            }
                         }
                     }) {
                         Text("생성하기")
