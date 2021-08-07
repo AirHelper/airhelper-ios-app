@@ -5,7 +5,6 @@ import NMapsMap
 import Combine
 import Alamofire
 
-
 struct CreateView: View {
     @State var title: String = ""
     @State var password: String = ""
@@ -39,7 +38,7 @@ struct CreateView: View {
     //      }
     
     //서울 좌표
-//    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5666791, longitude: 126.9782914), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+    //    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5666791, longitude: 126.9782914), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
     
     var body: some View {
         GeometryReader { gp in
@@ -195,7 +194,19 @@ struct CreateView: View {
                                 case .success:
                                     if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
                                         print(data)
-                                        
+                                        if let room_id = data["id"] {
+                                            print("통과")
+                                            let urlSession = URLSession(configuration: .default)
+                                            let urlStr = "ws://airhelper.kro.kr/ws/create/\(room_id)/"
+                                            if let encoded = urlStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                                                let webSocketTask = urlSession.webSocketTask(with: URL(string: encoded)!)
+                                                webSocketTask.resume()
+                                            }
+                                        }
+                                        else{
+                                            print("XXXXXX")
+                                        }
+                                            
                                     }
                                 case .failure(let error):
                                     print("Error: \(error)")

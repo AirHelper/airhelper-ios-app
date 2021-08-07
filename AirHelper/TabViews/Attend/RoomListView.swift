@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Alamofire
 
 
 struct RoomListView: View {
@@ -128,7 +129,6 @@ struct RoomListView: View {
                 }
                 .frame(width: gp.size.width)
                 .border(Color.green)
-                
                 .navigationBarItems(
                     trailing:
                         Button(action: {
@@ -141,9 +141,39 @@ struct RoomListView: View {
                                 .frame(width: gp.size.width * 0.06)
                         }
                 )
+                .onAppear(perform: {
+                    print("dddd")
+                    AF.request("http://airhelper.kro.kr/api/game/room", method: .get).responseJSON() { response in
+                        switch response.result {
+                        case .success(let responseObject):
+                            do {
+                                let data = try JSONSerialization.data(withJSONObject: responseObject, options: .prettyPrinted)
+                                
+                                let userlists = try JSONDecoder().decode([GameRoom].self, from: data)
+                                print(userlists[0].title)
+                            }
+                            catch { }
+
+                        case .failure(let error):
+                            print("Error: \(error)")
+                            return
+                        }
+                    }
+                })
             }
         }
     }
+}
+
+
+struct GameRoom: Codable {
+    var id: Int
+    var title: String
+    var password: String
+    var verbose_left: Int
+    var verbose_right: Int
+    var time: Int
+    var game_type: Int
 }
 
 struct AttendView_Previews: PreviewProvider {
