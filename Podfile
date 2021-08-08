@@ -1,8 +1,8 @@
 # Uncomment the next line to define a global platform for your project
 # platform :ios, '9.0'
-pod 'KakaoSDKCommon'  # 필수 요소를 담은 공통 모듈
-pod 'KakaoSDKAuth'  # 카카오 로그인
-pod 'KakaoSDKUser'  # 사용자 관리
+pod 'KakaoSDKCommon', '2.5.5'  # 필수 요소를 담은 공통 모듈
+pod 'KakaoSDKAuth', '2.5.5'  # 카카오 로그인
+pod 'KakaoSDKUser', '2.5.5'  # 사용자 관리
 pod 'Alamofire', '~> 5.4'
 pod 'NMapsMap'  # 네이버 지도
 
