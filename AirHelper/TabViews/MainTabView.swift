@@ -7,10 +7,13 @@
 
 import SwiftUI
 
+
+
+
 struct MainTabView: View {
     @Binding var shouldPopToRoot : Bool
     @State private var currentTab: Tab = .reserve
-    
+
     private enum Tab: String {
         case reserve="필드 예약", community="커뮤니티", add="방 생성", attend="방 참가", more="더보기"
     }
@@ -45,6 +48,7 @@ struct MainTabView: View {
                     Text("방 참가")
                 }
                 .tag(Tab.attend)
+
             
             
             MoreView(shouldPopToRoot: self.$shouldPopToRoot)
@@ -59,24 +63,24 @@ struct MainTabView: View {
         //.navigationBarHidden(true)
         .navigationBarTitle(Text(currentTab.rawValue), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(trailing: navigationBarLeadingItems)
+        //.navigationBarItems(leading: navigationBarLeadingItems)
     }
     
-    @ViewBuilder
-    var navigationBarLeadingItems: some View {
-        if currentTab == .attend {
-            Button(action: {
-                print("dd")
-            }) {
-                Image(systemName: "magnifyingglass")
-                    .resizable()
-                    .foregroundColor(Color.black)
-                    .scaledToFit()
-                    .frame(width: 20)
-                    .opacity(0.6)
-            }
-        }
-    }
+//    @ViewBuilder
+//    var navigationBarLeadingItems: some View {
+//        if currentTab == .attend {
+//            Button(action: {
+//                
+//            }) {
+//                Image(systemName: "goforward")
+//                    .resizable()
+//                    .foregroundColor(Color.black)
+//                    .scaledToFit()
+//                    .frame(width: 20)
+//                    .opacity(0.6)
+//            }
+//        }
+//    }
 }
 
 //struct MainTabView_Previews: PreviewProvider {

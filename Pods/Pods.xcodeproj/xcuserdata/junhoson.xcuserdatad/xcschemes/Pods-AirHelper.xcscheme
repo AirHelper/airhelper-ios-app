@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5C1AD1329870D3A332A9475CA7368917"
-               BuildableName = "Pods_AirHelper.framework"
+               BuildableName = "Pods-AirHelper.framework"
                BlueprintName = "Pods-AirHelper"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

@@ -15,6 +15,7 @@
 		132916A126789069009C9ADD /* AirHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132916A026789069009C9ADD /* AirHelperTests.swift */; };
 		132916AC26789069009C9ADD /* AirHelperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132916AB26789069009C9ADD /* AirHelperUITests.swift */; };
 		133F8BA42694B055008C7C0B /* CreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133F8BA32694B055008C7C0B /* CreateView.swift */; };
+		134414D726C1A52200169BE3 /* SwiftUIPullToRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = 134414D626C1A52200169BE3 /* SwiftUIPullToRefresh */; };
 		134B366A2685CFF6009FBCE2 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B36692685CFF6009FBCE2 /* MoreView.swift */; };
 		134B366D268641C6009FBCE2 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134B366C268641C6009FBCE2 /* AppState.swift */; };
 		134F2CD02684D72800731212 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134F2CCF2684D72800731212 /* MainTabView.swift */; };
@@ -93,6 +94,7 @@
 			files = (
 				7990E433EEFC083304535C91 /* Pods_AirHelper.framework in Frameworks */,
 				13F92A46269C58EF009A44F8 /* KeyboardToolbar in Frameworks */,
+				134414D726C1A52200169BE3 /* SwiftUIPullToRefresh in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +289,7 @@
 			name = AirHelper;
 			packageProductDependencies = (
 				13F92A45269C58EF009A44F8 /* KeyboardToolbar */,
+				134414D626C1A52200169BE3 /* SwiftUIPullToRefresh */,
 			);
 			productName = AirHelper;
 			productReference = 1329168B26789067009C9ADD /* AirHelper.app */;
@@ -364,6 +367,7 @@
 			mainGroup = 1329168226789067009C9ADD;
 			packageReferences = (
 				13F92A44269C58EF009A44F8 /* XCRemoteSwiftPackageReference "KeyboardToolbar" */,
+				134414D526C1A52200169BE3 /* XCRemoteSwiftPackageReference "swiftui-pull-to-refresh" */,
 			);
 			productRefGroup = 1329168C26789067009C9ADD /* Products */;
 			projectDirPath = "";
@@ -852,6 +856,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		134414D526C1A52200169BE3 /* XCRemoteSwiftPackageReference "swiftui-pull-to-refresh" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/globulus/swiftui-pull-to-refresh";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 		13F92A44269C58EF009A44F8 /* XCRemoteSwiftPackageReference "KeyboardToolbar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/cameronshemilt/KeyboardToolbar";
@@ -863,6 +875,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		134414D626C1A52200169BE3 /* SwiftUIPullToRefresh */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 134414D526C1A52200169BE3 /* XCRemoteSwiftPackageReference "swiftui-pull-to-refresh" */;
+			productName = SwiftUIPullToRefresh;
+		};
 		13F92A45269C58EF009A44F8 /* KeyboardToolbar */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 13F92A44269C58EF009A44F8 /* XCRemoteSwiftPackageReference "KeyboardToolbar" */;

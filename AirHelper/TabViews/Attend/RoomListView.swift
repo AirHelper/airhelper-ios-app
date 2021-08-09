@@ -7,20 +7,22 @@
 
 import SwiftUI
 import Alamofire
+import SwiftUIPullToRefresh
 
 struct RoomListView: View {
     @State var rooms: [GameRoom]? = nil
     
-    
-    
     var body: some View {
         GeometryReader { gp in
-            VStack(){
-                ScrollView(.vertical, showsIndicators: false){
+            RefreshableScrollView(onRefresh: { done in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    getRoomList()
+                    done()
+                }
+            }) {
+                VStack(){
                     if let gamerooms: [GameRoom] = self.rooms {
                         ForEach(0..<gamerooms.count, id: \.self) { index in
-                            
-                            Spacer()
                             if gamerooms[index].game_type == 0 {
                                 NavigationLink(destination: PasswordView()){
                                     VStack(alignment: .leading, spacing: 0){
@@ -141,49 +143,41 @@ struct RoomListView: View {
                         }
                         
                     }
+                    
+                    
                 }
-                
-                
+                .frame(width: gp.size.width, height: gp.size.height, alignment: .top)
+                .border(Color.green)
             }
-            .frame(width: gp.size.width)
-            .border(Color.green)
-            .navigationBarItems(
-                trailing:
-                    Button(action: {
-                        print("dd")
-                    }) {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .foregroundColor(Color.black)
-                            .scaledToFit()
-                            .frame(width: gp.size.width * 0.06)
-                    }
-            )
+            
             .onAppear(perform: {
-                AF.request("http://airhelper.kro.kr/api/game/room", method: .get).responseJSON() { response in
-                    switch response.result {
-                    case .success(let responseObject):
-                        print(responseObject)
-                        do {
-                            let data = try JSONSerialization.data(withJSONObject: responseObject, options: .prettyPrinted)
-                            
-                            self.rooms = try JSONDecoder().decode([GameRoom].self, from: data)
-                            if self.rooms?.count == 0 {
-                                self.rooms = nil
-                            }
-                            
-                        }
-                        catch { }
-                        
-                    case .failure(let error):
-                        print("Error: \(error)")
-                        return
-                    }
-                }
+                getRoomList()
             })
         }
     }
-
+    
+    func getRoomList() -> Void {
+        AF.request("http://airhelper.kro.kr/api/game/room", method: .get).responseJSON() { response in
+            switch response.result {
+            case .success(let responseObject):
+                print(responseObject)
+                do {
+                    let data = try JSONSerialization.data(withJSONObject: responseObject, options: .prettyPrinted)
+                    
+                    self.rooms = try JSONDecoder().decode([GameRoom].self, from: data)
+                    if self.rooms?.count == 0 {
+                        self.rooms = nil
+                    }
+                }
+                catch { }
+                
+            case .failure(let error):
+                print("Error: \(error)")
+                return
+            }
+        }
+    }
+    
 }
 
 
@@ -197,9 +191,9 @@ struct GameRoom: Codable {
     var game_type: Int
 }
 
-struct AttendView_Previews: PreviewProvider {
-    static var previews: some View {
-        RoomListView()
-    }
-}
+//struct AttendView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        RoomListView()
+//    }
+//}
 
