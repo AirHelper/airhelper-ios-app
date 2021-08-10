@@ -25,6 +25,7 @@
 		136D0B2226A2D4ED0099B75F /* KeyboardToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136D0B2126A2D4ED0099B75F /* KeyboardToolBar.swift */; };
 		137AFAA3269D7D8D005A7711 /* KeyboardHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137AFAA2269D7D8D005A7711 /* KeyboardHandler.swift */; };
 		1381F975268221410051AF88 /* LoginSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1381F974268221410051AF88 /* LoginSettingView.swift */; };
+		138E5A1026C2DB960066197C /* WaitingRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138E5A0F26C2DB960066197C /* WaitingRoom.swift */; };
 		13E9199326A5BE7B006B658A /* RoomListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E9199226A5BE7B006B658A /* RoomListView.swift */; };
 		13EC5FA226A014F3004ABFD6 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13EC5FA126A014F3004ABFD6 /* LocationManager.swift */; };
 		13F92A46269C58EF009A44F8 /* KeyboardToolbar in Frameworks */ = {isa = PBXBuildFile; productRef = 13F92A45269C58EF009A44F8 /* KeyboardToolbar */; };
@@ -75,6 +76,7 @@
 		136D0B2126A2D4ED0099B75F /* KeyboardToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardToolBar.swift; sourceTree = "<group>"; };
 		137AFAA2269D7D8D005A7711 /* KeyboardHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHandler.swift; sourceTree = "<group>"; };
 		1381F974268221410051AF88 /* LoginSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSettingView.swift; sourceTree = "<group>"; };
+		138E5A0F26C2DB960066197C /* WaitingRoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingRoom.swift; sourceTree = "<group>"; };
 		13E9199226A5BE7B006B658A /* RoomListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomListView.swift; sourceTree = "<group>"; };
 		13EC5FA126A014F3004ABFD6 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		721D3A5F4D3F48DAEACA03DF /* Pods_AirHelperTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AirHelperTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -186,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				133F8BA32694B055008C7C0B /* CreateView.swift */,
+				138E5A0F26C2DB960066197C /* WaitingRoom.swift */,
 			);
 			path = Create;
 			sourceTree = "<group>";
@@ -526,6 +529,7 @@
 				1329168F26789067009C9ADD /* AirHelperApp.swift in Sources */,
 				13E9199326A5BE7B006B658A /* RoomListView.swift in Sources */,
 				134B366D268641C6009FBCE2 /* AppState.swift in Sources */,
+				138E5A1026C2DB960066197C /* WaitingRoom.swift in Sources */,
 				134F2CD02684D72800731212 /* MainTabView.swift in Sources */,
 				1314D9E4268CB4AA00B57845 /* UserInfoView.swift in Sources */,
 				134B366A2685CFF6009FBCE2 /* MoreView.swift in Sources */,

@@ -25,8 +25,8 @@ struct CreateView: View {
     @StateObject var locationManager = LocationManager()
     
     @State private var showToast = false
-    @State var errorMsg: [String]? = nil
-    
+
+    @State var waitingroom_isActive = false
     var userLatitude: Double {
         return locationManager.lastLocation?.coordinate.latitude ?? 0
     }
@@ -101,6 +101,9 @@ struct CreateView: View {
                         .frame(width: gp.size.width * 0.9)
                     
                     Group(){
+                        NavigationLink(destination: WaitingRoom(), isActive: self.$waitingroom_isActive){
+                            EmptyView()
+                        }
                         HStack(){
                             Spacer()
                             Text("게임모드")
@@ -192,6 +195,7 @@ struct CreateView: View {
                                                 let webSocketTask = urlSession.webSocketTask(with: URL(string: encoded)!)
                                                 webSocketTask.resume()
                                                 
+                                                self.waitingroom_isActive = true
                                             }
                                         }
                                         else{
