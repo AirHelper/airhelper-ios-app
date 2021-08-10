@@ -5,6 +5,7 @@ pod 'KakaoSDKAuth', '2.5.5'  # 카카오 로그인
 pod 'KakaoSDKUser', '2.5.5'  # 사용자 관리
 pod 'Alamofire', '~> 5.4'
 pod 'NMapsMap'  # 네이버 지도
+pod 'AlertToast'
 
 target 'AirHelper' do
   # Comment the next line if you don't want to use dynamic frameworks

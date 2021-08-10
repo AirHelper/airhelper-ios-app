@@ -4,6 +4,7 @@ import MapKit
 import NMapsMap
 import Combine
 import Alamofire
+import AlertToast
 
 struct CreateView: View {
     @State var title: String = ""
@@ -22,6 +23,10 @@ struct CreateView: View {
     @StateObject private var keyboardHandler = KeyboardHandler()
     
     @StateObject var locationManager = LocationManager()
+    
+    @State private var showToast = false
+    @State var errorMsg: [String]? = nil
+    
     var userLatitude: Double {
         return locationManager.lastLocation?.coordinate.latitude ?? 0
     }
@@ -29,16 +34,6 @@ struct CreateView: View {
     var userLongitude: Double {
         return locationManager.lastLocation?.coordinate.longitude ?? 0
     }
-    //    var userLatitude: String {
-    //        return "\(locationManager.lastLocation?.coordinate.latitude ?? 0)"
-    //    }
-    //
-    //    var userLongitude: String {
-    //        return "\(locationManager.lastLocation?.coordinate.longitude ?? 0)"
-    //      }
-    
-    //서울 좌표
-    //    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5666791, longitude: 126.9782914), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
     
     var body: some View {
         GeometryReader { gp in
@@ -140,11 +135,6 @@ struct CreateView: View {
                             MapView(userLatitude: self.userLatitude, userLongitude: self.userLongitude)
                                 .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
                             
-                            
-                            //                            Map(coordinateRegion: $region, showsUserLocation: false, userTrackingMode: .constant(.follow))
-                            //                                .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
-                            
-                            
                         }
                         else if self.buttonSelected == 2 {
                             HStack() {
@@ -201,12 +191,14 @@ struct CreateView: View {
                                             if let encoded = urlStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
                                                 let webSocketTask = urlSession.webSocketTask(with: URL(string: encoded)!)
                                                 webSocketTask.resume()
+                                                
                                             }
                                         }
                                         else{
-                                            print("XXXXXX")
-                                        }
                                             
+                                            self.showToast = true
+                                        }
+                                        
                                     }
                                 case .failure(let error):
                                     print("Error: \(error)")
@@ -230,14 +222,15 @@ struct CreateView: View {
                 }
                 .listRowInsets(EdgeInsets())
             }
-            //        .onTapGesture(count: 1) { // 키보드밖 화면 터치시 키보드 사라짐
-            //            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            //        }
-            //        .gesture(DragGesture().onChanged{_ in UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)}) // 키보드 밖 화면에서 스크롤시 키보드 사라짐
+            .onTapGesture(count: 1) { // 키보드밖 화면 터치시 키보드 사라짐
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
             .padding(.bottom, keyboardHandler.keyboardHeight)
             .animation(.default)
             .keyboardToolbar(toolbarItems)
-            
+            .toast(isPresenting: $showToast){
+                AlertToast(type: .regular, title: "중복된 방이름으로 개설할 수 없습니다.")
+            }
         }
     }
     
