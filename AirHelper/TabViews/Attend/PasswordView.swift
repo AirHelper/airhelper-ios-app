@@ -76,9 +76,9 @@ struct PasswordView: View {
     @Environment(\.presentationMode) var presentation
 
     @StateObject private var keyboardHandler = KeyboardHandler()
-    init(){
-        UINavigationBar.setAnimationsEnabled(false)
-    }
+//    init(){
+//        UINavigationBar.setAnimationsEnabled(false)
+//    }
     
     var body: some View {
         GeometryReader { gp in
