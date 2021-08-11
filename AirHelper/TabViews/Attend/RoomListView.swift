@@ -146,10 +146,9 @@ struct RoomListView: View {
                     
                     
                 }
-                .frame(width: gp.size.width, height: gp.size.height, alignment: .top)
+                //.frame(width: gp.size.width, height: gp.size.height, alignment: .top)
                 .border(Color.green)
             }
-            
             .onAppear(perform: {
                 getRoomList()
             })

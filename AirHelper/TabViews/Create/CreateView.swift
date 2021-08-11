@@ -6,6 +6,16 @@ import Combine
 import Alamofire
 import AlertToast
 
+struct RoomData {
+    var id: Int = 0
+    var title: String = ""
+    var password: String = ""
+    var verbose_left: Int = 0
+    var verbose_right: Int = 0
+    var time: Int = 0
+    var game_type: Int = 0
+}
+
 struct CreateView: View {
     @State var title: String = ""
     @State var password: String = ""
@@ -27,6 +37,9 @@ struct CreateView: View {
     @State private var showToast = false
 
     @State var waitingroom_isActive = false
+    
+    @State var pass_room_data = RoomData()
+    
     var userLatitude: Double {
         return locationManager.lastLocation?.coordinate.latitude ?? 0
     }
@@ -101,7 +114,7 @@ struct CreateView: View {
                         .frame(width: gp.size.width * 0.9)
                     
                     Group(){
-                        NavigationLink(destination: WaitingRoom(), isActive: self.$waitingroom_isActive){
+                        NavigationLink(destination: WaitingRoom(roomData: self.pass_room_data), isActive: self.$waitingroom_isActive){
                             EmptyView()
                         }
                         HStack(){
@@ -189,14 +202,24 @@ struct CreateView: View {
                                         print(data)
                                         if let room_id = data["id"] {
                                             print("통과")
-                                            let urlSession = URLSession(configuration: .default)
-                                            let urlStr = "ws://airhelper.kro.kr/ws/create/\(room_id)/"
-                                            if let encoded = urlStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-                                                let webSocketTask = urlSession.webSocketTask(with: URL(string: encoded)!)
-                                                webSocketTask.resume()
-                                                
-                                                self.waitingroom_isActive = true
-                                            }
+                                            
+                                            self.pass_room_data.id = room_id as! Int
+                                            self.pass_room_data.title = self.title
+                                            self.pass_room_data.password = self.password
+                                            self.pass_room_data.verbose_left = Int(self.verboseLeft)!
+                                            self.pass_room_data.verbose_right = Int(self.verboseRight)!
+                                            self.pass_room_data.time = Int(self.minuties)!
+                                            self.pass_room_data.game_type = self.buttonSelected!
+                                            
+                                            self.waitingroom_isActive = true
+//                                            let urlSession = URLSession(configuration: .default)
+//                                            let urlStr = "ws://airhelper.kro.kr/ws/create/\(room_id)/"
+//                                            if let encoded = urlStr.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+//                                                let webSocketTask = urlSession.webSocketTask(with: URL(string: encoded)!)
+//                                                webSocketTask.resume()
+//
+//
+//                                            }
                                         }
                                         else{
                                             
