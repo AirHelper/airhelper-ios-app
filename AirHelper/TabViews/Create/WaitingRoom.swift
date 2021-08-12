@@ -22,7 +22,7 @@ final class RoomModel: ObservableObject {
     func disconnect() { // 7
         webSocketTask?.cancel(with: .normalClosure, reason: nil) // 8
     }
-
+    
     private func onReceive(incoming: Result<URLSessionWebSocketTask.Message, Error>) {
         // Nothing yet...
     }
@@ -35,10 +35,71 @@ final class RoomModel: ObservableObject {
 struct WaitingRoom: View {
     var roomData: RoomData
     @StateObject private var model = RoomModel()
+    @Environment(\.presentationMode) var presentation
     
     var body: some View {
         GeometryReader { gp in
-            Text(self.roomData.title)
+            VStack(alignment: .center, spacing: 0.5){
+                //레드팀, 블루팀 구별
+                HStack(alignment: .center, spacing: 3){
+                    HStack(){
+                        Image("sword")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: gp.size.width / 17)
+                        Text("RED TEAM")
+                            .fontWeight(.bold)
+                            .font(.system(size: 25))
+                    }
+                    .frame(width: gp.size.width*0.47, height: gp.size.height/10, alignment: .center)
+                    .background(Color.red)
+                    .foregroundColor(Color.white)
+                    .cornerRadius(5)
+                    
+                    HStack(){
+                        Image("shield")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: gp.size.width / 17)
+                        Text("BLUE TEAM")
+                            .fontWeight(.bold)
+                            .font(.system(size: 25))
+                    }
+                    .frame(width: gp.size.width*0.47, height: gp.size.height/10, alignment: .center)
+                    .background(Color.blue)
+                    .foregroundColor(Color.white)
+                    .cornerRadius(5)
+                }
+                //마크, 콜사인, 상태 구분
+                HStack(alignment: .center, spacing: 3){
+                    HStack(){
+                        Text("마크")
+                            .frame(width: gp.size.width*0.1)
+                        Text("콜사인")
+                            .frame(width: gp.size.width*0.2, alignment: .leading)
+                        Text("상태")
+                            .frame(width: gp.size.width*0.1)
+                    }
+                    .frame(width: gp.size.width*0.47, height: gp.size.height * 0.04, alignment: .center)
+                    .background(Color(hex: 0x3A383C))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(5)
+                    
+                    HStack(){
+                        Text("마크")
+                            .frame(width: gp.size.width*0.1)
+                        Text("콜사인")
+                            .frame(width: gp.size.width*0.2, alignment: .leading)
+                        Text("상태")
+                            .frame(width: gp.size.width*0.1)
+                    }
+                    .frame(width: gp.size.width*0.47, height: gp.size.height * 0.04, alignment: .center)
+                    .background(Color(hex: 0x3A383C))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(5)
+                }
+            }
+            .frame(width: gp.size.width, height: gp.size.height, alignment: .center)
         }
         .onAppear(perform: {
             self.model.room_id = self.roomData.id
@@ -47,6 +108,38 @@ struct WaitingRoom: View {
         .onDisappear(perform: {
             self.model.disconnect()
         })
+        .navigationBarTitle(self.roomData.title)
+        .navigationBarItems(leading: navigationBarLeadingItems, trailing: navigationBarTrailingItems)
+        .navigationBarBackButtonHidden(true)
+        
+    }
+    
+    @ViewBuilder
+    var navigationBarLeadingItems: some View {
+        Button(action: {
+            self.presentation.wrappedValue.dismiss()
+        }) {
+            Image(systemName: "xmark")
+                .resizable()
+                .foregroundColor(Color.black)
+                .scaledToFit()
+                .frame(width: 20)
+                .opacity(0.6)
+        }
+    }
+    
+    @ViewBuilder
+    var navigationBarTrailingItems: some View {
+        Button(action: {
+            print("dd")
+        }) {
+            Image(systemName: "gearshape.fill")
+                .resizable()
+                .foregroundColor(Color.black)
+                .scaledToFit()
+                .frame(width: 20)
+                .opacity(0.6)
+        }
     }
 }
 
