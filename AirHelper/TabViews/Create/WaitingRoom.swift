@@ -123,7 +123,7 @@ struct WaitingRoom: View {
                             }
                             .frame(width: gp.size.width*0.47, alignment: .leading)
                         }
-                        .frame(width: gp.size.width*0.47, height: gp.size.height / 2, alignment: .center)
+                        .frame(width: gp.size.width*0.47, height: gp.size.height / 3, alignment: .center)
                     }
                     
                     HStack(){
@@ -140,11 +140,78 @@ struct WaitingRoom: View {
                             .frame(width: gp.size.width*0.47, alignment: .leading)
                             
                         }
-                        .frame(width: gp.size.width*0.47, height: gp.size.height / 2, alignment: .center)
+                        .frame(width: gp.size.width*0.47, height: gp.size.height / 3, alignment: .center)
                     }
                 }
                 .frame(width: gp.size.width, alignment: .leading)
                 
+                Divider()
+                //옵저버
+                HStack(alignment: .center, spacing: 3){
+                    Button(action: {
+                        print("옵저버")
+                    }){
+                        HStack(){
+                            Image(systemName: "eye.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: gp.size.width / 17)
+                            Text("Observer")
+                                .fontWeight(.bold)
+                                .font(.system(size: 25))
+                        }
+                        .frame(width: gp.size.width*0.8, height: gp.size.height/10, alignment: .center)
+                        .background(Color.green)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(5)
+                    }
+                }
+                
+                //마크, 콜사인, 상태 구분
+                HStack(alignment: .center, spacing: 3){
+                    Text("마크")
+                        .frame(width: gp.size.width*0.2)
+                    Text("콜사인")
+                        .frame(width: gp.size.width*0.4, alignment: .leading)
+                    Text("상태")
+                        .frame(width: gp.size.width*0.2)
+                }
+                .frame(width: gp.size.width*0.8, height: gp.size.height * 0.04, alignment: .center)
+                .background(Color(hex: 0x3A383C))
+                .foregroundColor(Color.white)
+                .cornerRadius(5)
+                
+                
+                //플레이어 목록
+                HStack(alignment: .center, spacing: 3){
+                    List(){
+                        HStack(){
+                            Text(Image(systemName: "crown.fill"))
+                                .foregroundColor(Color.yellow)
+                                .frame(width: gp.size.width*0.15, alignment: .leading)
+                            Text("HERLOCK")
+                                .frame(width: gp.size.width*0.4, alignment: .leading)
+                            Text(Image(systemName: "checkmark"))
+                                .frame(width: gp.size.width*0.15, alignment: .center)
+                        }
+                        .frame(width: gp.size.width*0.8, alignment: .leading)
+                        
+                    }
+                    .frame(width: gp.size.width*0.8, height: gp.size.height / 8, alignment: .center)
+                }
+                .frame(width: gp.size.width, alignment: .center)
+                
+                
+                Button(action: {
+                    print("게임시작")
+                }){
+                    Text("게임시작")
+                        .frame(width: gp.size.width * 0.7, height: gp.size.height*0.1, alignment: .center)
+                        .background(Color.blue)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(5)
+                        .font(.system(size: 25))
+                }
             }
             .frame(width: gp.size.width, height: gp.size.height, alignment: .center)
         }
