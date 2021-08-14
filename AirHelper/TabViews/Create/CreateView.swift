@@ -114,7 +114,7 @@ struct CreateView: View {
                         .frame(width: gp.size.width * 0.9)
                     
                     Group(){
-                        NavigationLink(destination: WaitingRoom(roomData: self.pass_room_data), isActive: self.$waitingroom_isActive){
+                        NavigationLink(destination: WaitingRoom(roomData: self.pass_room_data, is_admin: true), isActive: self.$waitingroom_isActive){
                             EmptyView()
                         }
                         HStack(){

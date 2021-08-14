@@ -10,10 +10,10 @@ import SwiftUI
 final class RoomModel: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask? // 1
     var room_id: Int = 0
-    
+    var is_admin = "attend"
     // MARK: - Connection
     func connect() { // 2
-        let url = URL(string: "ws://airhelper.kro.kr/ws/create/\(room_id)/")! // 3
+        let url = URL(string: "ws://airhelper.kro.kr/ws/\(is_admin)/\(room_id)/")! // 3
         webSocketTask = URLSession.shared.webSocketTask(with: url) // 4
         webSocketTask?.receive(completionHandler: onReceive) // 5
         webSocketTask?.resume() // 6
@@ -27,6 +27,22 @@ final class RoomModel: ObservableObject {
         // Nothing yet...
     }
     
+    
+    func send(text: String) {
+        let message = SubmittedChatMessage(message: text) // 1
+        guard let json = try? JSONEncoder().encode(message), // 2
+                let jsonString = String(data: json, encoding: .utf8)
+        else {
+            return
+        }
+        
+        webSocketTask?.send(.string(jsonString)) { error in // 3
+            if let error = error {
+                print("Error sending message", error) // 4
+            }
+        }
+    }
+    
     deinit { // 9
         disconnect()
     }
@@ -34,6 +50,7 @@ final class RoomModel: ObservableObject {
 
 struct WaitingRoom: View {
     var roomData: RoomData
+    var is_admin = false
     @StateObject private var model = RoomModel()
     @Environment(\.presentationMode) var presentation
     
@@ -217,6 +234,9 @@ struct WaitingRoom: View {
         }
         .onAppear(perform: {
             self.model.room_id = self.roomData.id
+            if self.is_admin == true { //방장이면
+                self.model.is_admin = "create"
+            }
             self.model.connect()
         })
         .onDisappear(perform: {
