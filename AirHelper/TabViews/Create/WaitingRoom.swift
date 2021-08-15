@@ -24,19 +24,26 @@ final class RoomModel: ObservableObject {
     }
     
     private func onReceive(incoming: Result<URLSessionWebSocketTask.Message, Error>) {
-        // Nothing yet...
+        webSocketTask?.receive(completionHandler: onReceive) // 1
+
+        if case .success(let message) = incoming { // 2
+            onMessage(message: message)
+        }
+        else if case .failure(let error) = incoming { // 3
+            print("Error", error)
+        }
+    }
+
+    private func onMessage(message: URLSessionWebSocketTask.Message) { // 4
+        if case .string(let text) = message { // 5
+            print("받은 것 : \(text.data(using: .utf8))")
+        }
     }
     
     
     func send(text: String) {
-        let message = SubmittedChatMessage(message: text) // 1
-        guard let json = try? JSONEncoder().encode(message), // 2
-                let jsonString = String(data: json, encoding: .utf8)
-        else {
-            return
-        }
-        
-        webSocketTask?.send(.string(jsonString)) { error in // 3
+
+        webSocketTask?.send(.string(text)) { error in // 3
             if let error = error {
                 print("Error sending message", error) // 4
             }
@@ -53,6 +60,11 @@ struct WaitingRoom: View {
     var is_admin = false
     @StateObject private var model = RoomModel()
     @Environment(\.presentationMode) var presentation
+    
+    
+    private func onCommit(message: String) {
+        model.send(text: message)
+    }
     
     var body: some View {
         GeometryReader { gp in
@@ -234,10 +246,23 @@ struct WaitingRoom: View {
         }
         .onAppear(perform: {
             self.model.room_id = self.roomData.id
+            var dict = Dictionary<String, String>()
             if self.is_admin == true { //방장이면
                 self.model.is_admin = "create"
+                if let user_id = UserDefaults.standard.string(forKey: "user_id") {
+                    dict = ["user": user_id, "team": "레드팀", "is_admin": "True"]
+                }
+            }
+            else {
+                if let user_id = UserDefaults.standard.string(forKey: "user_id") {
+                    dict = ["user": user_id, "team": "레드팀"]
+                }
             }
             self.model.connect()
+            if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                let theJSONText = String(data: theJSONData, encoding: .utf8)
+                print("JSON string = \(theJSONText!)")
+            }
         })
         .onDisappear(perform: {
             self.model.disconnect()
