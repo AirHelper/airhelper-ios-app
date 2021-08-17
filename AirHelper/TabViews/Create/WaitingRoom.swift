@@ -107,13 +107,25 @@ struct WaitingRoom: View {
         model.send(text: message)
     }
     
+    private func team_change(changeTeam: String) {
+        var dict = Dictionary<String, String>()
+        if let user_id = UserDefaults.standard.string(forKey: "user_id") {
+            dict = ["type": "team_change", "user": user_id, "team": changeTeam]
+            if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                let theJSONText = String(data: theJSONData, encoding: .utf8)
+                print("팀변경 = \(theJSONText!)")
+                model.send(text: theJSONText!)
+            }
+        }
+    }
+    
     var body: some View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 0.5){
                 //레드팀, 블루팀 구별
                 HStack(alignment: .center, spacing: 3){
                     Button(action: {
-                        print("레드팀")
+                        team_change(changeTeam: "레드팀")
                     }){
                         
                         HStack(){
@@ -131,7 +143,7 @@ struct WaitingRoom: View {
                         .cornerRadius(5)
                     }
                     Button(action: {
-                        print("블루팀")
+                        team_change(changeTeam: "블루팀")
                     }){
                         HStack(){
                             Image("shield")
@@ -256,7 +268,7 @@ struct WaitingRoom: View {
                 //옵저버
                 HStack(alignment: .center, spacing: 3){
                     Button(action: {
-                        print("옵저버")
+                        team_change(changeTeam: "옵저버")
                     }){
                         HStack(){
                             Image(systemName: "eye.fill")
@@ -312,7 +324,7 @@ struct WaitingRoom: View {
                                                 .frame(width: gp.size.width*0.15, alignment: .leading)
                                         }
                                     }
-                                    Text("HERLOCK")
+                                    Text(model.attend_user_list[index].user.call_sign)
                                         .frame(width: gp.size.width*0.4, alignment: .leading)
                                     Text(Image(systemName: "checkmark"))
                                         .frame(width: gp.size.width*0.15, alignment: .center)
