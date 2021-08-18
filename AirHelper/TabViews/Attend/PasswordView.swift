@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import AlertToast
+
+
 struct CustomTextField: UIViewRepresentable {
     
     class Coordinator: NSObject, UITextFieldDelegate {
@@ -76,13 +79,17 @@ struct PasswordView: View {
     @Environment(\.presentationMode) var presentation
 
     @StateObject private var keyboardHandler = KeyboardHandler()
-//    init(){
-//        UINavigationBar.setAnimationsEnabled(false)
-//    }
+    @State var roomData: GameRoom
+    @State private var showToast = false
+    @State var waitingroom_isActive = false
     
+    @State var attend_room: RoomData = RoomData()
     var body: some View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 5){
+                NavigationLink(destination: WaitingRoom(roomData: self.attend_room), isActive: self.$waitingroom_isActive){
+                    EmptyView()
+                }
                 Text("방 비밀번호 입력")
                     .font(.title.bold())
                 Text("참여코드를 입력해 주십시오.")
@@ -108,7 +115,7 @@ struct PasswordView: View {
             }
             .frame(width:gp.size.width, height: gp.size.height / 1.1)
             .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: navigationBarLeadingItems)
+            .navigationBarItems(leading: navigationBarLeadingItems, trailing: navigationBarTrailingItems)
         }
         .opacity(appeared)
         .animation(Animation.easeInOut(duration: 3.0), value: appeared)
@@ -117,6 +124,9 @@ struct PasswordView: View {
         .padding(.bottom, keyboardHandler.keyboardHeight)
         .animation(.default)
         .keyboardToolbar(toolbarItems)
+        .toast(isPresenting: $showToast){
+            AlertToast(type: .error(Color.red), title: "비밀번호가 다릅니다.")
+        }
     }
     
     @ViewBuilder
@@ -132,11 +142,35 @@ struct PasswordView: View {
                 .opacity(0.6)
         }
     }
-}
-
-
-struct PasswordView_Previews: PreviewProvider {
-    static var previews: some View {
-        PasswordView()
+    
+    @ViewBuilder
+    var navigationBarTrailingItems: some View {
+        Button(action: {
+            if self.roomData.password == self.password {
+                //인원이 풀방인지, 방이 존재하는지 체크해야함.
+                
+                //데이터 이전
+                self.attend_room.id = self.roomData.id
+                self.attend_room.title = self.roomData.title
+                self.attend_room.password = self.roomData.password
+                self.attend_room.verbose_left = self.roomData.verbose_left
+                self.attend_room.verbose_right = self.roomData.verbose_right
+                self.attend_room.time = self.roomData.time
+                self.attend_room.game_type = self.roomData.game_type
+                self.waitingroom_isActive = true
+            }
+            else {
+                showToast = true
+            }
+        }){
+            Text("입장")
+        }
     }
 }
+
+
+//struct PasswordView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PasswordView()
+//    }
+//}

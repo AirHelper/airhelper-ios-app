@@ -32,7 +32,7 @@ final class RoomModel: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask? // 1
     var room_id: Int = 0
     var is_admin = "attend"
-
+    
     @Published var attend_user_list: [AttendUser] = []
     
     // MARK: - Connection
@@ -49,7 +49,7 @@ final class RoomModel: ObservableObject {
     
     private func onReceive(incoming: Result<URLSessionWebSocketTask.Message, Error>) {
         webSocketTask?.receive(completionHandler: onReceive) // 1
-
+        
         if case .success(let message) = incoming { // 2
             onMessage(message: message)
         }
@@ -59,31 +59,31 @@ final class RoomModel: ObservableObject {
     }
     
     private func onMessage(message: URLSessionWebSocketTask.Message) {
-            if case .string(let text) = message {
-                if let data = text.data(using: .utf8) {
-                    let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
-                    
-                    if json["type"] as! String == "user_attend" {
-                        let decoder = JSONDecoder()
-                        if let test = try? decoder.decode(ResData.self, from: data) {
-                           
-                            DispatchQueue.main.async { // 6
-                                self.attend_user_list = test.data
-                            }
-                            
+        if case .string(let text) = message {
+            if let data = text.data(using: .utf8) {
+                let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
+                
+                if json["type"] as! String == "user_attend" {
+                    let decoder = JSONDecoder()
+                    if let test = try? decoder.decode(ResData.self, from: data) {
+                        
+                        DispatchQueue.main.async { // 6
+                            self.attend_user_list = test.data
                         }
+                        
                     }
                 }
-                else {
-                    return
-                }
-
             }
+            else {
+                return
+            }
+            
         }
+    }
     
     
     func send(text: String) {
-
+        
         webSocketTask?.send(.string(text)) { error in // 3
             if let error = error {
                 print("Error sending message", error) // 4
@@ -102,7 +102,7 @@ struct WaitingRoom: View {
     var team = "레드팀"
     @StateObject private var model = RoomModel()
     @Environment(\.presentationMode) var presentation
-
+    
     private func onCommit(message: String) {
         model.send(text: message)
     }
@@ -198,22 +198,14 @@ struct WaitingRoom: View {
                             ForEach(0..<model.attend_user_list.count, id: \.self) { index in
                                 if model.attend_user_list[index].team == "레드팀" {
                                     HStack(){
-                                        if let user_id: String = UserDefaults.standard.string(forKey: "user_id") {
-                                            if Int(user_id) == model.attend_user_list[index].user.id {
-                                                if model.attend_user_list[index].is_admin {
-                                                    Text(Image(systemName: "crown.fill"))
-                                                        .foregroundColor(Color.yellow)
-                                                        .frame(width: gp.size.width*0.1)
-                                                }
-                                                else {
-                                                    Text("")
-                                                        .frame(width: gp.size.width*0.1)
-                                                }
-                                            }
-                                            else {
-                                                Text("")
-                                                    .frame(width: gp.size.width*0.1)
-                                            }
+                                        if model.attend_user_list[index].is_admin {
+                                            Text(Image(systemName: "crown.fill"))
+                                                .foregroundColor(Color.yellow)
+                                                .frame(width: gp.size.width*0.1)
+                                        }
+                                        else {
+                                            Text("")
+                                                .frame(width: gp.size.width*0.1)
                                         }
                                         Text(model.attend_user_list[index].user.call_sign)
                                             .frame(width: gp.size.width*0.2, alignment: .leading)
@@ -232,23 +224,18 @@ struct WaitingRoom: View {
                             ForEach(0..<model.attend_user_list.count, id: \.self) { index in
                                 if model.attend_user_list[index].team == "블루팀" {
                                     HStack(){
-                                        if let user_id: String = UserDefaults.standard.string(forKey: "user_id") {
-                                            if Int(user_id) == model.attend_user_list[index].user.id {
-                                                if model.attend_user_list[index].is_admin {
-                                                    Text(Image(systemName: "crown.fill"))
-                                                        .foregroundColor(Color.yellow)
-                                                        .frame(width: gp.size.width*0.1)
-                                                }
-                                                else {
-                                                    Text("")
-                                                        .frame(width: gp.size.width*0.1)
-                                                }
-                                            }
-                                            else {
-                                                Text("")
-                                                    .frame(width: gp.size.width*0.1)
-                                            }
+                                        
+                                        
+                                        if model.attend_user_list[index].is_admin {
+                                            Text(Image(systemName: "crown.fill"))
+                                                .foregroundColor(Color.yellow)
+                                                .frame(width: gp.size.width*0.1)
                                         }
+                                        else {
+                                            Text("")
+                                                .frame(width: gp.size.width*0.1)
+                                        }
+                                        
                                         Text(model.attend_user_list[index].user.call_sign)
                                             .frame(width: gp.size.width*0.2, alignment: .leading)
                                         Text(Image(systemName: "checkmark"))
@@ -262,7 +249,7 @@ struct WaitingRoom: View {
                     }
                 }
                 .frame(width: gp.size.width, alignment: .leading)
-               
+                
                 
                 Divider()
                 //옵저버
@@ -307,23 +294,18 @@ struct WaitingRoom: View {
                         ForEach(0..<model.attend_user_list.count, id: \.self) { index in
                             if model.attend_user_list[index].team == "옵저버" {
                                 HStack(){
-                                    if let user_id: String = UserDefaults.standard.string(forKey: "user_id") {
-                                        if Int(user_id) == model.attend_user_list[index].user.id {
-                                            if model.attend_user_list[index].is_admin {
-                                                Text(Image(systemName: "crown.fill"))
-                                                    .foregroundColor(Color.yellow)
-                                                    .frame(width: gp.size.width*0.15, alignment: .leading)
-                                            }
-                                            else {
-                                                Text("")
-                                                    .frame(width: gp.size.width*0.15, alignment: .leading)
-                                            }
-                                        }
-                                        else {
-                                            Text("")
-                                                .frame(width: gp.size.width*0.15, alignment: .leading)
-                                        }
+                                    
+                                    
+                                    if model.attend_user_list[index].is_admin {
+                                        Text(Image(systemName: "crown.fill"))
+                                            .foregroundColor(Color.yellow)
+                                            .frame(width: gp.size.width*0.15, alignment: .leading)
                                     }
+                                    else {
+                                        Text("")
+                                            .frame(width: gp.size.width*0.15, alignment: .leading)
+                                    }
+                                    
                                     Text(model.attend_user_list[index].user.call_sign)
                                         .frame(width: gp.size.width*0.4, alignment: .leading)
                                     Text(Image(systemName: "checkmark"))
@@ -351,7 +333,7 @@ struct WaitingRoom: View {
                         }
                     }
                 }
-
+                
             }
             .frame(width: gp.size.width, height: gp.size.height, alignment: .center)
         }

@@ -24,7 +24,7 @@ struct RoomListView: View {
                     if let gamerooms: [GameRoom] = self.rooms {
                         ForEach(0..<gamerooms.count, id: \.self) { index in
                             if gamerooms[index].game_type == 0 {
-                                NavigationLink(destination: PasswordView()){
+                                NavigationLink(destination: PasswordView(roomData: gamerooms[index])){
                                     VStack(alignment: .leading, spacing: 0){
                                         Text(gamerooms[index].title)
                                             .bold()
@@ -62,7 +62,7 @@ struct RoomListView: View {
                             }
                             else {
                                 if gamerooms[index].game_type == 1 {
-                                    NavigationLink(destination: PasswordView()){
+                                    NavigationLink(destination: PasswordView(roomData: gamerooms[index])){
                                         VStack(alignment: .leading, spacing: 0){
                                             Text(gamerooms[index].title)
                                                 .bold()
@@ -101,7 +101,7 @@ struct RoomListView: View {
                                     .isDetailLink(false)
                                 }
                                 else{
-                                    NavigationLink(destination: PasswordView()){
+                                    NavigationLink(destination: PasswordView(roomData: gamerooms[index])){
                                         VStack(alignment: .leading, spacing: 0){
                                             Text(gamerooms[index].title)
                                                 .bold()
@@ -147,7 +147,7 @@ struct RoomListView: View {
                     
                 }
                 //.frame(width: gp.size.width, height: gp.size.height, alignment: .top)
-                .border(Color.green)
+
             }
             .onAppear(perform: {
                 getRoomList()
