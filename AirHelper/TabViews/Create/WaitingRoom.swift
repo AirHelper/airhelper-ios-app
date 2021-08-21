@@ -338,6 +338,7 @@ struct WaitingRoom: View {
             .frame(width: gp.size.width, height: gp.size.height, alignment: .center)
         }
         .onAppear(perform: {
+            UIApplication.shared.isIdleTimerDisabled = true
             self.model.room_id = self.roomData.id
             var dict = Dictionary<String, String>()
             if self.is_admin == true { //방장이면
