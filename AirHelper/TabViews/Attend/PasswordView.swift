@@ -7,7 +7,7 @@
 
 import SwiftUI
 import AlertToast
-
+import Alamofire
 
 struct CustomTextField: UIViewRepresentable {
     
@@ -81,6 +81,7 @@ struct PasswordView: View {
     @StateObject private var keyboardHandler = KeyboardHandler()
     @State var roomData: GameRoom
     @State private var showToast = false
+    @State var toastTitle = ""
     @State var waitingroom_isActive = false
     
     @State var attend_room: RoomData = RoomData()
@@ -125,7 +126,7 @@ struct PasswordView: View {
         .animation(.default)
         .keyboardToolbar(toolbarItems)
         .toast(isPresenting: $showToast){
-            AlertToast(type: .error(Color.red), title: "비밀번호가 다릅니다.")
+            AlertToast(type: .error(Color.red), title: self.toastTitle)
         }
     }
     
@@ -148,23 +149,44 @@ struct PasswordView: View {
         Button(action: {
             if self.roomData.password == self.password {
                 //인원이 풀방인지, 방이 존재하는지 체크해야함.
-                
-                //데이터 이전
-                self.attend_room.id = self.roomData.id
-                self.attend_room.title = self.roomData.title
-                self.attend_room.password = self.roomData.password
-                self.attend_room.verbose_left = self.roomData.verbose_left
-                self.attend_room.verbose_right = self.roomData.verbose_right
-                self.attend_room.time = self.roomData.time
-                self.attend_room.game_type = self.roomData.game_type
-                self.waitingroom_isActive = true
+                AF.request("http://airhelper.kro.kr/api/game/room/\(self.roomData.id)", method: .get).responseJSON() { response in
+                    switch response.result {
+                    case .success:
+                        if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
+                            if let detail = data["detail"] {
+                                self.toastTitle = detail as! String
+                                self.showToast = true
+                            }
+                            else {
+                                //데이터 이전
+                                self.attend_room.id = self.roomData.id
+                                self.attend_room.title = self.roomData.title
+                                self.attend_room.password = self.roomData.password
+                                self.attend_room.verbose_left = self.roomData.verbose_left
+                                self.attend_room.verbose_right = self.roomData.verbose_right
+                                self.attend_room.time = self.roomData.time
+                                self.attend_room.game_type = self.roomData.game_type
+                                self.waitingroom_isActive = true
+                            }
+                        }
+                    case .failure(let error):
+                        print("Error: \(error)")
+                        return
+                    }
+                }
+
             }
             else {
+                self.toastTitle = "비밀번호가 다릅니다."
                 showToast = true
             }
         }){
             Text("입장")
         }
+    }
+    
+    func room_exists() -> Void {
+
     }
 }
 
