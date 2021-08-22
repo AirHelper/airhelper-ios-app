@@ -28,12 +28,14 @@ struct User: Codable {
     var profile_image: String
 }
 
+
 final class RoomModel: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask? // 1
     var room_id: Int = 0
     var is_admin = "attend"
     
     @Published var attend_user_list: [AttendUser] = []
+    @Published var room_delete_check: Bool = false
     
     // MARK: - Connection
     func connect() { // 2
@@ -62,7 +64,7 @@ final class RoomModel: ObservableObject {
         if case .string(let text) = message {
             if let data = text.data(using: .utf8) {
                 let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
-                
+                print("실시간 데이터 : \(json)")
                 if json["type"] as! String == "user_attend" {
                     let decoder = JSONDecoder()
                     if let test = try? decoder.decode(ResData.self, from: data) {
@@ -71,6 +73,11 @@ final class RoomModel: ObservableObject {
                             self.attend_user_list = test.data
                         }
                         
+                    }
+                }
+                else if json["type"] as! String == "room_delete" {
+                    DispatchQueue.main.async { // 6
+                        self.room_delete_check = true
                     }
                 }
             }
@@ -336,6 +343,16 @@ struct WaitingRoom: View {
                 
             }
             .frame(width: gp.size.width, height: gp.size.height, alignment: .center)
+            .alert(isPresented: self.$model.room_delete_check) {
+                Alert(
+                    title: Text("에러"),
+                    message: Text("방장이 방을 떠났습니다."),
+                    dismissButton: .default(Text("나가기"), action: {
+                        self.presentation.wrappedValue.dismiss()
+                    })
+                )
+                
+            }
         }
         .onAppear(perform: {
             UIApplication.shared.isIdleTimerDisabled = true
