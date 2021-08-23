@@ -8,6 +8,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         return true
     }
+    
+    static var orientationLock = UIInterfaceOrientationMask.portrait
 }
 
 

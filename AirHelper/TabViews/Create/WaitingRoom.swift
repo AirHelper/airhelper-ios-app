@@ -36,6 +36,7 @@ final class RoomModel: ObservableObject {
     
     @Published var attend_user_list: [AttendUser] = []
     @Published var room_delete_check: Bool = false
+    @Published var game_start: Bool = false
     
     // MARK: - Connection
     func connect() { // 2
@@ -80,6 +81,11 @@ final class RoomModel: ObservableObject {
                         self.room_delete_check = true
                     }
                 }
+                else if json["type"] as! String == "game_start" {
+                    DispatchQueue.main.async { // 6
+                        self.game_start = true
+                    }
+                }
             }
             else {
                 return
@@ -104,12 +110,12 @@ final class RoomModel: ObservableObject {
 }
 
 struct WaitingRoom: View {
-    var roomData: RoomData
+    @State var roomData: RoomData
     @State var is_admin = false
     var team = "레드팀"
     @StateObject private var model = RoomModel()
     @Environment(\.presentationMode) var presentation
-    
+    @State private var hideBar = false
     private func onCommit(message: String) {
         model.send(text: message)
     }
@@ -129,6 +135,12 @@ struct WaitingRoom: View {
     var body: some View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 0.5){
+                
+                NavigationLink(destination: GameMapView(roomData: self.$roomData, hideBar: self.$hideBar),
+                               isActive: self.$model.game_start) {
+                    EmptyView()
+                }
+                .isDetailLink(false)
                 //레드팀, 블루팀 구별
                 HStack(alignment: .center, spacing: 3){
                     Button(action: {
@@ -330,6 +342,14 @@ struct WaitingRoom: View {
                     if self.is_admin == true {
                         Button(action: {
                             print("게임시작")
+                            
+                            var dict = Dictionary<String, String>()
+                            dict = ["type": "game_start"]
+                            if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                                let theJSONText = String(data: theJSONData, encoding: .utf8)
+                                print("게임 시작 알림 = \(theJSONText!)")
+                                model.send(text: theJSONText!)
+                            }
                         }){
                             Text("게임시작")
                                 .frame(width: gp.size.width * 0.7, height: gp.size.height*0.1, alignment: .center)
@@ -355,6 +375,7 @@ struct WaitingRoom: View {
             }
         }
         .onAppear(perform: {
+            self.hideBar = false
             UIApplication.shared.isIdleTimerDisabled = true
             self.model.room_id = self.roomData.id
             var dict = Dictionary<String, String>()
@@ -375,14 +396,17 @@ struct WaitingRoom: View {
                 print("JSON string = \(theJSONText!)")
                 model.send(text: theJSONText!)
             }
+            print("연결 성공")
         })
         .onDisappear(perform: {
+            self.hideBar = true
             self.model.disconnect()
+            print("연결 끊김")
+            
         })
         .navigationBarTitle(self.roomData.title)
         .navigationBarItems(leading: navigationBarLeadingItems, trailing: navigationBarTrailingItems)
         .navigationBarBackButtonHidden(true)
-        
     }
     
     @ViewBuilder

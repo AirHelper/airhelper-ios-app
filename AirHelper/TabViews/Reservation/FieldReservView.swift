@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import MapKit
+import CoreLocation
+
 final class ChatScreenModel: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask? // 1
 
@@ -30,21 +31,74 @@ final class ChatScreenModel: ObservableObject {
         disconnect()
     }
 }
-struct FieldReservView: View {
-    //서울 좌표
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5666791, longitude: 126.9782914), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+class CurrentLocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+
+    private let locationManager = CLLocationManager()
+    @Published var locationStatus: CLAuthorizationStatus?
+    @Published var lastLocation: CLLocation?
+
+    override init() {
+        super.init()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+    }
+
+    var statusString: String {
+        guard let status = locationStatus else {
+            return "unknown"
+        }
+        
+        switch status {
+        case .notDetermined: return "notDetermined"
+        case .authorizedWhenInUse: return "authorizedWhenInUse"
+        case .authorizedAlways: return "authorizedAlways"
+        case .restricted: return "restricted"
+        case .denied: return "denied"
+        default: return "unknown"
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        locationStatus = status
+        print(#function, statusString)
+    }
     
-    @StateObject private var model = ChatScreenModel()
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        lastLocation = location
+        print(#function, location)
+    }
+}
+struct FieldReservView: View {
+    @StateObject var locationManager = CurrentLocationManager()
+    var userLatitude: Double {
+        return locationManager.lastLocation?.coordinate.latitude ?? 0
+    }
+
+    var userLongitude: Double {
+        return locationManager.lastLocation?.coordinate.longitude ?? 0
+    }
+    
     var body: some View {
-//        Map(coordinateRegion: $region, showsUserLocation: false, userTrackingMode: .constant(.follow))
-//            .frame(width: 200, height: 200)
-        Text("dd")
-            .onAppear(perform: {
-                model.connect()
-            })
-            .onDisappear(perform: {
-                model.disconnect()
-            })
+        GeometryReader { gp in
+            ZStack(){
+                if self.userLatitude != 0 && self.userLongitude != 0 {
+                    InGameMapView(userLatitude: self.userLatitude, userLongitude: self.userLongitude)
+                        .frame(width: gp.size.width, height: gp.size.height)
+                }
+//                VStack(alignment: .leading) {
+//                    Text("location status: \(locationManager.statusString)")
+//                    HStack {
+//                        Text("latitude: \(userLatitude)")
+//                        Text("longitude: \(userLongitude)")
+//                    }
+//                    .foregroundColor(Color.red)
+//                }
+            }
+        }
+
     }
 }
 
