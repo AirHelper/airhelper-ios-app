@@ -17,13 +17,13 @@ struct InGameMapView: UIViewRepresentable {
     let view = NMFNaverMapView()
     
     func makeUIView(context: Context) -> NMFNaverMapView {
-        let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: userLatitude, lng: userLongitude))
+        //let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: userLatitude, lng: userLongitude))
         view.showZoomControls = false
-        view.showCompass = true
-        view.mapView.moveCamera(cameraUpdate)
-        view.mapView.zoomLevel = 17
-        //view.mapView.mapType = .hybrid
-        view.mapView.positionMode = .compass
+        view.mapView.zoomLevel = 18
+        view.mapView.mapType = .hybrid
+        //view.mapView.touchDelegate = context.coordinator
+        view.mapView.addCameraDelegate(delegate: context.coordinator)
+        view.mapView.addOptionDelegate(delegate: context.coordinator)
         
         return view
     }
@@ -37,6 +37,11 @@ struct InGameMapView: UIViewRepresentable {
         
         init(viewModel: MapSceneViewModel) {
             self.viewModel = viewModel
+        }
+
+        //카메라 이동이 끝나면 호출
+        func mapViewCameraIdle(_ mapView: NMFMapView) {
+            mapView.positionMode = .direction
         }
         
     }
