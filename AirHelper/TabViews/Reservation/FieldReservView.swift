@@ -84,10 +84,10 @@ struct FieldReservView: View {
     var body: some View {
         GeometryReader { gp in
             ZStack(){
-                if self.userLatitude != 0 && self.userLongitude != 0 {
-                    InGameMapView(userLatitude: self.userLatitude, userLongitude: self.userLongitude)
+
+                    InGameMapView()
                         .frame(width: gp.size.width, height: gp.size.height)
-                }
+                
 //                VStack(alignment: .leading) {
 //                    Text("location status: \(locationManager.statusString)")
 //                    HStack {

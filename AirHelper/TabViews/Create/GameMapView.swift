@@ -12,8 +12,6 @@ import Combine
 import MapKit
 struct InGameMapView: UIViewRepresentable {
     @ObservedObject var viewModel = MapSceneViewModel()
-    @State var userLatitude: Double
-    @State var userLongitude: Double
     let view = NMFNaverMapView()
     
     func makeUIView(context: Context) -> NMFNaverMapView {
@@ -77,11 +75,10 @@ struct GameMapView: View {
     var body: some View {
         GeometryReader { gp in
             ZStack(){
-                if self.userLatitude != 0 && self.userLongitude != 0 {
-                    InGameMapView(userLatitude: self.userLatitude, userLongitude: self.userLongitude)
+            
+                    InGameMapView()
                         .edgesIgnoringSafeArea(.all)
-                }
-                    
+     
             }.navigationBarHidden(self.hideBar)
         }.onAppear(perform: {
             
