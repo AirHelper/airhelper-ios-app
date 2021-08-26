@@ -258,6 +258,12 @@ struct CreateView: View {
             .toast(isPresenting: $showToast){
                 AlertToast(type: .regular, title: "중복된 방이름으로 개설할 수 없습니다.")
             }
+            .onAppear(perform: {
+                self.locationManager.locationManagerStart()
+            })
+            .onDisappear(perform: {
+                self.locationManager.locationManagerStop()
+            })
         }
     }
     

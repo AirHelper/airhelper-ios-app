@@ -1,13 +1,15 @@
 import Foundation
 import CoreLocation
 import Combine
+import SwiftUI
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     private let locationManager = CLLocationManager()
     @Published var locationStatus: CLAuthorizationStatus?
     @Published var lastLocation: CLLocation?
-
+    
+    @Published var changeCnt = 0
     override init() {
         super.init()
         locationManager.delegate = self
@@ -33,14 +35,27 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
 
+    func locationManagerStop() -> Void {
+        self.locationManager.stopUpdatingLocation()
+    }
+    
+    func locationManagerStart() -> Void {
+        self.locationManager.startUpdatingLocation()
+    }
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        print("location changed1")
         locationStatus = status
         print(#function, statusString)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("location changed2")
         guard let location = locations.last else { return }
         lastLocation = location
         print(#function, location)
+        DispatchQueue.main.async {
+            self.changeCnt += 1
+        }
     }
 }

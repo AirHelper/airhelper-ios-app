@@ -116,6 +116,7 @@ struct WaitingRoom: View {
     @StateObject private var model = RoomModel()
     @Environment(\.presentationMode) var presentation
     @State private var hideBar = false
+    
     private func onCommit(message: String) {
         model.send(text: message)
     }
