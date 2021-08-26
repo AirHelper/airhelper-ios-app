@@ -70,7 +70,7 @@ struct GameMapView: View {
                 InGameMapView()
                     .edgesIgnoringSafeArea(.all)
                 Button(action: {
-                    
+                    print("나가기")
                 }){
                     Image(systemName: "clear")
                         .resizable()
@@ -82,6 +82,60 @@ struct GameMapView: View {
                         .opacity(0.6)
                 }
                 .offset(x: gp.size.width / 2, y: -gp.size.height / 2.2)
+                
+                
+                Text("남은 시간  15:00")
+                    .padding(2)
+                    .background(Color.black)
+                    .opacity(0.8)
+                    .foregroundColor(Color.white)
+                    .offset(x: -gp.size.width / 2.2, y: -gp.size.height / 2.2)
+                
+                Button(action: {
+                    print("무전")
+                }){
+                    HStack(){
+                        Image(systemName: "mic.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(Color.white)
+                            .frame(width: 20)
+                        Text("무전")
+                            .foregroundColor(Color.white)
+                            .bold()
+                            .font(.system(size: 20))
+                    }
+                    .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+                    .background(Color.black.opacity(0.7))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                    )
+                    
+                }
+                .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
+                
+                Button(action: {
+                    print("전사")
+                }){
+                    HStack(){
+                        Image(systemName: "eye.slash")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(Color.white)
+                            .frame(width: 30)
+                        Text("전사")
+                            .foregroundColor(Color.white)
+                            .bold()
+                            .font(.system(size: 20))
+                    }
+                    .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+                    .background(Color.red.opacity(0.7))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                    )
+
+                }
+                .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
                 
             }.navigationBarHidden(self.hideBar)
         }.onAppear(perform: {
