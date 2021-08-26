@@ -22,7 +22,7 @@ struct InGameMapView: UIViewRepresentable {
         //view.mapView.touchDelegate = context.coordinator
         view.mapView.addCameraDelegate(delegate: context.coordinator)
         view.mapView.addOptionDelegate(delegate: context.coordinator)
-        
+        view.mapView.positionMode = .direction
         return view
     }
     
@@ -36,11 +36,12 @@ struct InGameMapView: UIViewRepresentable {
         init(viewModel: MapSceneViewModel) {
             self.viewModel = viewModel
         }
-
+        
         //카메라 이동이 끝나면 호출
         func mapViewCameraIdle(_ mapView: NMFMapView) {
             mapView.positionMode = .direction
         }
+        
         
     }
     
@@ -50,60 +51,55 @@ struct InGameMapView: UIViewRepresentable {
 }
 
 extension AppDelegate {
-
+    
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-
+        
         return AppDelegate.orientationLock
-
+        
     }
-
+    
 }
 struct GameMapView: View {
     @Binding var roomData: RoomData
-    @StateObject var locationManager = CurrentLocationManager()
-    var userLatitude: Double {
-        return locationManager.lastLocation?.coordinate.latitude ?? 0
-    }
-
-    var userLongitude: Double {
-        return locationManager.lastLocation?.coordinate.longitude ?? 0
-    }
     @Binding var hideBar: Bool
     @Environment(\.presentationMode) var presentation
     
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.50007773, longitude: -0.1246402), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
     var body: some View {
         GeometryReader { gp in
             ZStack(){
-            
-                    InGameMapView()
-                        .edgesIgnoringSafeArea(.all)
-     
+                InGameMapView()
+                    .edgesIgnoringSafeArea(.all)
+                Button(action: {
+                    
+                }){
+                    Image(systemName: "clear")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30)
+                        .background(Color.black)
+                        .border(Color.white)
+                        .foregroundColor(Color.white)
+                        .opacity(0.6)
+                }
+                .offset(x: gp.size.width / 2, y: -gp.size.height / 2.2)
+                
             }.navigationBarHidden(self.hideBar)
         }.onAppear(perform: {
-            
             AppDelegate.orientationLock = UIInterfaceOrientationMask.landscape
-
             UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
-
             UINavigationController.attemptRotationToDeviceOrientation()
-
         })
         .onDisappear(perform: {
             self.hideBar = false
             DispatchQueue.main.async {
-                
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
-                
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
-                
                 UINavigationController.attemptRotationToDeviceOrientation()
-                
             }
         })
         
     }
-
+    
 }
 
 //struct GameMapView_Previews: PreviewProvider {
