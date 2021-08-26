@@ -64,6 +64,7 @@ struct GameMapView: View {
     @Binding var hideBar: Bool
     @Environment(\.presentationMode) var presentation
     
+    @State var showOutAlert = false
     var body: some View {
         GeometryReader { gp in
             ZStack(){
@@ -71,6 +72,7 @@ struct GameMapView: View {
                     .edgesIgnoringSafeArea(.all)
                 Button(action: {
                     print("나가기")
+                    self.showOutAlert = true
                 }){
                     Image(systemName: "clear")
                         .resizable()
@@ -138,6 +140,14 @@ struct GameMapView: View {
                 .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
                 
             }.navigationBarHidden(self.hideBar)
+            .alert(isPresented: self.$showOutAlert){
+                Alert(
+                  title: Text("나가기"),
+                  message: Text("정말로 게임에 나가시겠습니까?"),
+                    primaryButton: .destructive(Text("네"), action: {self.presentation.wrappedValue.dismiss()}),
+                    secondaryButton: .cancel(Text("아니오"), action: nil)
+                )
+            }
         }.onAppear(perform: {
             AppDelegate.orientationLock = UIInterfaceOrientationMask.landscape
             UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
