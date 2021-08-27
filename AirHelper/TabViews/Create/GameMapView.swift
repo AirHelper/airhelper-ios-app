@@ -100,10 +100,14 @@ struct InGameMapView: UIViewRepresentable {
         view.mapView.addOptionDelegate(delegate: context.coordinator)
 
         view.mapView.positionMode = .direction
+        print(view.mapView.cameraPosition)
         return view
     }
     
-    func updateUIView(_ uiView: NMFNaverMapView, context: Context) {}
+    func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
+        
+        
+    }
     
     
     class Coordinator: NSObject, NMFMapViewTouchDelegate, NMFMapViewCameraDelegate, NMFMapViewOptionDelegate {
@@ -137,9 +141,55 @@ extension AppDelegate {
     
 }
 
+class GameLocationManager: NSObject, ObservableObject {
+
+    let locationManager = CLLocationManager()
+    let geoCoder = CLGeocoder()
+
+    @Published var location: CLLocation?
+    @Published var placemark: CLPlacemark?
+    @Published var cnt = 0
+    override init() {
+        super.init()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.startUpdatingLocation()
+    }
+
+    func geoCode(with location: CLLocation) {
+
+        geoCoder.reverseGeocodeLocation(location) { (placemark, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            } else {
+                self.placemark = placemark?.first
+            }
+        }
+    }
+}
+
+extension GameLocationManager: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else { return }
+        print("위치 업뎃 \(location.coordinate.latitude)  :  \(location.coordinate.longitude)")
+        DispatchQueue.main.async {
+            self.location = location
+            self.geoCode(with: location)
+            self.cnt += 1
+        }
+
+    }
+
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        // TODO
+    }
+}
+
 
 struct GameMapView: View {
-    @StateObject private var locationManager = LocationManager()
+    @ObservedObject var locationManager: GameLocationManager = GameLocationManager()
     
     @Binding var roomData: RoomData
     @Binding var hideBar: Bool
@@ -152,11 +202,8 @@ struct GameMapView: View {
             ZStack(){
                 InGameMapView()
                     .edgesIgnoringSafeArea(.all)
-                    .onChange(of: self.locationManager.lastLocation?.coordinate.latitude, perform: { newValue in
+                    .onChange(of: self.locationManager.location, perform: { newValue in
                         print("lat변경 : \(newValue)")
-                    })
-                    .onChange(of: self.locationManager.lastLocation?.coordinate.longitude, perform: { newValue in
-                        print("lng변경 : \(newValue)")
                     })
 
                     Button(action: {
