@@ -17,7 +17,7 @@ final class GameModel: ObservableObject {
     
     // MARK: - Connection
     func connect() { // 2
-        let url = URL(string: "ws://211.63.219.212:8000/ws/game/\(game_id)/")! // 3
+        let url = URL(string: "ws://airhelper.kro.kr/ws/game/\(game_id)/")! // 3
         webSocketTask = URLSession.shared.webSocketTask(with: url) // 4
         webSocketTask?.receive(completionHandler: onReceive) // 5
         webSocketTask?.resume() // 6
@@ -43,7 +43,7 @@ final class GameModel: ObservableObject {
             if let data = text.data(using: .utf8) {
                 let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
                 print("실시간 데이터 : \(json)")
-                if json["type"] as! String == "user_attend" {
+                if json["type"] as! String == "timer" {
                     let decoder = JSONDecoder()
                     if let test = try? decoder.decode(ResData.self, from: data) {
                         
@@ -203,16 +203,26 @@ struct GameMapView: View {
     @State var showOutAlert = false
     @StateObject private var model = GameModel()
     @State var alive = true
-    
+    @Binding var is_admin: Bool
+    @Binding var game_id: Int
     func location_send() -> Void {
         var dict = Dictionary<String, Any>()
         if let user_id = UserDefaults.standard.string(forKey: "user_id"), let location = self.locationManager.location?.coordinate {
-            dict = ["type": "test", "user": user_id, "lat": location.latitude, "lng": location.longitude, "alive": self.alive]
+            dict = ["type": "location", "user": user_id, "lat": location.latitude, "lng": location.longitude, "alive": self.alive]
             if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
                 let theJSONText = String(data: theJSONData, encoding: .utf8)
                 print("위치 데이터 전송 = \(theJSONText!)")
                 model.send(text: theJSONText!)
             }
+        }
+    }
+    
+    func get_timer() -> Void {
+        var dict = Dictionary<String, Any>()
+        dict = ["type": "timer"]
+        if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+            let theJSONText = String(data: theJSONData, encoding: .utf8)
+            model.send(text: theJSONText!)
         }
     }
     
@@ -316,8 +326,11 @@ struct GameMapView: View {
             AppDelegate.orientationLock = UIInterfaceOrientationMask.landscape
             UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
             UINavigationController.attemptRotationToDeviceOrientation()
-            self.model.game_id = self.roomData.id
+            self.model.game_id = self.game_id
             self.model.connect()
+            if self.is_admin {
+                self.get_timer()
+            }
         })
         .onDisappear(perform: {
             self.model.disconnect()

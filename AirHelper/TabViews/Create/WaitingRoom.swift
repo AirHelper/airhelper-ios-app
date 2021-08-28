@@ -37,7 +37,7 @@ final class RoomModel: ObservableObject {
     @Published var attend_user_list: [AttendUser] = []
     @Published var room_delete_check: Bool = false
     @Published var game_start: Bool = false
-    
+    @Published var game_id = 0
     // MARK: - Connection
     func connect() { // 2
         let url = URL(string: "ws://airhelper.kro.kr/ws/\(is_admin)/\(room_id)/")! // 3
@@ -84,6 +84,7 @@ final class RoomModel: ObservableObject {
                 else if json["type"] as! String == "game_start" {
                     DispatchQueue.main.async { // 6
                         self.game_start = true
+                        self.game_id = json["game"] as! Int
                     }
                 }
             }
@@ -137,11 +138,12 @@ struct WaitingRoom: View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 0.5){
                 
-                NavigationLink(destination: GameMapView(roomData: self.$roomData, hideBar: self.$hideBar),
+                NavigationLink(destination: GameMapView(roomData: self.$roomData, hideBar: self.$hideBar, is_admin: self.$is_admin, game_id: self.$model.game_id),
                                isActive: self.$model.game_start) {
                     EmptyView()
                 }
                 .isDetailLink(false)
+
                 //레드팀, 블루팀 구별
                 HStack(alignment: .center, spacing: 3){
                     Button(action: {
