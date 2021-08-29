@@ -95,6 +95,9 @@ struct InGameMapView: UIViewRepresentable {
     let view = NMFNaverMapView()
     
     @EnvironmentObject var players: PlayerData
+    
+    @State var markers: [String: NMFMarker] = [String: NMFMarker]()
+
     func makeUIView(context: Context) -> NMFNaverMapView {
         //let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: userLatitude, lng: userLongitude))
         view.showZoomControls = false
@@ -111,18 +114,38 @@ struct InGameMapView: UIViewRepresentable {
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
         print("updateUIView 호출")
         
+        for (key, value) in self.players.player {
+            print("(\(key) : \(value))")
+            DispatchQueue.global(qos: .default).async {
+                // 백그라운드 스레드
+                self.markers[key]?.mapView = nil
+                self.markers[key] = NMFMarker()
+                self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
+                self.markers[key]?.width = 25
+                self.markers[key]?.height = 40
+                self.markers[key]?.captionText = value.call_sign
+                self.markers[key]?.captionAligns = [NMFAlignType.top]
+                self.markers[key]?.captionColor = UIColor.red
+                DispatchQueue.main.async {
+                    // 메인 스레드
+                    self.markers[key]?.mapView = uiView.mapView
+                }
+            }
+//            var marker: [String: NMFMarker] = [String: NMFMarker]()
+//            marker[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
+//            marker[key]?.width = 25
+//            marker[key]?.height = 40
+//            marker[key]?.captionText = value.call_sign
+//            marker[key]?.captionAligns = [NMFAlignType.top]
+//            marker[key]?.captionColor = UIColor.red
+//            marker[key]?.mapView = uiView.mapView
+
+//            self.markers[key] = NMFMarker(position: NMGLatLng(lat: 37.5666102, lng: 126.9783881))
+//            self.markers[key]?.mapView = uiView.mapView
+
+        }
     }
     
-    func addMarker() -> Void {
-        let marker = NMFMarker()
-        marker.position = NMGLatLng(lat: 37.5670135, lng: 126.9783740)
-        marker.width = 25
-        marker.height = 40
-        marker.captionText = "Hello"
-        marker.captionAligns = [NMFAlignType.top]
-        marker.captionColor = UIColor.red
-        marker.mapView = view.mapView
-    }
     
     class Coordinator: NSObject, NMFMapViewTouchDelegate, NMFMapViewCameraDelegate, NMFMapViewOptionDelegate {
         @ObservedObject var viewModel: MapSceneViewModel
