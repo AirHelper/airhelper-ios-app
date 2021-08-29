@@ -15,6 +15,7 @@ final class GameModel: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask? // 1
     var game_id: Int = 0
     
+    @Published var players: Dictionary<String, Player> = [String: Player]()
     // MARK: - Connection
     func connect() { // 2
         let url = URL(string: "ws://airhelper.kro.kr/ws/game/\(game_id)/")! // 3
@@ -43,9 +44,10 @@ final class GameModel: ObservableObject {
             if let data = text.data(using: .utf8) {
                 let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
                 print("실시간 데이터 : \(json)")
+                let decoder = JSONDecoder()
                 if json["type"] as! String == "timer" {
-                    let decoder = JSONDecoder()
-                    if let test = try? decoder.decode(ResData.self, from: data) {
+                    
+                    if let data = try? decoder.decode(ResData.self, from: data) {
                         
                         DispatchQueue.main.async { // 6
                             
@@ -53,15 +55,17 @@ final class GameModel: ObservableObject {
                         
                     }
                 }
-                else if json["type"] as! String == "room_delete" {
-                    DispatchQueue.main.async { // 6
-                        
+                else if json["type"] as! String == "location" {
+                    if let jsonData = try? JSONSerialization.data(withJSONObject: json, options: [])
+                    {
+                        do {
+                            let decoding_player = try JSONDecoder().decode(Player.self, from: jsonData)
+                            self.players[decoding_player.user] = decoding_player
+                        } catch {
+                            print("ERROR:", error)
+                        }
                     }
-                }
-                else if json["type"] as! String == "game_start" {
-                    DispatchQueue.main.async { // 6
-                        
-                    }
+                    
                 }
             }
             else {
@@ -90,6 +94,7 @@ struct InGameMapView: UIViewRepresentable {
     @ObservedObject var viewModel = MapSceneViewModel()
     let view = NMFNaverMapView()
     
+    @EnvironmentObject var players: PlayerData
     func makeUIView(context: Context) -> NMFNaverMapView {
         //let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: userLatitude, lng: userLongitude))
         view.showZoomControls = false
@@ -100,15 +105,24 @@ struct InGameMapView: UIViewRepresentable {
         view.mapView.addOptionDelegate(delegate: context.coordinator)
 
         view.mapView.positionMode = .direction
-        print(view.mapView.cameraPosition)
         return view
     }
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
-        
+        print("updateUIView 호출")
         
     }
     
+    func addMarker() -> Void {
+        let marker = NMFMarker()
+        marker.position = NMGLatLng(lat: 37.5670135, lng: 126.9783740)
+        marker.width = 25
+        marker.height = 40
+        marker.captionText = "Hello"
+        marker.captionAligns = [NMFAlignType.top]
+        marker.captionColor = UIColor.red
+        marker.mapView = view.mapView
+    }
     
     class Coordinator: NSObject, NMFMapViewTouchDelegate, NMFMapViewCameraDelegate, NMFMapViewOptionDelegate {
         @ObservedObject var viewModel: MapSceneViewModel
@@ -192,6 +206,19 @@ extension GameLocationManager: CLLocationManagerDelegate {
     }
 }
 
+class PlayerData: ObservableObject {
+    @Published var player: Dictionary<String, Player> = [String: Player]()
+}
+
+struct Player: Codable, Equatable {
+    var alive: Bool
+    var lat: Double
+    var lng: Double
+    var user: String
+    var call_sign: String
+    var team: String
+    var type: String
+}
 
 struct GameMapView: View {
     @ObservedObject var locationManager: GameLocationManager = GameLocationManager()
@@ -201,17 +228,20 @@ struct GameMapView: View {
     @Environment(\.presentationMode) var presentation
     
     @State var showOutAlert = false
-    @StateObject private var model = GameModel()
+    @StateObject var model = GameModel()
     @State var alive = true
     @Binding var is_admin: Bool
     @Binding var game_id: Int
+    @Binding var team: String
+    @StateObject var players = PlayerData()
+    
     func location_send() -> Void {
         var dict = Dictionary<String, Any>()
         if let user_id = UserDefaults.standard.string(forKey: "user_id"), let location = self.locationManager.location?.coordinate {
             dict = ["type": "location", "user": user_id, "lat": location.latitude, "lng": location.longitude, "alive": self.alive]
             if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
                 let theJSONText = String(data: theJSONData, encoding: .utf8)
-                print("위치 데이터 전송 = \(theJSONText!)")
+//                print("위치 데이터 전송 = \(theJSONText!)")
                 model.send(text: theJSONText!)
             }
         }
@@ -237,6 +267,11 @@ struct GameMapView: View {
                     .onChange(of: self.alive, perform: { newValue in
                         self.location_send()
                     })
+                    .onChange(of: self.model.players, perform: { newValue in
+                        self.players.player = self.model.players
+                        print("위치정보 변경완료")
+                    })
+                    .environmentObject(self.players)
                 
                     Button(action: {
                         print("나가기")

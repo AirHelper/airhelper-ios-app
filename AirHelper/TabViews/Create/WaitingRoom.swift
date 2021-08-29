@@ -113,7 +113,7 @@ final class RoomModel: ObservableObject {
 struct WaitingRoom: View {
     @State var roomData: RoomData
     @State var is_admin = false
-    var team = "레드팀"
+    @State var team = "레드팀"
     @StateObject private var model = RoomModel()
     @Environment(\.presentationMode) var presentation
     @State private var hideBar = false
@@ -122,10 +122,10 @@ struct WaitingRoom: View {
         model.send(text: message)
     }
     
-    private func team_change(changeTeam: String) {
+    private func team_change() {
         var dict = Dictionary<String, String>()
         if let user_id = UserDefaults.standard.string(forKey: "user_id") {
-            dict = ["type": "team_change", "user": user_id, "team": changeTeam]
+            dict = ["type": "team_change", "user": user_id, "team": self.team]
             if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
                 let theJSONText = String(data: theJSONData, encoding: .utf8)
                 print("팀변경 = \(theJSONText!)")
@@ -138,7 +138,7 @@ struct WaitingRoom: View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 0.5){
                 
-                NavigationLink(destination: GameMapView(roomData: self.$roomData, hideBar: self.$hideBar, is_admin: self.$is_admin, game_id: self.$model.game_id),
+                NavigationLink(destination: GameMapView(roomData: self.$roomData, hideBar: self.$hideBar, is_admin: self.$is_admin, game_id: self.$model.game_id, team: self.$team),
                                isActive: self.$model.game_start) {
                     EmptyView()
                 }
@@ -147,7 +147,8 @@ struct WaitingRoom: View {
                 //레드팀, 블루팀 구별
                 HStack(alignment: .center, spacing: 3){
                     Button(action: {
-                        team_change(changeTeam: "레드팀")
+                        self.team = "레드팀"
+                        team_change()
                     }){
                         
                         HStack(){
@@ -165,7 +166,8 @@ struct WaitingRoom: View {
                         .cornerRadius(5)
                     }
                     Button(action: {
-                        team_change(changeTeam: "블루팀")
+                        self.team = "블루팀"
+                        team_change()
                     }){
                         HStack(){
                             Image("shield")
@@ -277,7 +279,8 @@ struct WaitingRoom: View {
                 //옵저버
                 HStack(alignment: .center, spacing: 3){
                     Button(action: {
-                        team_change(changeTeam: "옵저버")
+                        self.team = "옵저버"
+                        team_change()
                     }){
                         HStack(){
                             Image(systemName: "eye.fill")
