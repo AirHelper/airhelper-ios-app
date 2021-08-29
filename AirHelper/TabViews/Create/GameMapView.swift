@@ -97,7 +97,7 @@ struct InGameMapView: UIViewRepresentable {
     @EnvironmentObject var players: PlayerData
     
     @State var markers: [String: NMFMarker] = [String: NMFMarker]()
-
+    
     func makeUIView(context: Context) -> NMFNaverMapView {
         //let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: userLatitude, lng: userLongitude))
         view.showZoomControls = false
@@ -106,7 +106,7 @@ struct InGameMapView: UIViewRepresentable {
         //view.mapView.touchDelegate = context.coordinator
         view.mapView.addCameraDelegate(delegate: context.coordinator)
         view.mapView.addOptionDelegate(delegate: context.coordinator)
-
+        
         view.mapView.positionMode = .direction
         return view
     }
@@ -116,33 +116,28 @@ struct InGameMapView: UIViewRepresentable {
         
         for (key, value) in self.players.player {
             print("(\(key) : \(value))")
-            DispatchQueue.global(qos: .default).async {
-                // 백그라운드 스레드
-                self.markers[key]?.mapView = nil
-                self.markers[key] = NMFMarker()
-                self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
-                self.markers[key]?.width = 25
-                self.markers[key]?.height = 40
-                self.markers[key]?.captionText = value.call_sign
-                self.markers[key]?.captionAligns = [NMFAlignType.top]
-                self.markers[key]?.captionColor = UIColor.red
-                DispatchQueue.main.async {
-                    // 메인 스레드
-                    self.markers[key]?.mapView = uiView.mapView
+            if let user_id = UserDefaults.standard.string(forKey: "user_id") {
+                if user_id != key {
+                    DispatchQueue.global(qos: .default).async {
+                        // 백그라운드 스레드
+                        
+                        if self.markers[key]?.mapView != nil {
+                            self.markers[key]?.mapView = nil
+                        }
+                        self.markers[key] = NMFMarker()
+                        self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
+                        self.markers[key]?.width = 25
+                        self.markers[key]?.height = 40
+                        self.markers[key]?.captionText = value.call_sign
+                        self.markers[key]?.captionAligns = [NMFAlignType.top]
+                        self.markers[key]?.captionColor = UIColor.red
+                        DispatchQueue.main.async {
+                            // 메인 스레드
+                            self.markers[key]?.mapView = uiView.mapView
+                        }
+                    }
                 }
             }
-//            var marker: [String: NMFMarker] = [String: NMFMarker]()
-//            marker[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
-//            marker[key]?.width = 25
-//            marker[key]?.height = 40
-//            marker[key]?.captionText = value.call_sign
-//            marker[key]?.captionAligns = [NMFAlignType.top]
-//            marker[key]?.captionColor = UIColor.red
-//            marker[key]?.mapView = uiView.mapView
-
-//            self.markers[key] = NMFMarker(position: NMGLatLng(lat: 37.5666102, lng: 126.9783881))
-//            self.markers[key]?.mapView = uiView.mapView
-
         }
     }
     
@@ -179,13 +174,13 @@ extension AppDelegate {
 }
 
 class GameLocationManager: NSObject, ObservableObject {
-
+    
     let locationManager = CLLocationManager()
     let geoCoder = CLGeocoder()
-
+    
     @Published var location: CLLocation?
     @Published var placemark: CLPlacemark?
-
+    
     override init() {
         super.init()
         self.locationManager.delegate = self
@@ -193,9 +188,9 @@ class GameLocationManager: NSObject, ObservableObject {
         self.locationManager.requestWhenInUseAuthorization()
         self.locationManager.startUpdatingLocation()
     }
-
+    
     func geoCode(with location: CLLocation) {
-
+        
         geoCoder.reverseGeocodeLocation(location) { (placemark, error) in
             if error != nil {
                 print(error!.localizedDescription)
@@ -216,14 +211,14 @@ extension GameLocationManager: CLLocationManagerDelegate {
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-//        print("위치 업뎃 \(location.coordinate.latitude)  :  \(location.coordinate.longitude)")
+        //        print("위치 업뎃 \(location.coordinate.latitude)  :  \(location.coordinate.longitude)")
         DispatchQueue.main.async {
             self.location = location
             self.geoCode(with: location)
         }
-
+        
     }
-
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         // TODO
     }
@@ -264,7 +259,7 @@ struct GameMapView: View {
             dict = ["type": "location", "user": user_id, "lat": location.latitude, "lng": location.longitude, "alive": self.alive]
             if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
                 let theJSONText = String(data: theJSONData, encoding: .utf8)
-//                print("위치 데이터 전송 = \(theJSONText!)")
+                //                print("위치 데이터 전송 = \(theJSONText!)")
                 model.send(text: theJSONText!)
             }
         }
@@ -296,76 +291,76 @@ struct GameMapView: View {
                     })
                     .environmentObject(self.players)
                 
-                    Button(action: {
-                        print("나가기")
-                        self.showOutAlert = true
-                    }){
-                        Image(systemName: "clear")
+                Button(action: {
+                    print("나가기")
+                    self.showOutAlert = true
+                }){
+                    Image(systemName: "clear")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30)
+                        .background(Color.black)
+                        .border(Color.white)
+                        .foregroundColor(Color.white)
+                        .opacity(0.6)
+                }
+                .offset(x: gp.size.width / 2, y: -gp.size.height / 2.2)
+                
+                
+                Text("남은 시간  15:00")
+                    .padding(2)
+                    .background(Color.black)
+                    .opacity(0.8)
+                    .foregroundColor(Color.white)
+                    .offset(x: -gp.size.width / 2.2, y: -gp.size.height / 2.2)
+                
+                Button(action: {
+                    print("무전")
+                }){
+                    HStack(){
+                        Image(systemName: "mic.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 30)
-                            .background(Color.black)
-                            .border(Color.white)
                             .foregroundColor(Color.white)
-                            .opacity(0.6)
+                            .frame(width: 20)
+                        Text("무전")
+                            .foregroundColor(Color.white)
+                            .bold()
+                            .font(.system(size: 20))
                     }
-                    .offset(x: gp.size.width / 2, y: -gp.size.height / 2.2)
+                    .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+                    .background(Color.black.opacity(0.7))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                    )
                     
-                    
-                    Text("남은 시간  15:00")
-                        .padding(2)
-                        .background(Color.black)
-                        .opacity(0.8)
-                        .foregroundColor(Color.white)
-                        .offset(x: -gp.size.width / 2.2, y: -gp.size.height / 2.2)
-                    
-                    Button(action: {
-                        print("무전")
-                    }){
-                        HStack(){
-                            Image(systemName: "mic.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundColor(Color.white)
-                                .frame(width: 20)
-                            Text("무전")
-                                .foregroundColor(Color.white)
-                                .bold()
-                                .font(.system(size: 20))
-                        }
-                        .frame(width: gp.size.width / 7, height: gp.size.height / 6)
-                        .background(Color.black.opacity(0.7))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
-                        )
-                        
+                }
+                .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
+                
+                Button(action: {
+                    print("전사")
+                    self.alive = false
+                    self.locationManager.locationManagerStop()
+                }){
+                    HStack(){
+                        Image(systemName: "eye.slash")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(Color.white)
+                            .frame(width: 30)
+                        Text("전사")
+                            .foregroundColor(Color.white)
+                            .bold()
+                            .font(.system(size: 20))
                     }
-                    .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
+                    .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+                    .background(Color.red.opacity(0.7))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                    )
                     
-                    Button(action: {
-                        print("전사")
-                        self.alive = false
-                        self.locationManager.locationManagerStop()
-                    }){
-                        HStack(){
-                            Image(systemName: "eye.slash")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundColor(Color.white)
-                                .frame(width: 30)
-                            Text("전사")
-                                .foregroundColor(Color.white)
-                                .bold()
-                                .font(.system(size: 20))
-                        }
-                        .frame(width: gp.size.width / 7, height: gp.size.height / 6)
-                        .background(Color.red.opacity(0.7))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
-                        )
-                        
-                    }
-                    .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
+                }
+                .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
                 
                 
             }
