@@ -131,6 +131,9 @@ struct InGameMapView: UIViewRepresentable {
                         self.markers[key]?.captionText = value.call_sign
                         self.markers[key]?.captionAligns = [NMFAlignType.top]
                         self.markers[key]?.captionColor = UIColor.red
+                        if value.alive == false {
+                            self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLACK
+                        }
                         DispatchQueue.main.async {
                             // 메인 스레드
                             self.markers[key]?.mapView = uiView.mapView
@@ -340,6 +343,7 @@ struct GameMapView: View {
                 Button(action: {
                     print("전사")
                     self.alive = false
+                    self.location_send()
                     self.locationManager.locationManagerStop()
                 }){
                     HStack(){
