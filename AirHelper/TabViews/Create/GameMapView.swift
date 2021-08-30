@@ -16,6 +16,8 @@ final class GameModel: ObservableObject {
     var game_id: Int = 0
     
     @Published var players: Dictionary<String, Player> = [String: Player]()
+    @Published var endTime = ""
+    
     // MARK: - Connection
     func connect() { // 2
         let url = URL(string: "ws://airhelper.kro.kr/ws/game/\(game_id)/")! // 3
@@ -44,20 +46,21 @@ final class GameModel: ObservableObject {
             if let data = text.data(using: .utf8) {
                 let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
                 print("실시간 데이터 : \(json)")
-                let decoder = JSONDecoder()
+
                 if json["type"] as! String == "timer" {
+                    print("타이머 들어옴")
+
                     
-                    if let data = try? decoder.decode(ResData.self, from: data) {
-                        
-                        DispatchQueue.main.async { // 6
-                            
-                        }
+                    self.endTime = json["end_time"] as! String
+//                    if let startTime = format.date(from: json["start_time"] as! String), let endTime = format.date(from: json["end_time"] as! String) {
+//                        self.end = Int(endTime.timeIntervalSince(startTime))
+//                    }
+                    DispatchQueue.main.async { // 6
                         
                     }
                 }
                 else if json["type"] as! String == "location" {
-                    if let jsonData = try? JSONSerialization.data(withJSONObject: json, options: [])
-                    {
+                    if let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []) {
                         do {
                             let decoding_player = try JSONDecoder().decode(Player.self, from: jsonData)
                             self.players[decoding_player.user] = decoding_player
@@ -256,6 +259,8 @@ struct GameMapView: View {
     @Binding var team: String
     @StateObject var players = PlayerData()
     
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var timeRemaining = 0
     func location_send() -> Void {
         var dict = Dictionary<String, Any>()
         if let user_id = UserDefaults.standard.string(forKey: "user_id"), let location = self.locationManager.location?.coordinate {
@@ -282,16 +287,32 @@ struct GameMapView: View {
             ZStack(){
                 InGameMapView()
                     .edgesIgnoringSafeArea(.all)
-                    .onChange(of: self.locationManager.location, perform: { newValue in
+                    .onChange(of: self.locationManager.location, perform: { newValue in //위치 변경때마다 전송
                         self.location_send()
                     })
-                    .onChange(of: self.alive, perform: { newValue in
+                    .onChange(of: self.alive, perform: { newValue in //사망시 전송
                         self.location_send()
                     })
-                    .onChange(of: self.model.players, perform: { newValue in
+                    .onChange(of: self.model.players, perform: { newValue in //위치정보 받아서 지도에 마커표시
                         self.players.player = self.model.players
                         print("위치정보 변경완료")
                     })
+                    .onChange(of: self.model.endTime, perform: { newValue in //남은시간 계싼
+                        let format = DateFormatter()
+                        format.dateFormat = "HH:mm:ss"
+                        if let startTime = format.date(from: format.string(from: Date())),
+                           let endTime = format.date(from: self.model.endTime) {
+                            
+                            self.timeRemaining = Int(endTime.timeIntervalSince(startTime))
+                        }
+                    })
+                    .onReceive(timer) { time in
+                        if self.model.endTime != "" {
+                            if self.timeRemaining > 0 {
+                                self.timeRemaining -= 1
+                            }
+                        }
+                    }
                     .environmentObject(self.players)
                 
                 Button(action: {
@@ -310,7 +331,7 @@ struct GameMapView: View {
                 .offset(x: gp.size.width / 2, y: -gp.size.height / 2.2)
                 
                 
-                Text("남은 시간  15:00")
+                Text("남은 시간  \(self.timeRemaining / 60):\(self.timeRemaining % 60)")
                     .padding(2)
                     .background(Color.black)
                     .opacity(0.8)
@@ -385,9 +406,9 @@ struct GameMapView: View {
             UINavigationController.attemptRotationToDeviceOrientation()
             self.model.game_id = self.game_id
             self.model.connect()
-            if self.is_admin {
-                self.get_timer()
-            }
+//            if self.is_admin {
+//                self.get_timer()
+//            }
         })
         .onDisappear(perform: {
             self.model.disconnect()

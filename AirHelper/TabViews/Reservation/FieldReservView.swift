@@ -33,11 +33,18 @@ final class ChatScreenModel: ObservableObject {
 }
 
 struct FieldReservView: View {
-
+    @State private var timeRemaining = 100
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var body: some View {
         GeometryReader { gp in
             ZStack(){
-
+                Text("Time: \(timeRemaining)")
+                            .font(.largeTitle)
+                    .onReceive(timer) { time in
+                        if self.timeRemaining > 0 {
+                            self.timeRemaining -= 1
+                        }
+                    }
             }
         }
 
