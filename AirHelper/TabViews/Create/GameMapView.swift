@@ -306,7 +306,7 @@ struct GameMapView: View {
                             self.timeRemaining = Int(endTime.timeIntervalSince(startTime))
                         }
                     })
-                    .onReceive(timer) { time in
+                    .onReceive(timer) { time in // 타이
                         if self.model.endTime != "" {
                             if self.timeRemaining > 0 {
                                 self.timeRemaining -= 1
