@@ -100,7 +100,7 @@ struct InGameMapView: UIViewRepresentable {
     @EnvironmentObject var players: PlayerData
     
     @State var markers: [String: NMFMarker] = [String: NMFMarker]()
-    
+    var team: String
     func makeUIView(context: Context) -> NMFNaverMapView {
         //let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: userLatitude, lng: userLongitude))
         view.showZoomControls = false
@@ -120,26 +120,28 @@ struct InGameMapView: UIViewRepresentable {
         for (key, value) in self.players.player {
             print("(\(key) : \(value))")
             if let user_id = UserDefaults.standard.string(forKey: "user_id") {
-                if user_id != key {
-                    DispatchQueue.global(qos: .default).async {
-                        // 백그라운드 스레드
-                        
-                        if self.markers[key]?.mapView != nil {
-                            self.markers[key]?.mapView = nil
-                        }
-                        self.markers[key] = NMFMarker()
-                        self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
-                        self.markers[key]?.width = 25
-                        self.markers[key]?.height = 40
-                        self.markers[key]?.captionText = value.call_sign
-                        self.markers[key]?.captionAligns = [NMFAlignType.top]
-                        self.markers[key]?.captionColor = UIColor.red
-                        if value.alive == false {
-                            self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLACK
-                        }
-                        DispatchQueue.main.async {
-                            // 메인 스레드
-                            self.markers[key]?.mapView = uiView.mapView
+                if user_id != key { //자신꺼 제외한 마커 표시
+                    if self.team == value.team { //같은 팀이면
+                        DispatchQueue.global(qos: .default).async {
+                            // 백그라운드 스레드
+                            
+                            if self.markers[key]?.mapView != nil {
+                                self.markers[key]?.mapView = nil
+                            }
+                            self.markers[key] = NMFMarker()
+                            self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
+                            self.markers[key]?.width = 25
+                            self.markers[key]?.height = 40
+                            self.markers[key]?.captionText = value.call_sign
+                            self.markers[key]?.captionAligns = [NMFAlignType.top]
+                            self.markers[key]?.captionColor = UIColor.red
+                            if value.alive == false {
+                                self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLACK
+                            }
+                            DispatchQueue.main.async {
+                                // 메인 스레드
+                                self.markers[key]?.mapView = uiView.mapView
+                            }
                         }
                     }
                 }
@@ -285,14 +287,14 @@ struct GameMapView: View {
     var body: some View {
         GeometryReader { gp in
             ZStack(){
-                InGameMapView()
+                InGameMapView(team: self.team)
                     .edgesIgnoringSafeArea(.all)
                     .onChange(of: self.locationManager.location, perform: { newValue in //위치 변경때마다 전송
                         self.location_send()
                     })
-                    .onChange(of: self.alive, perform: { newValue in //사망시 전송
-                        self.location_send()
-                    })
+//                    .onChange(of: self.alive, perform: { newValue in //사망시 전송
+//                        self.location_send()
+//                    })
                     .onChange(of: self.model.players, perform: { newValue in //위치정보 받아서 지도에 마커표시
                         self.players.player = self.model.players
                         print("위치정보 변경완료")
@@ -331,7 +333,7 @@ struct GameMapView: View {
                 .offset(x: gp.size.width / 2, y: -gp.size.height / 2.2)
                 
                 
-                Text("남은 시간  \(self.timeRemaining / 60):\(self.timeRemaining % 60)")
+                Text("남은 시간  \(String(format: "%02d" ,self.timeRemaining / 60)):\(String(format: "%02d", self.timeRemaining % 60))")
                     .padding(2)
                     .background(Color.black)
                     .opacity(0.8)
@@ -406,9 +408,6 @@ struct GameMapView: View {
             UINavigationController.attemptRotationToDeviceOrientation()
             self.model.game_id = self.game_id
             self.model.connect()
-//            if self.is_admin {
-//                self.get_timer()
-//            }
         })
         .onDisappear(perform: {
             self.model.disconnect()
