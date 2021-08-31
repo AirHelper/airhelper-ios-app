@@ -11,13 +11,19 @@ import CoreLocation
 import Combine
 import Foundation
 
+struct TeamPlayerCount: Equatable {
+    var redTeam: Int = -1
+    var blueTeam: Int = -1
+}
+
 final class GameModel: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask? // 1
     var game_id: Int = 0
     
     @Published var players: Dictionary<String, Player> = [String: Player]()
     @Published var endTime = ""
-    
+    @Published var player_cnt = TeamPlayerCount()
+    @Published var endGame = false
     // MARK: - Connection
     func connect() { // 2
         let url = URL(string: "ws://airhelper.kro.kr/ws/game/\(game_id)/")! // 3
@@ -46,29 +52,29 @@ final class GameModel: ObservableObject {
             if let data = text.data(using: .utf8) {
                 let json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
                 print("실시간 데이터 : \(json)")
-
+                
                 if json["type"] as! String == "timer" {
-                    print("타이머 들어옴")
-
-                    
-                    self.endTime = json["end_time"] as! String
-//                    if let startTime = format.date(from: json["start_time"] as! String), let endTime = format.date(from: json["end_time"] as! String) {
-//                        self.end = Int(endTime.timeIntervalSince(startTime))
-//                    }
                     DispatchQueue.main.async { // 6
-                        
+                        self.endTime = json["end_time"] as! String
                     }
                 }
                 else if json["type"] as! String == "location" {
                     if let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []) {
                         do {
                             let decoding_player = try JSONDecoder().decode(Player.self, from: jsonData)
-                            self.players[decoding_player.user] = decoding_player
+                            DispatchQueue.main.async {
+                                self.players[decoding_player.user] = decoding_player
+                            }
+                            if let redTeam_cnt = json["redTeam_player_count"], let blueTeam_cnt = json["blueTeam_player_count"] {
+                                DispatchQueue.main.async {
+                                    self.player_cnt.redTeam = redTeam_cnt as! Int
+                                    self.player_cnt.blueTeam = blueTeam_cnt as! Int
+                                }
+                            }
                         } catch {
                             print("ERROR:", error)
                         }
                     }
-                    
                 }
             }
             else {
@@ -115,10 +121,10 @@ struct InGameMapView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
-        print("updateUIView 호출")
+//        print("updateUIView 호출")
         
         for (key, value) in self.players.player {
-            print("(\(key) : \(value))")
+//            print("(\(key) : \(value))")
             if let user_id = UserDefaults.standard.string(forKey: "user_id") {
                 if user_id != key { //자신꺼 제외한 마커 표시
                     if self.team == value.team { //같은 팀이면
@@ -130,8 +136,8 @@ struct InGameMapView: UIViewRepresentable {
                             }
                             self.markers[key] = NMFMarker()
                             self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
-                            self.markers[key]?.width = 25
-                            self.markers[key]?.height = 40
+                            self.markers[key]?.width = CGFloat(NMF_MARKER_SIZE_AUTO)
+                            self.markers[key]?.height = CGFloat(NMF_MARKER_SIZE_AUTO)
                             self.markers[key]?.captionText = value.call_sign
                             self.markers[key]?.captionAligns = [NMFAlignType.top]
                             self.markers[key]?.captionColor = UIColor.red
@@ -263,6 +269,7 @@ struct GameMapView: View {
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var timeRemaining = 0
+    
     func location_send() -> Void {
         var dict = Dictionary<String, Any>()
         if let user_id = UserDefaults.standard.string(forKey: "user_id"), let location = self.locationManager.location?.coordinate {
@@ -299,7 +306,7 @@ struct GameMapView: View {
                         self.players.player = self.model.players
                         print("위치정보 변경완료")
                     })
-                    .onChange(of: self.model.endTime, perform: { newValue in //남은시간 계싼
+                    .onChange(of: self.model.endTime, perform: { newValue in //남은시간 계산
                         let format = DateFormatter()
                         format.dateFormat = "HH:mm:ss"
                         if let startTime = format.date(from: format.string(from: Date())),
@@ -308,7 +315,17 @@ struct GameMapView: View {
                             self.timeRemaining = Int(endTime.timeIntervalSince(startTime))
                         }
                     })
-                    .onReceive(timer) { time in // 타이
+                    .onChange(of: self.model.player_cnt, perform: { newValue in //승패
+                        if self.model.endGame == false { //게임이 끝나지 않았을 때
+                            if self.model.player_cnt.redTeam == 0 {
+                                self.model.endGame = true
+                            }
+                            else if self.model.player_cnt.blueTeam == 0 {
+                                self.model.endGame = true
+                            }
+                        }
+                    })
+                    .onReceive(timer) { time in // 타이머
                         if self.model.endTime != "" {
                             if self.timeRemaining > 0 {
                                 self.timeRemaining -= 1
@@ -400,6 +417,31 @@ struct GameMapView: View {
                     secondaryButton: .cancel(Text("아니오"), action: nil)
                 )
             }
+            .alert(isPresented: self.$model.endGame, content: {
+                var message = ""
+                if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
+                    if self.team == "레드팀" {
+                        message = "승리하셨습니다."
+                    }
+                    else {
+                        message = "패배하셨습니다."
+                    }
+                }
+                else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
+                    if self.team == "레드팀" {
+                        message = "패배하셨습니다."
+                    }
+                    else {
+                        message = "승리하셨습니다."
+                    }
+                }
+                else {
+                    message = "무승부입니다."
+                }
+                return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
+                    print("나가기")
+                }))
+            })
             
         }
         .onAppear(perform: {
