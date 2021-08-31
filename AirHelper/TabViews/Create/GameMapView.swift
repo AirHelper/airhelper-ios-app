@@ -76,6 +76,15 @@ final class GameModel: ObservableObject {
                         }
                     }
                 }
+                else if json["type"] as! String == "game_end" {
+                    if let redTeam_cnt = json["redTeam_player_count"], let blueTeam_cnt = json["blueTeam_player_count"] {
+                        DispatchQueue.main.async {
+                            self.player_cnt.redTeam = redTeam_cnt as! Int
+                            self.player_cnt.blueTeam = blueTeam_cnt as! Int
+                            self.endGame = true
+                        }
+                    }
+                }
             }
             else {
                 return
@@ -330,6 +339,15 @@ struct GameMapView: View {
                             if self.timeRemaining > 0 {
                                 self.timeRemaining -= 1
                             }
+                            else if self.timeRemaining == 0 { //시간 만료시
+                                var dict = Dictionary<String, String>()
+                                dict = ["type": "game_end"]
+                                if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                                    let theJSONText = String(data: theJSONData, encoding: .utf8)
+                                    model.send(text: theJSONText!)
+                                }
+                                self.timeRemaining = -1
+                            }
                         }
                     }
                     .environmentObject(self.players)
@@ -439,7 +457,7 @@ struct GameMapView: View {
                     message = "무승부입니다."
                 }
                 return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
-                    print("나가기")
+                    self.presentation.wrappedValue.dismiss()
                 }))
             })
             
