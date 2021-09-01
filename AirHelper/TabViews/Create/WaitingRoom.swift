@@ -117,6 +117,7 @@ struct WaitingRoom: View {
     @StateObject private var model = RoomModel()
     @Environment(\.presentationMode) var presentation
     @State private var hideBar = false
+    @State var isPresented = false //방정보 팝업
     
     private func onCommit(message: String) {
         model.send(text: message)
@@ -377,7 +378,11 @@ struct WaitingRoom: View {
                         self.presentation.wrappedValue.dismiss()
                     })
                 )
-                
+            }
+            .sheet(isPresented: self.$isPresented) {
+                NavigationView(){
+                    GCPresentedView(roomData: self.$roomData)
+                }
             }
         }
         .onAppear(perform: {
@@ -432,7 +437,7 @@ struct WaitingRoom: View {
     @ViewBuilder
     var navigationBarTrailingItems: some View {
         Button(action: {
-            print("dd")
+            self.isPresented = true
         }) {
             Image(systemName: "info.circle.fill")
                 .resizable()
