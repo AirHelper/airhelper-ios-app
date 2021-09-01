@@ -12,16 +12,48 @@ struct GCPresentedView: View {
     @Binding var roomData: RoomData
     var body: some View {
         GeometryReader { gp in
-            VStack(alignment: .center, spacing: 1){
-                HStack(alignment: .center){
-                   Text("방 제목")
-                    .bold()
-                    .frame(width: gp.size.width * 0.2, alignment: .center)
-                    Text(self.roomData.title)
-                        .frame(width: gp.size.width * 0.7, alignment: .center)
+            Form{
+                Section(header: Text("기본 정보")){
+                    HStack {
+                        Text("방 제목")
+                            .bold()
+                        Spacer()
+                        Text(self.roomData.title)
+                    }
+                    HStack {
+                        Text("비밀번호")
+                            .bold()
+                        Spacer()
+                        Text(self.roomData.password)
+                    }
+                    HStack {
+                        Text("대결 인원")
+                            .bold()
+                        Spacer()
+                        Text("\(self.roomData.verbose_left) vs \(self.roomData.verbose_right)")
+                    }
+                    HStack {
+                        Text("게임 시간")
+                            .bold()
+                        Spacer()
+                        Text("\(self.roomData.time)분")
+                    }
+                    HStack {
+                        Text("게임 모드")
+                            .bold()
+                        Spacer()
+                        switch self.roomData.game_type {
+                        case 0:
+                            Text("섬멸전")
+                        case 1:
+                            Text("폭탄전")
+                        case 2:
+                            Text("스파이전")
+                        default:
+                            Text("섬멸전")
+                        }
+                    }
                 }
-                .frame(width: gp.size.width, alignment: .center)
-
             }
             .navigationBarTitle(Text("방 정보"), displayMode: .inline)
             .navigationBarItems(trailing:
