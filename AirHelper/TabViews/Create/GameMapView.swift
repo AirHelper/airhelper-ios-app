@@ -80,6 +80,7 @@ final class GameModel: ObservableObject {
                 }
                 else if json["type"] as! String == "game_end" {
                     if let redTeam_cnt = json["redTeam_player_count"], let blueTeam_cnt = json["blueTeam_player_count"], let room_id = json["room_id"] {
+                        self.disconnect()
                         DispatchQueue.main.async {
                             self.player_cnt.redTeam = redTeam_cnt as! Int
                             self.player_cnt.blueTeam = blueTeam_cnt as! Int
@@ -125,10 +126,12 @@ struct InGameMapView: UIViewRepresentable {
         view.mapView.zoomLevel = 18
         view.mapView.mapType = .hybrid
         //view.mapView.touchDelegate = context.coordinator
-        view.mapView.addCameraDelegate(delegate: context.coordinator)
-        view.mapView.addOptionDelegate(delegate: context.coordinator)
         
-        view.mapView.positionMode = .direction
+        view.mapView.addOptionDelegate(delegate: context.coordinator)
+        if self.team != "옵저버" {
+            view.mapView.addCameraDelegate(delegate: context.coordinator)
+            view.mapView.positionMode = .direction
+        }
         return view
     }
     

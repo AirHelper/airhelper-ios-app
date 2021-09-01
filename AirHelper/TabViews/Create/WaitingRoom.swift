@@ -434,7 +434,7 @@ struct WaitingRoom: View {
         Button(action: {
             print("dd")
         }) {
-            Image(systemName: "gearshape.fill")
+            Image(systemName: "info.circle.fill")
                 .resizable()
                 .foregroundColor(Color.black)
                 .scaledToFit()
