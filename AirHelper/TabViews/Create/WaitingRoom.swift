@@ -68,7 +68,7 @@ final class RoomModel: ObservableObject {
                 print("실시간 데이터 : \(json)")
                 if json["type"] as! String == "user_attend" {
                     let decoder = JSONDecoder()
-                    if let test = try? decoder.decode(ResData.self, from: data) {
+                    if let test = try? decoder.decode(ResData.self, from: data){
                         
                         DispatchQueue.main.async { // 6
                             self.attend_user_list = test.data

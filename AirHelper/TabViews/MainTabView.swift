@@ -20,19 +20,19 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $currentTab) {
             
-            FieldReservView()
-                .tabItem {
-                    Image(systemName: "clock.fill")
-                    Text("필드 예약")
-                }
-                .tag(Tab.reserve)
-                
-            Text("2")
-                .tabItem {
-                    Image(systemName: "bubble.left.and.bubble.right.fill")
-                    Text("커뮤니티")
-                }
-                .tag(Tab.community)
+//            FieldReservView()
+//                .tabItem {
+//                    Image(systemName: "clock.fill")
+//                    Text("필드 예약")
+//                }
+//                .tag(Tab.reserve)
+//                
+//            Text("2")
+//                .tabItem {
+//                    Image(systemName: "bubble.left.and.bubble.right.fill")
+//                    Text("커뮤니티")
+//                }
+//                .tag(Tab.community)
             
             CreateView()
                 .tabItem {
