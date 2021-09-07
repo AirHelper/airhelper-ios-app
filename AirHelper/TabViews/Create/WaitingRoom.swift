@@ -118,6 +118,7 @@ struct WaitingRoom: View {
     @Environment(\.presentationMode) var presentation
     @State private var hideBar = false
     @State var isPresented = false //방정보 팝업
+    @Binding var rootIsActive: Bool
     
     private func onCommit(message: String) {
         model.send(text: message)
@@ -139,7 +140,7 @@ struct WaitingRoom: View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 0.5){
                 
-                NavigationLink(destination: GameMapView(roomData: self.$roomData, hideBar: self.$hideBar, is_admin: self.$is_admin, game_id: self.$model.game_id, team: self.$team),
+                NavigationLink(destination: GameMapView(roomData: self.$roomData, hideBar: self.$hideBar, is_admin: self.$is_admin, game_id: self.$model.game_id, team: self.$team, rootIsActive: self.$rootIsActive),
                                isActive: self.$model.game_start) {
                     EmptyView()
                 }
@@ -386,6 +387,10 @@ struct WaitingRoom: View {
             }
         }
         .onAppear(perform: {
+            if self.rootIsActive == false {
+                self.presentation.wrappedValue.dismiss()
+                return
+            }
             self.hideBar = false
             UIApplication.shared.isIdleTimerDisabled = true
             self.model.room_id = self.roomData.id

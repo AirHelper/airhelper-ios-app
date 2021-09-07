@@ -13,7 +13,7 @@ import SwiftUI
 struct MainTabView: View {
     @Binding var shouldPopToRoot : Bool
     @State private var currentTab: Tab = .reserve
-
+    @EnvironmentObject var appState: AppState
     private enum Tab: String {
         case reserve="필드 예약", community="커뮤니티", add="방 생성", attend="방 참가", more="더보기"
     }

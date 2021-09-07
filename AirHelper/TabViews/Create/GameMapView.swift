@@ -283,8 +283,9 @@ struct GameMapView: View {
     @StateObject var players = PlayerData()
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State private var timeRemaining = 0
-    
+    @State private var timeRemaining: Int = 0
+    @Binding var rootIsActive: Bool
+
     func location_send() -> Void {
         var dict = Dictionary<String, Any>()
         if let user_id = UserDefaults.standard.string(forKey: "user_id"), let location = self.locationManager.location?.coordinate {
@@ -426,7 +427,17 @@ struct GameMapView: View {
                         .opacity(0.6)
                 }
                 .offset(x: gp.size.width / 2, y: -gp.size.height / 2.2)
-                
+                .alert(isPresented: self.$showOutAlert){
+                    Alert(
+                        title: Text("나가기"),
+                        message: Text("정말로 게임에 나가시겠습니까?"),
+                        primaryButton: .destructive(Text("네"), action: {
+                            self.rootIsActive = false
+                            self.presentation.wrappedValue.dismiss()
+                        }),
+                        secondaryButton: .cancel(Text("아니오"), action: nil)
+                    )
+                }
                 
                 Text("남은 시간  \(String(format: "%02d" ,self.timeRemaining / 60)):\(String(format: "%02d", self.timeRemaining % 60))")
                     .padding(2)
@@ -483,45 +494,36 @@ struct GameMapView: View {
                     
                 }
                 .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
-                
+                .alert(isPresented: self.$model.endGame, content: {
+                    var message = ""
+                    if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
+                        if self.team == "레드팀" {
+                            message = "승리하셨습니다."
+                        }
+                        else {
+                            message = "패배하셨습니다."
+                        }
+                    }
+                    else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
+                        if self.team == "레드팀" {
+                            message = "패배하셨습니다."
+                        }
+                        else {
+                            message = "승리하셨습니다."
+                        }
+                    }
+                    else {
+                        message = "무승부입니다."
+                    }
+                    self.roomData.id = self.model.newRoomID
+                    return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
+                        self.presentation.wrappedValue.dismiss()
+                    }))
+                })
                 
             }
             .navigationBarHidden(self.hideBar)
-            .alert(isPresented: self.$showOutAlert){
-                Alert(
-                    title: Text("나가기"),
-                    message: Text("정말로 게임에 나가시겠습니까?"),
-                    primaryButton: .destructive(Text("네"), action: {self.presentation.wrappedValue.dismiss()}),
-                    secondaryButton: .cancel(Text("아니오"), action: nil)
-                )
-            }
-            .alert(isPresented: self.$model.endGame, content: {
-                var message = ""
-                if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
-                    if self.team == "레드팀" {
-                        message = "승리하셨습니다."
-                    }
-                    else {
-                        message = "패배하셨습니다."
-                    }
-                }
-                else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
-                    if self.team == "레드팀" {
-                        message = "패배하셨습니다."
-                    }
-                    else {
-                        message = "승리하셨습니다."
-                    }
-                }
-                else {
-                    message = "무승부입니다."
-                }
-                self.roomData.id = self.model.newRoomID
-                return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
-                    self.presentation.wrappedValue.dismiss()
-                }))
-            })
-            
+ 
         }
         .onAppear(perform: {
             AppDelegate.orientationLock = UIInterfaceOrientationMask.landscape

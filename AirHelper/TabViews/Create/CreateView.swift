@@ -39,7 +39,7 @@ struct CreateView: View {
     @State var waitingroom_isActive = false
     
     @State var pass_room_data = RoomData()
-    
+
     var userLatitude: Double {
         return locationManager.lastLocation?.coordinate.latitude ?? 0
     }
@@ -114,7 +114,7 @@ struct CreateView: View {
                         .frame(width: gp.size.width * 0.9)
                     
                     Group(){
-                        NavigationLink(destination: WaitingRoom(roomData: self.pass_room_data, is_admin: true), isActive: self.$waitingroom_isActive){
+                        NavigationLink(destination: WaitingRoom(roomData: self.pass_room_data, is_admin: true, rootIsActive: self.$waitingroom_isActive), isActive: self.$waitingroom_isActive){
                             EmptyView()
                         }
                         HStack(){

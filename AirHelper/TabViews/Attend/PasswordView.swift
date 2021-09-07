@@ -88,7 +88,7 @@ struct PasswordView: View {
     var body: some View {
         GeometryReader { gp in
             VStack(alignment: .center, spacing: 5){
-                NavigationLink(destination: WaitingRoom(roomData: self.attend_room), isActive: self.$waitingroom_isActive){
+                NavigationLink(destination: WaitingRoom(roomData: self.attend_room, rootIsActive: self.$waitingroom_isActive), isActive: self.$waitingroom_isActive){
                     EmptyView()
                 }
                 Text("방 비밀번호 입력")
