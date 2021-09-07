@@ -121,7 +121,7 @@ struct InGameMapView: UIViewRepresentable {
     @State var markers: [String: NMFMarker] = [String: NMFMarker]()
     var team: String
     func makeUIView(context: Context) -> NMFNaverMapView {
-        //let cameraUpdate = NMFCameraUpdate(scrollTo: NMGLatLng(lat: userLatitude, lng: userLongitude))
+        
         view.showZoomControls = false
         view.mapView.zoomLevel = 18
         view.mapView.mapType = .hybrid
@@ -131,6 +131,10 @@ struct InGameMapView: UIViewRepresentable {
         if self.team != "옵저버" {
             view.mapView.addCameraDelegate(delegate: context.coordinator)
             view.mapView.positionMode = .direction
+        }
+        else {
+            view.mapView.positionMode = .direction
+            
         }
         return view
     }
@@ -446,81 +450,82 @@ struct GameMapView: View {
                     .foregroundColor(Color.white)
                     .offset(x: -gp.size.width / 2.2, y: -gp.size.height / 2.2)
                 
-                Button(action: {
-                    print("무전")
-                }){
-                    HStack(){
-                        Image(systemName: "mic.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(Color.white)
-                            .frame(width: 20)
-                        Text("무전")
-                            .foregroundColor(Color.white)
-                            .bold()
-                            .font(.system(size: 20))
+                if self.team != "옵저버" {
+                    Button(action: {
+                        print("무전")
+                    }){
+                        HStack(){
+                            Image(systemName: "mic.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(Color.white)
+                                .frame(width: 20)
+                            Text("무전")
+                                .foregroundColor(Color.white)
+                                .bold()
+                                .font(.system(size: 20))
+                        }
+                        .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+                        .background(Color.black.opacity(0.7))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                        )
+                        
                     }
-                    .frame(width: gp.size.width / 7, height: gp.size.height / 6)
-                    .background(Color.black.opacity(0.7))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
-                    )
+                    .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
                     
-                }
-                .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
-                
-                Button(action: {
-                    print("전사")
-                    self.alive = false
-                    self.location_send()
-                    self.locationManager.locationManagerStop()
-                }){
-                    HStack(){
-                        Image(systemName: "eye.slash")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(Color.white)
-                            .frame(width: 30)
-                        Text("전사")
-                            .foregroundColor(Color.white)
-                            .bold()
-                            .font(.system(size: 20))
+                    Button(action: {
+                        print("전사")
+                        self.alive = false
+                        self.location_send()
+                        self.locationManager.locationManagerStop()
+                    }){
+                        HStack(){
+                            Image(systemName: "eye.slash")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(Color.white)
+                                .frame(width: 30)
+                            Text("전사")
+                                .foregroundColor(Color.white)
+                                .bold()
+                                .font(.system(size: 20))
+                        }
+                        .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+                        .background(Color.red.opacity(0.7))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                        )
+                        
                     }
-                    .frame(width: gp.size.width / 7, height: gp.size.height / 6)
-                    .background(Color.red.opacity(0.7))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
-                    )
-                    
-                }
-                .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
-                .alert(isPresented: self.$model.endGame, content: {
-                    var message = ""
-                    if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
-                        if self.team == "레드팀" {
-                            message = "승리하셨습니다."
+                    .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
+                    .alert(isPresented: self.$model.endGame, content: {
+                        var message = ""
+                        if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
+                            if self.team == "레드팀" {
+                                message = "승리하셨습니다."
+                            }
+                            else {
+                                message = "패배하셨습니다."
+                            }
+                        }
+                        else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
+                            if self.team == "레드팀" {
+                                message = "패배하셨습니다."
+                            }
+                            else {
+                                message = "승리하셨습니다."
+                            }
                         }
                         else {
-                            message = "패배하셨습니다."
+                            message = "무승부입니다."
                         }
-                    }
-                    else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
-                        if self.team == "레드팀" {
-                            message = "패배하셨습니다."
-                        }
-                        else {
-                            message = "승리하셨습니다."
-                        }
-                    }
-                    else {
-                        message = "무승부입니다."
-                    }
-                    self.roomData.id = self.model.newRoomID
-                    return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
-                        self.presentation.wrappedValue.dismiss()
-                    }))
-                })
-                
+                        self.roomData.id = self.model.newRoomID
+                        return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
+                            self.presentation.wrappedValue.dismiss()
+                        }))
+                    })
+                }
             }
             .navigationBarHidden(self.hideBar)
  
