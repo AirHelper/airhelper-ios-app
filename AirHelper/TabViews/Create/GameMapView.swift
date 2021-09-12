@@ -79,7 +79,9 @@ final class GameModel: ObservableObject {
                     }
                 }
                 else if json["type"] as! String == "game_end" {
+                    print("게임 종료")
                     if let redTeam_cnt = json["redTeam_player_count"], let blueTeam_cnt = json["blueTeam_player_count"], let room_id = json["room_id"] {
+                        print("들어옴")
                         self.disconnect()
                         DispatchQueue.main.async {
                             self.player_cnt.redTeam = redTeam_cnt as! Int
@@ -87,6 +89,8 @@ final class GameModel: ObservableObject {
                             self.newRoomID = room_id as! Int
                             self.endGame = true
                         }
+                        
+                        print(self.endGame)
                     }
                 }
             }
@@ -120,6 +124,7 @@ struct InGameMapView: UIViewRepresentable {
     
     @State var markers: [String: NMFMarker] = [String: NMFMarker]()
     var team: String
+    var locationManager: GameLocationManager
     func makeUIView(context: Context) -> NMFNaverMapView {
         
         view.showZoomControls = false
@@ -132,41 +137,94 @@ struct InGameMapView: UIViewRepresentable {
             view.mapView.addCameraDelegate(delegate: context.coordinator)
             view.mapView.positionMode = .direction
         }
-        else {
-            view.mapView.positionMode = .direction
-            
-        }
+
         return view
     }
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
-//        print("updateUIView 호출")
-        
+        print("updateUIView 호출")
+        if self.team == "옵저버", let location = self.locationManager.location {
+            uiView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude)))
+        }
         for (key, value) in self.players.player {
-//            print("(\(key) : \(value))")
-            if let user_id = UserDefaults.standard.string(forKey: "user_id") {
-                if user_id != key { //자신꺼 제외한 마커 표시
-                    if self.team == value.team { //같은 팀이면
-                        DispatchQueue.global(qos: .default).async {
-                            // 백그라운드 스레드
-                            
-                            if self.markers[key]?.mapView != nil {
-                                self.markers[key]?.mapView = nil
+            //            print("(\(key) : \(value))")
+            if self.team != "옵저버" {
+                if let user_id = UserDefaults.standard.string(forKey: "user_id") {
+                    if user_id != key { //자신꺼 제외한 마커 표시
+                        if self.team == value.team { //같은 팀이면
+                            DispatchQueue.global(qos: .default).async {
+                                // 백그라운드 스레드
+                                
+                                if self.markers[key]?.mapView != nil {
+                                    self.markers[key]?.mapView = nil
+                                }
+                                self.markers[key] = NMFMarker()
+                                self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
+                                self.markers[key]?.width = CGFloat(NMF_MARKER_SIZE_AUTO)
+                                self.markers[key]?.height = CGFloat(NMF_MARKER_SIZE_AUTO)
+                                self.markers[key]?.captionText = value.call_sign
+                                self.markers[key]?.captionAligns = [NMFAlignType.top]
+                                self.markers[key]?.captionColor = UIColor.green
+                                if value.alive == false {
+                                    self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLACK
+                                }
+                                DispatchQueue.main.async {
+                                    // 메인 스레드
+                                    self.markers[key]?.mapView = uiView.mapView
+                                }
                             }
-                            self.markers[key] = NMFMarker()
-                            self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
-                            self.markers[key]?.width = CGFloat(NMF_MARKER_SIZE_AUTO)
-                            self.markers[key]?.height = CGFloat(NMF_MARKER_SIZE_AUTO)
-                            self.markers[key]?.captionText = value.call_sign
-                            self.markers[key]?.captionAligns = [NMFAlignType.top]
-                            self.markers[key]?.captionColor = UIColor.red
-                            if value.alive == false {
-                                self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLACK
-                            }
-                            DispatchQueue.main.async {
-                                // 메인 스레드
-                                self.markers[key]?.mapView = uiView.mapView
-                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if value.team == "레드팀" {
+                    DispatchQueue.global(qos: .default).async {
+                        // 백그라운드 스레드
+                        if self.markers[key]?.mapView != nil {
+                            self.markers[key]?.mapView = nil
+                        }
+                        self.markers[key] = NMFMarker()
+                        self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
+                        self.markers[key]?.width = CGFloat(NMF_MARKER_SIZE_AUTO)
+                        self.markers[key]?.height = CGFloat(NMF_MARKER_SIZE_AUTO)
+                        self.markers[key]?.captionText = value.call_sign
+                        self.markers[key]?.captionAligns = [NMFAlignType.top]
+                        self.markers[key]?.captionColor = UIColor.red
+                        if value.alive == false {
+                            self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLACK
+                        }
+                        else {
+                            self.markers[key]?.iconImage = NMF_MARKER_IMAGE_RED
+                        }
+                        DispatchQueue.main.async {
+                            // 메인 스레드
+                            self.markers[key]?.mapView = uiView.mapView
+                        }
+                    }
+                }
+                else if value.team == "블루팀" {
+                    DispatchQueue.global(qos: .default).async {
+                        // 백그라운드 스레드
+                        if self.markers[key]?.mapView != nil {
+                            self.markers[key]?.mapView = nil
+                        }
+                        self.markers[key] = NMFMarker()
+                        self.markers[key]?.position = NMGLatLng(lat: value.lat, lng: value.lng)
+                        self.markers[key]?.width = CGFloat(NMF_MARKER_SIZE_AUTO)
+                        self.markers[key]?.height = CGFloat(NMF_MARKER_SIZE_AUTO)
+                        self.markers[key]?.captionText = value.call_sign
+                        self.markers[key]?.captionAligns = [NMFAlignType.top]
+                        self.markers[key]?.captionColor = UIColor.red
+                        if value.alive == false {
+                            self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLACK
+                        }
+                        else {
+                            self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLUE
+                        }
+                        DispatchQueue.main.async {
+                            // 메인 스레드
+                            self.markers[key]?.mapView = uiView.mapView
                         }
                     }
                 }
@@ -181,6 +239,7 @@ struct InGameMapView: UIViewRepresentable {
         
         init(viewModel: MapSceneViewModel) {
             self.viewModel = viewModel
+            
         }
         
         //카메라 이동이 끝나면 호출
@@ -314,10 +373,12 @@ struct GameMapView: View {
     var body: some View {
         GeometryReader { gp in
             ZStack(){
-                InGameMapView(team: self.team)
+                InGameMapView(team: self.team, locationManager: self.locationManager)
                     .edgesIgnoringSafeArea(.all)
                     .onChange(of: self.locationManager.location, perform: { newValue in //위치 변경때마다 전송
-                        self.location_send()
+                        if self.team != "옵저버" {
+                            self.location_send()
+                        }
                     })
 //                    .onChange(of: self.alive, perform: { newValue in //사망시 전송
 //                        self.location_send()
@@ -500,6 +561,7 @@ struct GameMapView: View {
                     }
                     .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
                     .alert(isPresented: self.$model.endGame, content: {
+                        print("alert 작동")
                         var message = ""
                         if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
                             if self.team == "레드팀" {
