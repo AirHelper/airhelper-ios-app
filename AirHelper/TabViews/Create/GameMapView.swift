@@ -83,11 +83,13 @@ final class GameModel: ObservableObject {
                     if let redTeam_cnt = json["redTeam_player_count"], let blueTeam_cnt = json["blueTeam_player_count"], let room_id = json["room_id"] {
                         print("들어옴")
                         self.disconnect()
+                        
                         DispatchQueue.main.async {
+                            self.endGame = true
                             self.player_cnt.redTeam = redTeam_cnt as! Int
                             self.player_cnt.blueTeam = blueTeam_cnt as! Int
                             self.newRoomID = room_id as! Int
-                            self.endGame = true
+                            
                         }
                         
                         print(self.endGame)
@@ -477,6 +479,38 @@ struct GameMapView: View {
                         }
                     }
                     .environmentObject(self.players)
+                    .alert(isPresented: self.$model.endGame, content: {
+                        print("alert 작동")
+                        var message = ""
+                        if self.team != "옵저버" {
+                            if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
+                                if self.team == "레드팀" {
+                                    message = "승리하셨습니다."
+                                }
+                                else {
+                                    message = "패배하셨습니다."
+                                }
+                            }
+                            else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
+                                if self.team == "레드팀" {
+                                    message = "패배하셨습니다."
+                                }
+                                else {
+                                    message = "승리하셨습니다."
+                                }
+                            }
+                            else {
+                                message = "무승부입니다."
+                            }
+                        }
+                        else {
+                            message = "게임이 종료되었습니다."
+                        }
+                        self.roomData.id = self.model.newRoomID
+                        return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
+                            self.presentation.wrappedValue.dismiss()
+                        }))
+                    })
                 
                 Button(action: {
                     print("나가기")
@@ -560,33 +594,7 @@ struct GameMapView: View {
                         
                     }
                     .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
-                    .alert(isPresented: self.$model.endGame, content: {
-                        print("alert 작동")
-                        var message = ""
-                        if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
-                            if self.team == "레드팀" {
-                                message = "승리하셨습니다."
-                            }
-                            else {
-                                message = "패배하셨습니다."
-                            }
-                        }
-                        else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
-                            if self.team == "레드팀" {
-                                message = "패배하셨습니다."
-                            }
-                            else {
-                                message = "승리하셨습니다."
-                            }
-                        }
-                        else {
-                            message = "무승부입니다."
-                        }
-                        self.roomData.id = self.model.newRoomID
-                        return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
-                            self.presentation.wrappedValue.dismiss()
-                        }))
-                    })
+
                 }
             }
             .navigationBarHidden(self.hideBar)
