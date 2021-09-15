@@ -132,12 +132,13 @@ struct InGameMapView: UIViewRepresentable {
         view.showZoomControls = false
         view.mapView.zoomLevel = 18
         view.mapView.mapType = .hybrid
-        //view.mapView.touchDelegate = context.coordinator
+        
         
         view.mapView.addOptionDelegate(delegate: context.coordinator)
         if self.team != "옵저버" {
             view.mapView.addCameraDelegate(delegate: context.coordinator)
             view.mapView.positionMode = .direction
+            view.mapView.touchDelegate = context.coordinator
         }
 
         return view
@@ -239,6 +240,8 @@ struct InGameMapView: UIViewRepresentable {
         @ObservedObject var viewModel: MapSceneViewModel
         var cancellable = Set<AnyCancellable>()
         
+        let marker = NMFMarker()
+        
         init(viewModel: MapSceneViewModel) {
             self.viewModel = viewModel
             
@@ -249,7 +252,15 @@ struct InGameMapView: UIViewRepresentable {
             mapView.positionMode = .direction
         }
         
-        
+        func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
+            marker.iconImage = NMFOverlayImage(name: "kakao")
+            marker.position = NMGLatLng(lat: latlng.lat, lng: latlng.lng)
+            marker.touchHandler = { (overlay: NMFOverlay) -> Bool in
+                overlay.mapView = nil
+                return true // 이벤트 소비, -mapView:didTapMap:point 이벤트는 발생하지 않음
+            }
+            marker.mapView = mapView
+        }
     }
     
     func makeCoordinator() -> Coordinator {
