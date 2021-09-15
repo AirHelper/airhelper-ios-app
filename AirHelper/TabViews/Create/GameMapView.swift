@@ -253,12 +253,15 @@ struct InGameMapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
-            marker.iconImage = NMFOverlayImage(name: "kakao")
+            marker.iconImage = NMFOverlayImage(name: "ping_marker")
+            marker.width = 40
+            marker.height = 40
             marker.position = NMGLatLng(lat: latlng.lat, lng: latlng.lng)
             marker.touchHandler = { (overlay: NMFOverlay) -> Bool in
                 overlay.mapView = nil
                 return true // 이벤트 소비, -mapView:didTapMap:point 이벤트는 발생하지 않음
             }
+            print(marker)
             marker.mapView = mapView
         }
     }
