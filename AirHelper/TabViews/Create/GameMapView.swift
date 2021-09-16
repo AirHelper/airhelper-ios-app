@@ -240,9 +240,10 @@ struct InGameMapView: UIViewRepresentable {
         @ObservedObject var viewModel: MapSceneViewModel
         var cancellable = Set<AnyCancellable>()
         let marker = NMFMarker()
-        init(viewModel: MapSceneViewModel) {
+        let session: PlayerData
+        init(viewModel: MapSceneViewModel, session: PlayerData) {
             self.viewModel = viewModel
-            
+            self.session = session
         }
         
         //카메라 이동이 끝나면 호출
@@ -251,6 +252,7 @@ struct InGameMapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
+            print(session.player)
             marker.iconImage = NMFOverlayImage(name: "ping_marker")
             marker.width = 40
             marker.height = 40
@@ -264,7 +266,7 @@ struct InGameMapView: UIViewRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(viewModel: self.viewModel)
+        return Coordinator(viewModel: self.viewModel, session: self.players)
     }
 }
 
