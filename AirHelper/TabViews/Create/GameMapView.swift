@@ -239,9 +239,7 @@ struct InGameMapView: UIViewRepresentable {
     class Coordinator: NSObject, NMFMapViewTouchDelegate, NMFMapViewCameraDelegate, NMFMapViewOptionDelegate {
         @ObservedObject var viewModel: MapSceneViewModel
         var cancellable = Set<AnyCancellable>()
-        
         let marker = NMFMarker()
-        
         init(viewModel: MapSceneViewModel) {
             self.viewModel = viewModel
             
@@ -261,7 +259,6 @@ struct InGameMapView: UIViewRepresentable {
                 overlay.mapView = nil
                 return true // 이벤트 소비, -mapView:didTapMap:point 이벤트는 발생하지 않음
             }
-            print(marker)
             marker.mapView = mapView
         }
     }
@@ -324,7 +321,6 @@ extension GameLocationManager: CLLocationManagerDelegate {
             self.location = location
             self.geoCode(with: location)
         }
-        
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
