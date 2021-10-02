@@ -21,7 +21,8 @@ final class GameModel: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask? // 1
     var game_id: Int = 0
     
-    @Published var players: Dictionary<String, Player> = [String: Player]()
+    @Published var players: Dictionary<String, Player> = [String: Player]() //팀 위치정보
+    @Published var checkpoints: [CheckPoint] = [CheckPoint]() //체크 포인트 정보
     @Published var endTime = ""
     @Published var player_cnt = TeamPlayerCount()
     @Published var endGame = false
@@ -83,7 +84,6 @@ final class GameModel: ObservableObject {
                     if let redTeam_cnt = json["redTeam_player_count"], let blueTeam_cnt = json["blueTeam_player_count"], let room_id = json["room_id"] {
                         print("들어옴")
                         self.disconnect()
-                        
                         DispatchQueue.main.async {
                             self.endGame = true
                             self.player_cnt.redTeam = redTeam_cnt as! Int
@@ -91,8 +91,14 @@ final class GameModel: ObservableObject {
                             self.newRoomID = room_id as! Int
                             
                         }
-                        
                         print(self.endGame)
+                    }
+                }
+                else if json["type"] as! String == "checkpoint" {
+                    print("체크포인트 공유")
+                    if let lat = json["lat"], let lng = json["lng"], let team = json["team"] {
+                        print("들어옴")
+                        self.checkpoints.append(CheckPoint(lat: lat as! Double, lng: lng as! Double, team: team as! String))
                     }
                 }
             }
@@ -125,8 +131,11 @@ struct InGameMapView: UIViewRepresentable {
     @EnvironmentObject var players: PlayerData
     
     @State var markers: [String: NMFMarker] = [String: NMFMarker]()
+    @StateObject var model: GameModel
     var team: String
     var locationManager: GameLocationManager
+    
+    
     func makeUIView(context: Context) -> NMFNaverMapView {
         
         view.showZoomControls = false
@@ -140,12 +149,25 @@ struct InGameMapView: UIViewRepresentable {
             view.mapView.positionMode = .direction
             view.mapView.touchDelegate = context.coordinator
         }
-
+        
+        
+        var testMarker = NMFMarker()
+        testMarker.position = NMGLatLng(lat: 37.32651597910787, lng: 127.1166428612914)
+        let when = DispatchTime.now() + 10
+        testMarker.mapView = self.view.mapView
+        DispatchQueue.main.asyncAfter(deadline: when){
+            // your code with delay
+            print("삭제")
+            testMarker.mapView = nil
+        }
+        
+        
         return view
     }
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
         print("updateUIView 호출")
+        
         if self.team == "옵저버", let location = self.locationManager.location {
             uiView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude)))
         }
@@ -240,10 +262,11 @@ struct InGameMapView: UIViewRepresentable {
         @ObservedObject var viewModel: MapSceneViewModel
         var cancellable = Set<AnyCancellable>()
         let marker = NMFMarker()
-        let session: PlayerData
-        init(viewModel: MapSceneViewModel, session: PlayerData) {
+        var model: GameModel
+        
+        init(viewModel: MapSceneViewModel, model: GameModel) {
             self.viewModel = viewModel
-            self.session = session
+            self.model = model
         }
         
         //카메라 이동이 끝나면 호출
@@ -252,7 +275,6 @@ struct InGameMapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
-            print(session.player)
             marker.iconImage = NMFOverlayImage(name: "ping_marker")
             marker.width = 40
             marker.height = 40
@@ -262,11 +284,24 @@ struct InGameMapView: UIViewRepresentable {
                 return true // 이벤트 소비, -mapView:didTapMap:point 이벤트는 발생하지 않음
             }
             marker.mapView = mapView
+            self.checkpoint_send(lat: latlng.lat, lng: latlng.lng)
+        }
+        
+        func checkpoint_send(lat: Double, lng: Double) -> Void {
+            var dict = Dictionary<String, Any>()
+            if let user_id = UserDefaults.standard.string(forKey: "user_id"){
+                dict = ["type": "checkpoint", "user": user_id, "lat": lat, "lng": lng]
+                if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                    let theJSONText = String(data: theJSONData, encoding: .utf8)
+                    //                print("위치 데이터 전송 = \(theJSONText!)")
+                    model.send(text: theJSONText!)
+                }
+            }
         }
     }
     
     func makeCoordinator() -> Coordinator {
-        return Coordinator(viewModel: self.viewModel, session: self.players)
+        return Coordinator(viewModel: self.viewModel, model: self.model)
     }
 }
 
@@ -332,9 +367,16 @@ extension GameLocationManager: CLLocationManagerDelegate {
 
 class PlayerData: ObservableObject {
     @Published var player: Dictionary<String, Player> = [String: Player]()
+    @Published var checkpoint: [CheckPoint] = [CheckPoint]()
 }
 
-struct Player: Codable, Equatable {
+struct CheckPoint: Equatable { //체크포인트 정보
+    var lat: Double
+    var lng: Double
+    var team: String
+}
+
+struct Player: Codable, Equatable { //유저 정보
     var alive: Bool
     var lat: Double
     var lng: Double
@@ -387,7 +429,7 @@ struct GameMapView: View {
     var body: some View {
         GeometryReader { gp in
             ZStack(){
-                InGameMapView(team: self.team, locationManager: self.locationManager)
+                InGameMapView(model: self.model, team: self.team, locationManager: self.locationManager)
                     .edgesIgnoringSafeArea(.all)
                     .onChange(of: self.locationManager.location, perform: { newValue in //위치 변경때마다 전송
                         if self.team != "옵저버" {
@@ -400,6 +442,13 @@ struct GameMapView: View {
                     .onChange(of: self.model.players, perform: { newValue in //위치정보 받아서 지도에 마커표시
                         self.players.player = self.model.players
                         print("위치정보 변경완료")
+                    })
+                    .onChange(of: self.model.checkpoints, perform: { newValue in //체크포인트 정보
+                        if self.model.checkpoints.count != 0 {
+                            self.players.checkpoint = self.model.checkpoints
+                            print("반영 완료 : \(self.players.checkpoint)")
+                            self.model.checkpoints = []
+                        }
                     })
                     .onChange(of: self.model.endTime, perform: { newValue in //남은시간 계산
                         let format = DateFormatter()
