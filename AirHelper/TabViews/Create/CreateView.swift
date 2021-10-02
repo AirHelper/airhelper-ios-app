@@ -23,7 +23,7 @@ struct CreateView: View {
     @State var verboseRight: String = ""
     @State var minuties: String = ""
     
-    let buttons = ["섬멸전", "폭탄전", "스파이전"]
+    let buttons = ["섬멸전", "폭탄전"/*, "스파이전"*/]
     @State public var buttonSelected: Int?
     @State private var showingAlert = false
     
@@ -143,16 +143,16 @@ struct CreateView: View {
                             }
                         }
                         
-                        if self.buttonSelected == 1 {
-                            Text("폭탄 설치지역 설정")
-                                .padding(.vertical, 30)
-                            
-                            
-                            MapView(userLatitude: self.userLatitude, userLongitude: self.userLongitude)
-                                .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
-                            
-                        }
-                        else if self.buttonSelected == 2 {
+//                        if self.buttonSelected == 1 {
+//                            Text("폭탄 설치지역 설정")
+//                                .padding(.vertical, 30)
+//                            
+//                            
+//                            MapView(userLatitude: self.userLatitude, userLongitude: self.userLongitude)
+//                                .frame(width: gp.size.width * 0.8, height: gp.size.height * 0.4)
+//                            
+//                        }
+                        if self.buttonSelected == 2 {
                             HStack() {
                                 TextField("스파이 발생확률", text: self.$spyPercent)
                                     .keyboardType(.numberPad)
