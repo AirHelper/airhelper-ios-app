@@ -151,22 +151,44 @@ struct InGameMapView: UIViewRepresentable {
         }
         
         
-        var testMarker = NMFMarker()
-        testMarker.position = NMGLatLng(lat: 37.32651597910787, lng: 127.1166428612914)
-        let when = DispatchTime.now() + 10
-        testMarker.mapView = self.view.mapView
-        DispatchQueue.main.asyncAfter(deadline: when){
-            // your code with delay
-            print("삭제")
-            testMarker.mapView = nil
-        }
-        
+//        var testMarker = NMFMarker()
+//        testMarker.position = NMGLatLng(lat: 37.32651597910787, lng: 127.1166428612914)
+//        let when = DispatchTime.now() + 10
+//        testMarker.mapView = self.view.mapView
+//        DispatchQueue.main.asyncAfter(deadline: when){
+//            // your code with delay
+//            print("삭제")
+//            testMarker.mapView = nil
+//        }
+//
         
         return view
     }
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
         print("updateUIView 호출")
+        
+        if self.players.checkpoint.count != 0 {
+            for ping in self.players.checkpoint {
+                print(ping)
+                if ping.team == self.team {
+                    
+                    var checkMarker = NMFMarker()
+                    checkMarker.iconImage = NMFOverlayImage(name: "ping_marker")
+                    checkMarker.width = 40
+                    checkMarker.height = 40
+                    checkMarker.position = NMGLatLng(lat: ping.lat, lng: ping.lng)
+                    checkMarker.mapView = uiView.mapView
+                    let when = DispatchTime.now() + 10
+                    DispatchQueue.main.asyncAfter(deadline: when){
+                        // your code with delay
+                        print("삭제")
+                        checkMarker.mapView = nil
+                    }
+                }
+            }
+            self.players.checkpoint = []
+        }
         
         if self.team == "옵저버", let location = self.locationManager.location {
             uiView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude)))
@@ -275,15 +297,15 @@ struct InGameMapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: NMFMapView, didTapMap latlng: NMGLatLng, point: CGPoint) {
-            marker.iconImage = NMFOverlayImage(name: "ping_marker")
-            marker.width = 40
-            marker.height = 40
-            marker.position = NMGLatLng(lat: latlng.lat, lng: latlng.lng)
-            marker.touchHandler = { (overlay: NMFOverlay) -> Bool in
-                overlay.mapView = nil
-                return true // 이벤트 소비, -mapView:didTapMap:point 이벤트는 발생하지 않음
-            }
-            marker.mapView = mapView
+//            marker.iconImage = NMFOverlayImage(name: "ping_marker")
+//            marker.width = 40
+//            marker.height = 40
+//            marker.position = NMGLatLng(lat: latlng.lat, lng: latlng.lng)
+//            marker.touchHandler = { (overlay: NMFOverlay) -> Bool in
+//                overlay.mapView = nil
+//                return true // 이벤트 소비, -mapView:didTapMap:point 이벤트는 발생하지 않음
+//            }
+//            marker.mapView = mapView
             self.checkpoint_send(lat: latlng.lat, lng: latlng.lng)
         }
         
