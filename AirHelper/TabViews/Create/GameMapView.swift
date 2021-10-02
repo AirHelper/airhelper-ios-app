@@ -629,28 +629,79 @@ struct GameMapView: View {
                     .offset(x: -gp.size.width / 2.2, y: -gp.size.height / 2.2)
                 
                 if self.team != "옵저버" {
-                    Button(action: {
-                        print("무전")
-                    }){
-                        HStack(){
-                            Image(systemName: "mic.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundColor(Color.white)
-                                .frame(width: 20)
-                            Text("무전")
-                                .foregroundColor(Color.white)
-                                .bold()
-                                .font(.system(size: 20))
+//                    Button(action: {
+//                        print("무전")
+//                    }){
+//                        HStack(){
+//                            Image(systemName: "mic.fill")
+//                                .resizable()
+//                                .scaledToFit()
+//                                .foregroundColor(Color.white)
+//                                .frame(width: 20)
+//                            Text("무전")
+//                                .foregroundColor(Color.white)
+//                                .bold()
+//                                .font(.system(size: 20))
+//                        }
+//                        .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+//                        .background(Color.black.opacity(0.7))
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+//                        )
+//
+//                    }
+//                    .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
+                    
+                    if self.roomData.game_type == 1 {
+                        if self.team == "레드팀"{
+                            Button(action: {
+                                print("설치")
+                            }){
+                                HStack(){
+                                    Image("폭탄전")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 40)
+                                    Text("설치")
+                                        .foregroundColor(Color.white)
+                                        .bold()
+                                        .font(.system(size: 20))
+                                }
+                                .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+                                .background(Color.black.opacity(0.7))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                                )
+                                
+                            }
+                            .offset(x: gp.size.width / 40, y: gp.size.height / 3)
                         }
-                        .frame(width: gp.size.width / 7, height: gp.size.height / 6)
-                        .background(Color.black.opacity(0.7))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
-                        )
-                        
+                        else {
+                            Button(action: {
+                                print("해체")
+                            }){
+                                HStack(){
+                                    Image(systemName: "wrench.and.screwdriver")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundColor(Color.white)
+                                        .frame(width: 40)
+                                    Text("해체")
+                                        .foregroundColor(Color.white)
+                                        .bold()
+                                        .font(.system(size: 20))
+                                }
+                                .frame(width: gp.size.width / 7, height: gp.size.height / 6)
+                                .background(Color.black.opacity(0.7))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                                )
+                                
+                            }
+                            .offset(x: gp.size.width / 40, y: gp.size.height / 3)
+                        }
                     }
-                    .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
+                    
                     
                     Button(action: {
                         print("전사")
@@ -677,6 +728,7 @@ struct GameMapView: View {
                         
                     }
                     .offset(x: gp.size.width / 2.5, y: gp.size.height / 3)
+                    
 
                 }
             }
