@@ -211,7 +211,7 @@ struct InGameMapView: UIViewRepresentable {
                                 self.markers[key]?.height = CGFloat(NMF_MARKER_SIZE_AUTO)
                                 self.markers[key]?.captionText = value.call_sign
                                 self.markers[key]?.captionAligns = [NMFAlignType.top]
-                                self.markers[key]?.captionColor = UIColor.green
+                                self.markers[key]?.captionColor = UIColor.red
                                 if value.alive == false {
                                     self.markers[key]?.iconImage = NMF_MARKER_IMAGE_BLACK
                                 }
