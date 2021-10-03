@@ -634,6 +634,9 @@ struct GameMapView: View {
                             print("설치")
                             self.bombAmount = 0
                             self.progressIsActive = true
+                            if let location = self.locationManager.location?.coordinate {
+                                print("폭탄 설치 좌표 : \(location)")
+                            }
                         }){
                             HStack(){
                                 Image("폭탄전")
@@ -673,6 +676,9 @@ struct GameMapView: View {
                             print("해체")
                             self.bombAmount = 0
                             self.progressIsActive = true
+                            if let location = self.locationManager.location?.coordinate {
+                                print("폭탄 해체 좌표 : \(location)")
+                            }
                         }){
                             HStack(){
                                 Image(systemName: "wrench.and.screwdriver")
@@ -690,7 +696,6 @@ struct GameMapView: View {
                             .overlay(
                                 RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
                             )
-                            
                         }
                         .offset(x: -gp.size.width / 2.5, y: gp.size.height / 3)
                     }
