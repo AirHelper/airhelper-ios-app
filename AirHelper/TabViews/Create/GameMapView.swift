@@ -652,7 +652,7 @@ struct GameMapView: View {
                             )
                             
                         }
-                        .offset(x: gp.size.width / 40, y: gp.size.height / 3)
+                        .offset(x: -gp.size.width / 2.5, y: gp.size.height / 3)
 
                     }
                     else if self.team == "블루팀" {
@@ -692,7 +692,7 @@ struct GameMapView: View {
                             )
                             
                         }
-                        .offset(x: gp.size.width / 40, y: gp.size.height / 3)
+                        .offset(x: -gp.size.width / 2.5, y: gp.size.height / 3)
                     }
                 }
                 
