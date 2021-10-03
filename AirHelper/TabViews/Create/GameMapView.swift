@@ -637,8 +637,22 @@ struct GameMapView: View {
 
                     }
                     else if self.team == "블루팀" {
+                        if self.progressIsActive {
+                            ProgressView("폭탄 해체중...", value: self.bombAmount, total: 100)
+                                .onReceive(timer) { _ in
+                                    if self.bombAmount < 100 {
+                                        self.bombAmount += 2
+                                    }
+                                    else {
+                                        self.progressIsActive = false
+                                    }
+                                    
+                                }
+                        }
                         Button(action: {
                             print("해체")
+                            self.bombAmount = 0
+                            self.progressIsActive = true
                         }){
                             HStack(){
                                 Image(systemName: "wrench.and.screwdriver")
