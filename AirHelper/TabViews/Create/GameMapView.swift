@@ -426,7 +426,8 @@ struct GameMapView: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var timeRemaining: Int = 0
     @Binding var rootIsActive: Bool
-
+    @State private var bombAmount: Double = 0.0
+    @State private var progressIsActive: Bool = false
     func location_send() -> Void {
         var dict = Dictionary<String, Any>()
         if let user_id = UserDefaults.standard.string(forKey: "user_id"), let location = self.locationManager.location?.coordinate {
@@ -596,9 +597,24 @@ struct GameMapView: View {
                     })
                 
                 if self.roomData.game_type == 1 {
+
                     if self.team == "레드팀"{
+                        if self.progressIsActive {
+                            ProgressView("폭탄 설치중...", value: self.bombAmount, total: 100)
+                                .onReceive(timer) { _ in
+                                    if self.bombAmount < 100 {
+                                        self.bombAmount += 2
+                                    }
+                                    else {
+                                        self.progressIsActive = false
+                                    }
+                                    
+                                }
+                        }
                         Button(action: {
                             print("설치")
+                            self.bombAmount = 0
+                            self.progressIsActive = true
                         }){
                             HStack(){
                                 Image("폭탄전")
