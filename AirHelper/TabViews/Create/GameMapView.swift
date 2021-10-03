@@ -614,7 +614,6 @@ struct GameMapView: View {
                     })
                 
                 if self.roomData.game_type == 1 {
-
                     if self.team == "레드팀"{
                         if self.progressIsActive {
                             ProgressView("폭탄 설치중... \(Int(self.bombAmount))%", value: self.bombAmount, total: 100)
@@ -626,9 +625,7 @@ struct GameMapView: View {
                                     else {
                                         self.progressIsActive = false
                                     }
-                                    
                                 }
-                                
                         }
                         Button(action: {
                             print("설치")
