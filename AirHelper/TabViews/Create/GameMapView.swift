@@ -408,6 +408,23 @@ struct Player: Codable, Equatable { //유저 정보
     var type: String
 }
 
+struct RoundedRectProgressViewStyle: ProgressViewStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        ZStack(alignment: .leading) {
+            RoundedRectangle(cornerRadius: 14)
+                .frame(width: 250, height: 28)
+                .foregroundColor(.white)
+                .overlay(Color.white.opacity(0.5)).cornerRadius(14)
+            
+            RoundedRectangle(cornerRadius: 14)
+                .frame(width: CGFloat(configuration.fractionCompleted ?? 0) * 250, height: 28)
+                .foregroundColor(.blue)
+        }
+        .padding()
+    }
+}
+ 
+
 struct GameMapView: View {
     @ObservedObject var locationManager: GameLocationManager = GameLocationManager()
     
@@ -600,16 +617,18 @@ struct GameMapView: View {
 
                     if self.team == "레드팀"{
                         if self.progressIsActive {
-                            ProgressView("폭탄 설치중...", value: self.bombAmount, total: 100)
+                            ProgressView("폭탄 설치중... \(Int(self.bombAmount))%", value: self.bombAmount, total: 100)
+                                .progressViewStyle(RoundedRectProgressViewStyle())
                                 .onReceive(timer) { _ in
                                     if self.bombAmount < 100 {
-                                        self.bombAmount += 2
+                                        self.bombAmount += 10
                                     }
                                     else {
                                         self.progressIsActive = false
                                     }
                                     
                                 }
+                                
                         }
                         Button(action: {
                             print("설치")
@@ -638,10 +657,11 @@ struct GameMapView: View {
                     }
                     else if self.team == "블루팀" {
                         if self.progressIsActive {
-                            ProgressView("폭탄 해체중...", value: self.bombAmount, total: 100)
+                            ProgressView("폭탄 해체중... \(Int(self.bombAmount))%", value: self.bombAmount, total: 100)
+                                .progressViewStyle(RoundedRectProgressViewStyle())
                                 .onReceive(timer) { _ in
                                     if self.bombAmount < 100 {
-                                        self.bombAmount += 2
+                                        self.bombAmount += 10
                                     }
                                     else {
                                         self.progressIsActive = false
