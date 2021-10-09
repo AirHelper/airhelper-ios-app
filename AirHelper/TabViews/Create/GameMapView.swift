@@ -27,6 +27,7 @@ final class GameModel: ObservableObject {
     @Published var player_cnt = TeamPlayerCount()
     @Published var endGame = false
     @Published var newRoomID = -1
+    @Published var bomb_data: Bomb = Bomb()
     // MARK: - Connection
     func connect() { // 2
         let url = URL(string: "ws://airhelper.kro.kr/ws/game/\(game_id)/")! // 3
@@ -101,6 +102,21 @@ final class GameModel: ObservableObject {
                         self.checkpoints.append(CheckPoint(lat: lat as! Double, lng: lng as! Double, team: team as! String))
                     }
                 }
+                else if json["type"] as! String == "bomb_install" {
+                    print("폭탄 설치 메시지")
+                    if let lat = json["lat"], let lng = json["lng"], let start_time = json["start_time"], let end_time = json["end_time"]{
+                        DispatchQueue.main.async {
+                            self.bomb_data.lat = lat as! Double
+                            self.bomb_data.lng = lng as! Double
+                            self.bomb_data.start_time = start_time as! String
+                            self.bomb_data.end_time = end_time as! String
+                            self.bomb_data.is_install = true
+                        }
+                    }
+                }
+                else if json["type"] as! String == "bomb_uninstall" {
+                    print("폭탄 해체 메시지")
+                }
             }
             else {
                 return
@@ -135,7 +151,7 @@ struct InGameMapView: UIViewRepresentable {
     var team: String
     var locationManager: GameLocationManager
     
-    
+    @State var bomb_marker: NMFMarker = NMFMarker()
     func makeUIView(context: Context) -> NMFNaverMapView {
         
         view.showZoomControls = false
@@ -150,24 +166,24 @@ struct InGameMapView: UIViewRepresentable {
             view.mapView.touchDelegate = context.coordinator
         }
         
-        
-//        var testMarker = NMFMarker()
-//        testMarker.position = NMGLatLng(lat: 37.32651597910787, lng: 127.1166428612914)
-//        let when = DispatchTime.now() + 10
-//        testMarker.mapView = self.view.mapView
-//        DispatchQueue.main.asyncAfter(deadline: when){
-//            // your code with delay
-//            print("삭제")
-//            testMarker.mapView = nil
-//        }
-//
-        
         return view
     }
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
         print("updateUIView 호출")
         
+        //폭탄 설치
+        if self.players.bomb_data.is_install {
+            
+            self.bomb_marker.iconImage = NMFOverlayImage(name: "bomb")
+            self.bomb_marker.width = 30
+            self.bomb_marker.height = 30
+            self.bomb_marker.position = NMGLatLng(lat: self.players.bomb_data.lat, lng: self.players.bomb_data.lng)
+            self.bomb_marker.mapView = uiView.mapView
+        }
+        
+        
+        //체크포인트
         if self.players.checkpoint.count != 0 {
             for ping in self.players.checkpoint {
                 print(ping)
@@ -390,6 +406,7 @@ extension GameLocationManager: CLLocationManagerDelegate {
 class PlayerData: ObservableObject {
     @Published var player: Dictionary<String, Player> = [String: Player]()
     @Published var checkpoint: [CheckPoint] = [CheckPoint]()
+    @Published var bomb_data: Bomb = Bomb()
 }
 
 struct CheckPoint: Equatable { //체크포인트 정보
@@ -408,6 +425,13 @@ struct Player: Codable, Equatable { //유저 정보
     var type: String
 }
 
+struct Bomb: Equatable {
+    var lat: Double = 0
+    var lng: Double = 0
+    var start_time: String = ""
+    var end_time: String = ""
+    var is_install: Bool = false
+}
 struct RoundedRectProgressViewStyle: ProgressViewStyle {
     func makeBody(configuration: Configuration) -> some View {
         ZStack(alignment: .leading) {
@@ -624,6 +648,15 @@ struct GameMapView: View {
                                     }
                                     else {
                                         self.progressIsActive = false
+                                        if let location = self.locationManager.location?.coordinate {
+                                            print("폭탄 설치 좌표 : \(location)")
+                                            var dict = Dictionary<String, Any>()
+                                            dict = ["type": "bomb_install", "lat": location.latitude, "lng": location.longitude]
+                                            if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                                                let theJSONText = String(data: theJSONData, encoding: .utf8)
+                                                model.send(text: theJSONText!)
+                                            }
+                                        }
                                     }
                                 }
                         }
@@ -631,9 +664,7 @@ struct GameMapView: View {
                             print("설치")
                             self.bombAmount = 0
                             self.progressIsActive = true
-                            if let location = self.locationManager.location?.coordinate {
-                                print("폭탄 설치 좌표 : \(location)")
-                            }
+
                         }){
                             HStack(){
                                 Image("폭탄전")
@@ -653,6 +684,10 @@ struct GameMapView: View {
                             
                         }
                         .offset(x: -gp.size.width / 2.5, y: gp.size.height / 3)
+                        .onChange(of: self.model.bomb_data, perform: { newValue in
+                            self.progressIsActive = false
+                            self.players.bomb_data = newValue
+                        })
 
                     }
                     else if self.team == "블루팀" {
