@@ -662,8 +662,10 @@ struct GameMapView: View {
                         }
                         Button(action: {
                             print("설치")
-                            self.bombAmount = 0
-                            self.progressIsActive = true
+                            if self.players.bomb_data.is_install != false{
+                                self.bombAmount = 0
+                                self.progressIsActive = true
+                            }
 
                         }){
                             HStack(){
