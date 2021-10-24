@@ -637,7 +637,27 @@ struct GameMapView: View {
                         }))
                     })
                 
-                if self.roomData.game_type == 1 {
+                if self.roomData.game_type == 1 { //폭탄전
+                    HStack(){
+                        Image(systemName: "clock")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(Color.white)
+                            .frame(width: 35)
+                            
+                        Text("05:00")
+                            .foregroundColor(Color.white)
+                            .bold()
+                            .font(.system(size: 30))
+                            .minimumScaleFactor(0.001)
+                    }
+                    .frame(width: gp.size.width / 5, height: gp.size.height / 6)
+                    .background(Color.black.opacity(0.7))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                    )
+                    .offset(x: 0, y: -gp.size.height / 2.5)
+                    
                     if self.team == "레드팀"{
                         if self.progressIsActive {
                             ProgressView("폭탄 설치중... \(Int(self.bombAmount))%", value: self.bombAmount, total: 100)
@@ -662,7 +682,7 @@ struct GameMapView: View {
                         }
                         Button(action: {
                             print("설치")
-                            if self.players.bomb_data.is_install != false{
+                            if self.players.bomb_data.is_install == false{
                                 self.bombAmount = 0
                                 self.progressIsActive = true
                             }
