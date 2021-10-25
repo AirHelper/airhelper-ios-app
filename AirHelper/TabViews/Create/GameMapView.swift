@@ -105,9 +105,16 @@ final class GameModel: ObservableObject {
                 else if json["type"] as! String == "bomb_install" {
                     print("폭탄 설치 메시지")
                     if let lat = json["lat"], let lng = json["lng"], let start_time = json["start_time"], let end_time = json["end_time"]{
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "HH:mm:ss"
                         DispatchQueue.main.async {
                             self.bomb_data.lat = lat as! Double
                             self.bomb_data.lng = lng as! Double
+
+                            if let endTime = formatter.date(from: end_time as! String),
+                               let startTime = formatter.date(from: formatter.string(from: Date())) {
+                                self.bomb_data.bomb_time = Int(endTime.timeIntervalSince(startTime))
+                            }
                             self.bomb_data.start_time = start_time as! String
                             self.bomb_data.end_time = end_time as! String
                             self.bomb_data.is_install = true
@@ -431,6 +438,7 @@ struct Bomb: Equatable {
     var start_time: String = ""
     var end_time: String = ""
     var is_install: Bool = false
+    var bomb_time: Int = 0
 }
 struct RoundedRectProgressViewStyle: ProgressViewStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -601,6 +609,10 @@ struct GameMapView: View {
                                     }
                                 }
                             }
+                            
+                            if self.model.bomb_data.is_install, self.model.bomb_data.bomb_time > 0 {
+                                self.model.bomb_data.bomb_time -= 1
+                            }
                         }
                     }
                     .environmentObject(self.players)
@@ -638,26 +650,28 @@ struct GameMapView: View {
                     })
                 
                 if self.roomData.game_type == 1 { //폭탄전
-                    HStack(){
-                        Image(systemName: "clock")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(Color.white)
-                            .frame(width: 35)
+                    if self.model.bomb_data.is_install { //폭탄 설치됬으면 타이머 보이게 하기
+                        HStack(){
+                            Image(systemName: "clock")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(Color.white)
+                                .frame(width: 35)
                             
-                        Text("05:00")
-                            .foregroundColor(Color.white)
-                            .bold()
-                            .font(.system(size: 30))
-                            .minimumScaleFactor(0.001)
+                            Text("\(String(format: "%02d" , self.model.bomb_data.bomb_time / 60)):\(String(format: "%02d", self.model.bomb_data.bomb_time % 60))")
+                                
+                                .foregroundColor(Color.white)
+                                .bold()
+                                .font(.system(size: 30))
+                                .minimumScaleFactor(0.001)
+                        }
+                        .frame(width: gp.size.width / 5, height: gp.size.height / 6)
+                        .background(Color.black.opacity(0.7))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
+                        )
+                        .offset(x: 0, y: -gp.size.height / 2.5)
                     }
-                    .frame(width: gp.size.width / 5, height: gp.size.height / 6)
-                    .background(Color.black.opacity(0.7))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
-                    )
-                    .offset(x: 0, y: -gp.size.height / 2.5)
-                    
                     if self.team == "레드팀"{
                         if self.progressIsActive {
                             ProgressView("폭탄 설치중... \(Int(self.bombAmount))%", value: self.bombAmount, total: 100)
