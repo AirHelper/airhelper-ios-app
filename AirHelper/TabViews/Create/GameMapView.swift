@@ -178,10 +178,8 @@ struct InGameMapView: UIViewRepresentable {
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
         print("updateUIView 호출")
-        print(self.players.bomb_data)
         //폭탄 설치
         if self.players.bomb_data.is_install {
-            
             self.bomb_marker.iconImage = NMFOverlayImage(name: "bomb")
             self.bomb_marker.width = 30
             self.bomb_marker.height = 30
@@ -477,6 +475,7 @@ struct GameMapView: View {
     @Binding var rootIsActive: Bool
     @State private var bombAmount: Double = 0.0
     @State private var progressIsActive: Bool = false
+    @State private var dissolveIsActive: Bool = false
     func location_send() -> Void {
         var dict = Dictionary<String, Any>()
         if let user_id = UserDefaults.standard.string(forKey: "user_id"), let location = self.locationManager.location?.coordinate {
@@ -727,7 +726,7 @@ struct GameMapView: View {
 
                     }
                     else if self.team == "블루팀" {
-                        if self.progressIsActive {
+                        if self.dissolveIsActive {
                             ProgressView("폭탄 해체중... \(Int(self.bombAmount))%", value: self.bombAmount, total: 100)
                                 .progressViewStyle(RoundedRectProgressViewStyle())
                                 .onReceive(timer) { _ in
@@ -735,18 +734,22 @@ struct GameMapView: View {
                                         self.bombAmount += 10
                                     }
                                     else {
-                                        self.progressIsActive = false
+                                        self.dissolveIsActive = false
                                     }
                                     
                                 }
                         }
                         Button(action: {
-                            print("해체")
-                            self.bombAmount = 0
-                            self.progressIsActive = true
-                            if let location = self.locationManager.location?.coordinate {
-                                print("폭탄 해체 좌표 : \(location)")
+                            let bomb_location = CLLocation(latitude: self.model.bomb_data.lat, longitude: self.model.bomb_data.lng)
+                            if let distanceInMeters = self.locationManager.location?.distance(from: bomb_location){
+                                print("폭탄 해체 좌표 : \(distanceInMeters)")
+                                if distanceInMeters <= 10 {
+                                    self.bombAmount = 0
+                                    self.dissolveIsActive = true
+                                }
+                                
                             }
+                            
                         }){
                             HStack(){
                                 Image(systemName: "wrench.and.screwdriver")
