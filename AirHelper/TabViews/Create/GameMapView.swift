@@ -178,7 +178,7 @@ struct InGameMapView: UIViewRepresentable {
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
         print("updateUIView 호출")
-        
+        print(self.players.bomb_data)
         //폭탄 설치
         if self.players.bomb_data.is_install {
             
@@ -570,6 +570,10 @@ struct GameMapView: View {
                             }
                         }
                     })
+                    .onChange(of: self.model.bomb_data, perform: { newValue in
+                        self.progressIsActive = false
+                        self.players.bomb_data = newValue
+                    })
                     .onReceive(timer) { time in // 타이머
                         if self.model.endTime != "" {
                             if self.timeRemaining > 0 {
@@ -652,14 +656,13 @@ struct GameMapView: View {
                 if self.roomData.game_type == 1 { //폭탄전
                     if self.model.bomb_data.is_install { //폭탄 설치됬으면 타이머 보이게 하기
                         HStack(){
-                            Image(systemName: "clock")
+                            Image("폭탄전")
                                 .resizable()
                                 .scaledToFit()
                                 .foregroundColor(Color.white)
                                 .frame(width: 35)
                             
                             Text("\(String(format: "%02d" , self.model.bomb_data.bomb_time / 60)):\(String(format: "%02d", self.model.bomb_data.bomb_time % 60))")
-                                
                                 .foregroundColor(Color.white)
                                 .bold()
                                 .font(.system(size: 30))
@@ -720,10 +723,7 @@ struct GameMapView: View {
                             
                         }
                         .offset(x: -gp.size.width / 2.5, y: gp.size.height / 3)
-                        .onChange(of: self.model.bomb_data, perform: { newValue in
-                            self.progressIsActive = false
-                            self.players.bomb_data = newValue
-                        })
+
 
                     }
                     else if self.team == "블루팀" {
