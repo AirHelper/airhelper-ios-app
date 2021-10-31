@@ -122,7 +122,9 @@ final class GameModel: ObservableObject {
                     }
                 }
                 else if json["type"] as! String == "bomb_uninstall" {
-                    print("폭탄 해체 메시지")
+                    DispatchQueue.main.async {
+                        self.bomb_data.is_install = false
+                    }
                 }
             }
             else {
@@ -185,6 +187,9 @@ struct InGameMapView: UIViewRepresentable {
             self.bomb_marker.height = 30
             self.bomb_marker.position = NMGLatLng(lat: self.players.bomb_data.lat, lng: self.players.bomb_data.lng)
             self.bomb_marker.mapView = uiView.mapView
+        }
+        else {
+            self.bomb_marker.mapView = nil
         }
         
         
@@ -735,6 +740,14 @@ struct GameMapView: View {
                                     }
                                     else {
                                         self.dissolveIsActive = false
+                                        var dict = Dictionary<String, Any>()
+                                        
+                                        dict = ["type": "bomb_uninstall"]
+                                        if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                                            let theJSONText = String(data: theJSONData, encoding: .utf8)
+                                            model.send(text: theJSONText!)
+                                        }
+                                        
                                     }
                                     
                                 }
