@@ -849,7 +849,7 @@ struct GameMapView: View {
                             let bomb_location = CLLocation(latitude: self.model.bomb_data.lat, longitude: self.model.bomb_data.lng)
                             if let distanceInMeters = self.locationManager.location?.distance(from: bomb_location){
                                 print("폭탄 해체 좌표 : \(distanceInMeters)")
-                                if distanceInMeters <= 10 {
+                                if distanceInMeters <= 100 {
                                     self.bombAmount = 0
                                     self.dissolveIsActive = true
                                 }
