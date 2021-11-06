@@ -136,7 +136,6 @@ final class GameModel: ObservableObject {
     
     
     func send(text: String) {
-        
         webSocketTask?.send(.string(text)) { error in // 3
             if let error = error {
                 print("Error sending message", error) // 4
@@ -341,7 +340,6 @@ struct InGameMapView: UIViewRepresentable {
                 dict = ["type": "checkpoint", "user": user_id, "lat": lat, "lng": lng]
                 if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
                     let theJSONText = String(data: theJSONData, encoding: .utf8)
-                    //                print("위치 데이터 전송 = \(theJSONText!)")
                     model.send(text: theJSONText!)
                 }
             }
@@ -537,46 +535,83 @@ struct GameMapView: View {
                     })
                     .onChange(of: self.model.player_cnt, perform: { newValue in //승패
                         if self.model.endGame == false { //게임이 끝나지 않았을 때
-                            if self.model.player_cnt.redTeam == 0 || self.model.player_cnt.blueTeam == 0  {
-                                if self.is_admin {
-                                    AF.request("http://airhelper.kro.kr/api/game/room", method: .post, parameters: [
-                                        "title": self.roomData.title,
-                                        "password": self.roomData.password,
-                                        "verbose_left": self.roomData.verbose_left,
-                                        "verbose_right": self.roomData.verbose_right,
-                                        "time": self.roomData.time,
-                                        "game_type": self.roomData.game_type
-                                    ], encoding: URLEncoding.httpBody).responseJSON() { response in
-                                        switch response.result {
-                                        case .success:
-                                            if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
-                                                print(data)
-                                                if let room_id = data["id"] {
-                                                    print("방만들기 완료")
-                                                    
-                                                    self.roomData.id = room_id as! Int
-                                                    self.timeRemaining = -1
-                                                    var dict = Dictionary<String, Any>()
-                                                    dict = ["type": "game_end", "room_id": room_id as! Int]
-                                                    if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
-                                                        let theJSONText = String(data: theJSONData, encoding: .utf8)
-                                                        model.send(text: theJSONText!)
+                            if self.roomData.game_type == 0 {
+                                if self.model.player_cnt.redTeam == 0 || self.model.player_cnt.blueTeam == 0  {
+                                    if self.is_admin {
+                                        AF.request("http://airhelper.kro.kr/api/game/room", method: .post, parameters: [
+                                            "title": self.roomData.title,
+                                            "password": self.roomData.password,
+                                            "verbose_left": self.roomData.verbose_left,
+                                            "verbose_right": self.roomData.verbose_right,
+                                            "time": self.roomData.time,
+                                            "game_type": self.roomData.game_type
+                                        ], encoding: URLEncoding.httpBody).responseJSON() { response in
+                                            switch response.result {
+                                            case .success:
+                                                if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
+                                                    print(data)
+                                                    if let room_id = data["id"] {
+                                                        print("방만들기 완료")
+                                                        
+                                                        self.roomData.id = room_id as! Int
+                                                        self.timeRemaining = -1
+                                                        var dict = Dictionary<String, Any>()
+                                                        dict = ["type": "game_end", "room_id": room_id as! Int]
+                                                        if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                                                            let theJSONText = String(data: theJSONData, encoding: .utf8)
+                                                            model.send(text: theJSONText!)
+                                                        }
                                                     }
                                                 }
+                                            case .failure(let error):
+                                                print("Error: \(error)")
+                                                return
                                             }
-                                        case .failure(let error):
-                                            print("Error: \(error)")
-                                            return
                                         }
                                     }
+                                    self.model.endGame = true
                                 }
-                                self.model.endGame = true
                             }
                         }
                     })
                     .onChange(of: self.model.bomb_data, perform: { newValue in
                         self.progressIsActive = false
                         self.players.bomb_data = newValue
+                        if newValue.is_install == false {
+                            if self.is_admin {
+                                AF.request("http://airhelper.kro.kr/api/game/room", method: .post, parameters: [
+                                    "title": self.roomData.title,
+                                    "password": self.roomData.password,
+                                    "verbose_left": self.roomData.verbose_left,
+                                    "verbose_right": self.roomData.verbose_right,
+                                    "time": self.roomData.time,
+                                    "game_type": self.roomData.game_type
+                                ], encoding: URLEncoding.httpBody).responseJSON() { response in
+                                    switch response.result {
+                                    case .success:
+                                        if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
+                                            print(data)
+                                            if let room_id = data["id"] {
+                                                print("방만들기 완료")
+                                                
+                                                self.roomData.id = room_id as! Int
+                                                self.timeRemaining = -1
+                                                var dict = Dictionary<String, Any>()
+                                                dict = ["type": "game_end", "room_id": room_id as! Int]
+                                                if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                                                    let theJSONText = String(data: theJSONData, encoding: .utf8)
+                                                    model.send(text: theJSONText!)
+                                                }
+                                            }
+                                        }
+                                    case .failure(let error):
+                                        print("Error: \(error)")
+                                        return
+                                    }
+                                }
+                            }
+                            self.model.endGame = true
+                        }
                     })
                     .onReceive(timer) { time in // 타이머
                         if self.model.endTime != "" {
@@ -621,36 +656,62 @@ struct GameMapView: View {
                             if self.model.bomb_data.is_install, self.model.bomb_data.bomb_time > 0 {
                                 self.model.bomb_data.bomb_time -= 1
                             }
+
                         }
                     }
                     .environmentObject(self.players)
                     .alert(isPresented: self.$model.endGame, content: {
                         print("alert 작동")
                         var message = ""
-                        if self.team != "옵저버" {
-                            if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
-                                if self.team == "레드팀" {
-                                    message = "승리하셨습니다."
+                        if self.roomData.game_type == 0 {
+                            if self.team != "옵저버" {
+                                if self.model.player_cnt.redTeam > self.model.player_cnt.blueTeam {
+                                    if self.team == "레드팀" {
+                                        message = "승리하셨습니다."
+                                    }
+                                    else {
+                                        message = "패배하셨습니다."
+                                    }
+                                }
+                                else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
+                                    if self.team == "레드팀" {
+                                        message = "패배하셨습니다."
+                                    }
+                                    else {
+                                        message = "승리하셨습니다."
+                                    }
                                 }
                                 else {
-                                    message = "패배하셨습니다."
-                                }
-                            }
-                            else if self.model.player_cnt.redTeam < self.model.player_cnt.blueTeam {
-                                if self.team == "레드팀" {
-                                    message = "패배하셨습니다."
-                                }
-                                else {
-                                    message = "승리하셨습니다."
+                                    message = "무승부입니다."
                                 }
                             }
                             else {
-                                message = "무승부입니다."
+                                message = "게임이 종료되었습니다."
                             }
                         }
-                        else {
-                            message = "게임이 종료되었습니다."
+                        
+                        else if self.roomData.game_type == 1 { //폭탄전 승패 판정
+                            if self.team == "레드팀" {
+                                if self.model.bomb_data.is_install { //폭탄 설치 된상태에서 게임 종료
+                                    message = "승리하셨습니다."
+                                }
+                                else { // 시간 만료
+                                    message = "패배하셨습니다."
+                                }
+                            }
+                            else if self.team == "블루팀" {
+                                if self.model.bomb_data.is_install { //폭탄 설치 된상태에서 게임 종료
+                                    message = "패배하셨습니다."
+                                }
+                                else { // 시간 만료
+                                    message = "승리하셨습니다."
+                                }
+                            }
+                            else if self.team == "옵저버" {
+                                message = "게임이 종료되었습니다."
+                            }
                         }
+                        
                         self.roomData.id = self.model.newRoomID
                         return Alert(title: Text("게임 종료"), message: Text(message), dismissButton: .default(Text("나가기"), action: {
                             self.presentation.wrappedValue.dismiss()
@@ -843,8 +904,6 @@ struct GameMapView: View {
 //                    .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
                     
 
-                    
-                    
                     Button(action: {
                         print("전사")
                         self.alive = false
@@ -893,7 +952,6 @@ struct GameMapView: View {
                 UINavigationController.attemptRotationToDeviceOrientation()
             }
         })
-        
     }
     
 }
