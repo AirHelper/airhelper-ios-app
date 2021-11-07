@@ -491,6 +491,37 @@ struct GameMapView: View {
         }
     }
     
+    func gameEnd_send() -> Void {
+        AF.request("http://airhelper.kro.kr/api/game/room", method: .post, parameters: [
+            "title": self.roomData.title,
+            "password": self.roomData.password,
+            "verbose_left": self.roomData.verbose_left,
+            "verbose_right": self.roomData.verbose_right,
+            "time": self.roomData.time,
+            "game_type": self.roomData.game_type
+        ], encoding: URLEncoding.httpBody).responseJSON() { response in
+            switch response.result {
+            case .success:
+                if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
+                    print(data)
+                    if let room_id = data["id"] {
+                        self.roomData.id = room_id as! Int
+                        self.timeRemaining = -1
+                        var dict = Dictionary<String, Any>()
+                        dict = ["type": "game_end", "room_id": room_id as! Int]
+                        if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                            let theJSONText = String(data: theJSONData, encoding: .utf8)
+                            model.send(text: theJSONText!)
+                        }
+                    }
+                }
+            case .failure(let error):
+                print("Error: \(error)")
+                return
+            }
+        }
+    }
+    
     var body: some View {
         GeometryReader { gp in
             ZStack(){
@@ -522,7 +553,7 @@ struct GameMapView: View {
                             self.timeRemaining = Int(endTime.timeIntervalSince(startTime))
                         }
                     })
-                    .onChange(of: self.model.player_cnt, perform: { newValue in //승패
+                    .onChange(of: self.model.player_cnt, perform: { newValue in //전사시 승패
                         if self.model.endGame == false { //게임이 끝나지 않았을 때
                             if self.roomData.game_type == 0 {
                                 if self.model.player_cnt.redTeam == 0 || self.model.player_cnt.blueTeam == 0  {
@@ -556,6 +587,22 @@ struct GameMapView: View {
                                                 print("Error: \(error)")
                                                 return
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                            else if self.roomData.game_type == 1 { //폭탄전 진행시 전사버튼 눌렀을 때 승패판정 (즉 한쪽팀이 전멸했을 때 승패판정)
+                                if self.model.bomb_data.is_install {
+                                    if self.model.player_cnt.blueTeam == 0 {
+                                        if self.is_admin {
+                                            gameEnd_send()
+                                        }
+                                    }
+                                }
+                                else{
+                                    if self.model.player_cnt.redTeam == 0 {
+                                        if self.is_admin {
+                                            gameEnd_send()
                                         }
                                     }
                                 }
@@ -724,7 +771,6 @@ struct GameMapView: View {
                     }
                     .environmentObject(self.players)
                     .alert(isPresented: self.$model.endGame, content: {
-                        print("alert 작동")
                         var message = ""
                         if self.roomData.game_type == 0 {
                             if self.team != "옵저버" {
@@ -943,30 +989,6 @@ struct GameMapView: View {
                     .offset(x: -gp.size.width / 2.2, y: -gp.size.height / 2.2)
                 
                 if self.team != "옵저버" {
-//                    Button(action: {
-//                        print("무전")
-//                    }){
-//                        HStack(){
-//                            Image(systemName: "mic.fill")
-//                                .resizable()
-//                                .scaledToFit()
-//                                .foregroundColor(Color.white)
-//                                .frame(width: 20)
-//                            Text("무전")
-//                                .foregroundColor(Color.white)
-//                                .bold()
-//                                .font(.system(size: 20))
-//                        }
-//                        .frame(width: gp.size.width / 7, height: gp.size.height / 6)
-//                        .background(Color.black.opacity(0.7))
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 4).stroke(Color(.white), lineWidth: 1)
-//                        )
-//
-//                    }
-//                    .offset(x: gp.size.width / 2.5, y: gp.size.height / 8)
-                    
-
                     Button(action: {
                         print("전사")
                         self.alive = false
