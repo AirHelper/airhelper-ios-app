@@ -95,7 +95,6 @@ final class GameModel: ObservableObject {
                 else if json["type"] as! String == "checkpoint" {
                     print("체크포인트 공유")
                     if let lat = json["lat"], let lng = json["lng"], let team = json["team"] {
-                        print("들어옴")
                         self.checkpoints.append(CheckPoint(lat: lat as! Double, lng: lng as! Double, team: team as! String))
                     }
                 }
@@ -175,7 +174,6 @@ struct InGameMapView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: NMFNaverMapView, context: Context) {
-        print("updateUIView 호출")
         //폭탄 설치
         if self.players.bomb_data.is_install {
             self.bomb_marker.iconImage = NMFOverlayImage(name: "bomb")
@@ -192,7 +190,6 @@ struct InGameMapView: UIViewRepresentable {
         //체크포인트
         if self.players.checkpoint.count != 0 {
             for ping in self.players.checkpoint {
-                print(ping)
                 if ping.team == self.team {
                     
                     var checkMarker = NMFMarker()
@@ -204,7 +201,6 @@ struct InGameMapView: UIViewRepresentable {
                     let when = DispatchTime.now() + 10
                     DispatchQueue.main.asyncAfter(deadline: when){
                         // your code with delay
-                        print("삭제")
                         checkMarker.mapView = nil
                     }
                 }
@@ -216,7 +212,6 @@ struct InGameMapView: UIViewRepresentable {
             uiView.mapView.moveCamera(NMFCameraUpdate(scrollTo: NMGLatLng(lat: location.coordinate.latitude, lng: location.coordinate.longitude)))
         }
         for (key, value) in self.players.player {
-            //            print("(\(key) : \(value))")
             if self.team != "옵저버" {
                 if let user_id = UserDefaults.standard.string(forKey: "user_id") {
                     if user_id != key { //자신꺼 제외한 마커 표시
@@ -396,7 +391,6 @@ extension GameLocationManager: CLLocationManagerDelegate {
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        //        print("위치 업뎃 \(location.coordinate.latitude)  :  \(location.coordinate.longitude)")
         DispatchQueue.main.async {
             self.location = location
             self.geoCode(with: location)
@@ -512,12 +506,10 @@ struct GameMapView: View {
 //                    })
                     .onChange(of: self.model.players, perform: { newValue in //위치정보 받아서 지도에 마커표시
                         self.players.player = self.model.players
-                        print("위치정보 변경완료")
                     })
                     .onChange(of: self.model.checkpoints, perform: { newValue in //체크포인트 정보
                         if self.model.checkpoints.count != 0 {
                             self.players.checkpoint = self.model.checkpoints
-                            print("반영 완료 : \(self.players.checkpoint)")
                             self.model.checkpoints = []
                         }
                     })
@@ -566,7 +558,6 @@ struct GameMapView: View {
                                             }
                                         }
                                     }
-                                    self.model.endGame = true
                                 }
                             }
                         }
@@ -612,7 +603,14 @@ struct GameMapView: View {
                     .onReceive(timer) { time in // 타이머
                         if self.model.endTime != "" {
                             if self.timeRemaining > 0 {
-                                self.timeRemaining -= 1
+                                if self.roomData.game_type == 0 {
+                                    self.timeRemaining -= 1
+                                }
+                                else if self.roomData.game_type == 1 {
+                                    if self.model.bomb_data.is_install == false {
+                                        self.timeRemaining -= 1
+                                    }
+                                }
                             }
                             else if self.timeRemaining == 0 { //시간 만료시
                                 if self.is_admin, self.roomData.game_type == 0 {
@@ -629,7 +627,7 @@ struct GameMapView: View {
                                             if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
                                                 print(data)
                                                 if let room_id = data["id"] {
-                                                    print("방만들기 완료")
+                                                    print("게임 시간 만료!! 섬멸방만들기 완료")
                                                     
                                                     self.roomData.id = room_id as! Int
                                                     var dict = Dictionary<String, Any>()
@@ -647,6 +645,39 @@ struct GameMapView: View {
                                         }
                                     }
                                 }
+                                else if self.is_admin, self.roomData.game_type == 1 {
+                                    AF.request("http://airhelper.kro.kr/api/game/room", method: .post, parameters: [
+                                        "title": self.roomData.title,
+                                        "password": self.roomData.password,
+                                        "verbose_left": self.roomData.verbose_left,
+                                        "verbose_right": self.roomData.verbose_right,
+                                        "time": self.roomData.time,
+                                        "game_type": self.roomData.game_type
+                                    ], encoding: URLEncoding.httpBody).responseJSON() { response in
+                                        switch response.result {
+                                        case .success:
+                                            if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
+                                                print(data)
+                                                if let room_id = data["id"] {
+                                                    print("게임 시간 만료!! 폭탄방만들기 완료")
+                                                    
+                                                    self.roomData.id = room_id as! Int
+                                                    var dict = Dictionary<String, Any>()
+                                                    dict = ["type": "game_end", "room_id": room_id as! Int]
+                                                    if let theJSONData = try? JSONSerialization.data(withJSONObject: dict, options: []) {
+                                                        let theJSONText = String(data: theJSONData, encoding: .utf8)
+                                                        model.send(text: theJSONText!)
+                                                    }
+                                                    self.timeRemaining = -1
+                                                }
+                                            }
+                                        case .failure(let error):
+                                            print("Error: \(error)")
+                                            return
+                                        }
+                                    }
+                                }
+                                self.timer.upstream.connect().cancel() //게임 시간 만료로 인한 타이머 종료
                             }
                             
                             if self.model.bomb_data.is_install, self.model.bomb_data.bomb_time > 0 {
@@ -667,7 +698,7 @@ struct GameMapView: View {
                                             if let data = try! response.result.get() as? [String: Any]{ //응답 데이터 체크
                                                 print(data)
                                                 if let room_id = data["id"] {
-                                                    print("폭탄전 방만들기 완료")
+                                                    print("폭탄 설치!! 폭탄전 방만들기 완료")
                                                     
                                                     self.roomData.id = room_id as! Int
                                                     self.timeRemaining = -1
@@ -685,8 +716,8 @@ struct GameMapView: View {
                                         }
                                     }
                                 }
-                                self.model.endGame = true
                                 
+                                self.timer.upstream.connect().cancel() //게임 시간 만료로 인한 타이머 종료
                             }
 
                         }
