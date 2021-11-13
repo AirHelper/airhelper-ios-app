@@ -18,6 +18,27 @@ extension Color {
 }
 
 
+struct AppleUser: Codable {
+    let userId: String
+    let firstName: String
+    let lastName: String
+    let email: String
+    
+    init?(credentials: ASAuthorizationAppleIDCredential) {
+        guard
+            let firstName = credentials.fullName?.givenName,
+            let lastName = credentials.fullName?.familyName,
+            let email = credentials.email
+        else { return nil }
+        
+        self.userId = credentials.user
+        self.firstName = firstName
+        self.lastName = lastName
+        self.email = email
+    }
+}
+
+
 struct MainLoginView: View {
     @State var isActive : Bool = false
     @State var autoIsActive : Bool = false
@@ -184,23 +205,44 @@ struct MainLoginView: View {
     }
     
     func configure(_ request: ASAuthorizationAppleIDRequest) {
-        
+        request.requestedScopes = [.fullName, .email]
     }
     
     func handle(_ authResult: Result<ASAuthorization, Error>) {
-        
+        switch authResult {
+        case .success(let auth):
+            print(auth)
+            switch auth.credential {
+            case let appleIdCredentials as ASAuthorizationAppleIDCredential:
+                print(appleIdCredentials)
+                //최초 로그인
+                if let appleUser = AppleUser(credentials: appleIdCredentials),
+                   let appleUserData = try? JSONEncoder().encode(appleUser){
+                    print("appleUser : ", appleUser)
+                    
+                }
+                //이미 인증한 경우
+                else {
+                    print("missing some fields", appleIdCredentials.email, appleIdCredentials.fullName, appleIdCredentials.user)
+                
+                }
+            default:
+                print(auth.credential)
+            }
+            
+        case .failure(let error):
+            print(error)
+        }
     }
     
 }
 
 struct ContentView: View {
     
-
     var body: some View {
         if let _ = UserDefaults.standard.string(forKey: "access_token"), let _ = UserDefaults.standard.string(forKey: "refresh_token") {
             GeometryReader() { gp in
                 MainLoginView(autoIsActive: true)
-                //MainTabView()
             }
         }
         else {
