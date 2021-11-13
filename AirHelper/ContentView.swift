@@ -3,6 +3,7 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 import Alamofire
+import AuthenticationServices
 
 extension Color {
     init(hex: UInt, alpha: Double = 1) {
@@ -158,7 +159,15 @@ struct MainLoginView: View {
                         }
                         .background(Color(hex: 0xFEE500))
                         .cornerRadius(5)
-                        .padding(.bottom, 20)
+                        .padding(.bottom, -20)
+                        
+                        SignInWithAppleButton(
+                            .signIn,
+                            onRequest: configure,
+                            onCompletion: handle
+                        )
+                        .frame(height: 50)
+                        .padding(30)
                         
                         Text("계속 진행 시, airhelper 규정 및 개인정보 처리방침을 읽었으며 이에 동의합니다.")
                             .foregroundColor(.white)
@@ -172,6 +181,14 @@ struct MainLoginView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+    }
+    
+    func configure(_ request: ASAuthorizationAppleIDRequest) {
+        
+    }
+    
+    func handle(_ authResult: Result<ASAuthorization, Error>) {
+        
     }
     
 }
